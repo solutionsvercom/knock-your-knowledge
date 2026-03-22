@@ -1,50 +1,48 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig, loadEnv } from 'vite'
-import path from 'node:path'
-import fs from 'node:fs'
+import react from "@vitejs/plugin-react";
+import { defineConfig, loadEnv } from "vite";
+import path from "node:path";
+import fs from "node:fs";
 
 /** Read PORT from backend/.env (strip UTF-8 BOM so regex always matches) */
-function readPortFromServerEnv() {
+function readPortFromBackendEnv() {
   try {
-    const envPath = path.resolve(process.cwd(), '../backend/.env')
-    let raw = fs.readFileSync(envPath, 'utf8')
-    if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1)
-    const m = raw.match(/^\s*PORT\s*=\s*(\d+)/m)
-    if (m) return Number(m[1])
+    const envPath = path.resolve(process.cwd(), "../backend/.env");
+    let raw = fs.readFileSync(envPath, "utf8");
+    if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1);
+    const m = raw.match(/^\s*PORT\s*=\s*(\d+)/m);
+    if (m) return Number(m[1]);
   } catch {
     // missing backend/.env
   }
-  return null
+  return null;
 }
 
-/** Match backend/.env PORT so /api proxy hits the same process as the API workspace */
 function resolveApiProxyTarget(env = {}) {
-  const fromEnv = env?.VITE_PROXY_TARGET
-  if (fromEnv) return String(fromEnv).replace(/\/$/, '')
-  const port = readPortFromServerEnv()
-  return `http://localhost:${port ?? 5001}`
+  const fromEnv = env?.VITE_PROXY_TARGET;
+  if (fromEnv) return String(fromEnv).replace(/\/$/, "");
+  const port = readPortFromBackendEnv();
+  return `http://localhost:${port ?? 5001}`;
 }
 
-// https://vite.dev/config/
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '') ?? {}
-  const apiTarget = resolveApiProxyTarget(env)
+  const env = loadEnv(mode, process.cwd(), "") ?? {};
+  const apiTarget = resolveApiProxyTarget(env);
 
   return {
-    logLevel: 'error',
+    logLevel: "error",
     plugins: [react()],
     resolve: {
       alias: {
-        '@': path.resolve(process.cwd(), 'src'),
+        "@": path.resolve(process.cwd(), "src"),
       },
     },
     server: {
       proxy: {
-        '/api': {
+        "/api": {
           target: apiTarget,
           changeOrigin: true,
         },
       },
     },
-  }
-})
+  };
+});

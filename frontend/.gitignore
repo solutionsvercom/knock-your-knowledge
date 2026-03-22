@@ -1,0 +1,4 @@
+# Vite / tooling output — not part of source; do not commit for production
+dist
+dist-ssr
+build

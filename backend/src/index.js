@@ -34,24 +34,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** Always load backend/.env even if the process was started from the repo root */
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-/** Comma-separated origins allowed (local + production). Example: http://localhost:5173,https://www.example.com */
-function corsOriginOption(raw) {
-  const s = (raw ?? "").trim();
-  if (!s || s === "*") return true;
-  const parts = s.split(",").map((x) => x.trim()).filter(Boolean);
-  if (parts.length === 0) return true;
-  if (parts.length === 1) return parts[0];
-  return parts;
-}
-
-/** Match frontend/vite.config.js proxy default and backend/.env.example */
+/** Match backend/.env.example and frontend/src/utils/apiBase.js */
 const PORT = Number(process.env.PORT || 5001);
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
 
 const app = express();
 app.use(
   cors({
-    origin: corsOriginOption(process.env.FRONTEND_URL),
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );

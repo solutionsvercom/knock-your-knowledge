@@ -10,7 +10,7 @@ import { execSync } from "node:child_process";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const envPath = path.join(root, "backend", ".env");
 
-let ports = [5001, 5002];
+let ports = [5000, 5001, 5002];
 try {
   const raw = readFileSync(envPath, "utf8");
   const m = raw.match(/^\s*PORT\s*=\s*(\d+)/m);

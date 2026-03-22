@@ -8,6 +8,11 @@ import { validate } from "../middleware/validate.js";
 
 const router = express.Router();
 
+router.use((req, _res, next) => {
+  console.log("Auth route hit:", req.originalUrl);
+  next();
+});
+
 const signupBody = z.object({
   email: z.string().email(),
   full_name: z.string().max(120).optional(),
@@ -100,6 +105,7 @@ async function loginHandler(req, res, next) {
 router.post("/signup", validate({ body: signupBody }), signupHandler);
 router.post("/register", validate({ body: signupBody }), signupHandler);
 router.post("/login", validate({ body: loginBody }), loginHandler);
+router.post("/admin/login", validate({ body: loginBody }), loginHandler);
 
 router.get("/me", authMiddleware.required, async (req, res) => {
   res.json(req.user);

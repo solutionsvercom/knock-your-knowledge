@@ -14,8 +14,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+
+# Build output (never commit; production hosts run `npm run build` themselves)
 dist
 dist-ssr
+build
 *.local
 
 # Editor directories and files
