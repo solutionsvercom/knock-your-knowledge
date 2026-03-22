@@ -112,24 +112,40 @@ export const api = {
   auth: {
     me: async () => http("/api/auth/me"),
     signup: async ({ email, full_name, password } = {}) => {
-      const result = await httpClient.post("/api/auth/signup", { email, full_name, password });
-      if (result?.token) setToken(result.token);
-      return result?.user;
+      try {
+        const result = await httpClient.post("/api/auth/signup", { email, full_name, password });
+        if (result?.token) setToken(result.token);
+        return result?.user;
+      } catch (e) {
+        throw normalizeAxiosError(e);
+      }
     },
     register: async (body) => {
-      const result = await httpClient.post("/api/auth/register", body);
-      if (result?.token) setToken(result.token);
-      return result?.user;
+      try {
+        const result = await httpClient.post("/api/auth/register", body);
+        if (result?.token) setToken(result.token);
+        return result?.user;
+      } catch (e) {
+        throw normalizeAxiosError(e);
+      }
     },
     login: async ({ email, password } = {}) => {
-      const result = await httpClient.post("/api/auth/login", { email, password });
-      if (result?.token) setToken(result.token);
-      return result?.user;
+      try {
+        const result = await httpClient.post("/api/auth/login", { email, password });
+        if (result?.token) setToken(result.token);
+        return result?.user;
+      } catch (e) {
+        throw normalizeAxiosError(e);
+      }
     },
     adminLogin: async ({ email, password } = {}) => {
-      const result = await httpClient.post("/api/auth/admin/login", { email, password });
-      if (result?.token) setToken(result.token);
-      return result?.user;
+      try {
+        const result = await httpClient.post("/api/auth/admin/login", { email, password });
+        if (result?.token) setToken(result.token);
+        return result?.user;
+      } catch (e) {
+        throw normalizeAxiosError(e);
+      }
     },
     clearSession: () => setToken(null),
     logout: (redirectTo) => {

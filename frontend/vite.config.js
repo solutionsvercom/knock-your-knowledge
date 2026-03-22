@@ -3,7 +3,6 @@ import { defineConfig, loadEnv } from "vite";
 import path from "node:path";
 import fs from "node:fs";
 
-/** Read PORT from backend/.env (strip UTF-8 BOM so regex always matches) */
 function readPortFromBackendEnv() {
   try {
     const envPath = path.resolve(process.cwd(), "../backend/.env");

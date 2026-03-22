@@ -39,14 +39,40 @@ const PORT = Number(process.env.PORT || 5000);
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
 
 const app = express();
+
+function originsFromEnv(raw) {
+  if (!raw || typeof raw !== "string") return [];
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+const allowedOrigins = [
+  ...new Set([
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://knockyourknowledge.com",
+    "https://www.knockyourknowledge.com",
+    ...originsFromEnv(process.env.FRONTEND_URL),
+  ]),
+];
+
 app.use(
   cors({
-    origin: "*",
+    origin(origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );
 app.use(express.json({ limit: "2mb" }));
+
 
 // Ensure upload dir exists
 const uploadAbs = path.resolve(process.cwd(), UPLOAD_DIR);
@@ -100,6 +126,32 @@ app.use("/api/certificates", certificatesRoutes);
 
 app.use("/api/users", authMiddleware.required, usersRoutes);
 
+const frontendPath = path.join(process.cwd(), "../frontend/dist");
+const frontendIndex = path.join(frontendPath, "index.html");
+const hasFrontendDist = fs.existsSync(frontendIndex);
+
+if (hasFrontendDist) {
+  app.use(express.static(frontendPath));
+
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api")) return next();
+    res.sendFile(frontendIndex, (err) => {
+      if (err) next(err);
+    });
+  });
+
+  app.use((req, res) => {
+    if (req.path.startsWith("/api")) {
+      return res.status(404).json({ message: "Not found" });
+    }
+    res.status(404).send("Not found");
+  });
+} else {
+  console.warn(
+    "[API] frontend/dist not found — run `npm run build -w kyk-frontend` to serve the SPA from Express. API routes still work."
+  );
+}
+
 // Basic error handler
 // eslint-disable-next-line no-unused-vars
 app.use((err, _req, res, _next) => {
@@ -150,19 +202,33 @@ const tryListen = (port) =>
     server.on("error", reject);
   });
 
-try {
-  await tryListen(PORT);
-  console.log(`API listening on http://localhost:${PORT}`);
-} catch (err) {
-  if (err?.code === "EADDRINUSE") {
-    console.error(
-      `[API] Port ${PORT} is already in use. Stop the other process (or the old nodemon), or set PORT in backend/.env to a free port.`
-    );
-    console.error(
-      `[API] If you ran seed:admin while dev was running, that is fine — but do not start two API servers on the same PORT.`
-    );
-    process.exit(1);
+async function listenWithRetry(port, maxAttempts = 6) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await tryListen(port);
+      console.log(`API listening on http://localhost:${port}`);
+      return;
+    } catch (err) {
+      if (err?.code === "EADDRINUSE" && attempt < maxAttempts) {
+        console.warn(`[API] Port ${port} busy (retry ${attempt}/${maxAttempts - 1} in 500ms)...`);
+        await new Promise((r) => setTimeout(r, 500));
+        continue;
+      }
+      if (err?.code === "EADDRINUSE") {
+        console.error(
+          `[API] Port ${port} is still in use. Stop the other process or set PORT in backend/.env.`
+        );
+        process.exit(1);
+      }
+      throw err;
+    }
   }
-  throw err;
+}
+
+try {
+  await listenWithRetry(PORT);
+} catch (err) {
+  console.error("[API] Failed to listen:", err?.message || err);
+  process.exit(1);
 }
 
