@@ -5,19 +5,19 @@ import { User } from "../models/User.js";
 
 loadServerEnv();
 
-/** Defaults match local test admin; override via server/.env in production. */
+/** Defaults match local test admin; override via backend/.env in production. */
 const email = (process.env.ADMIN_EMAIL || "vinay@gmail.com").trim().toLowerCase();
 const fullName = process.env.ADMIN_FULL_NAME || "Vinay";
 const password = (process.env.ADMIN_PASSWORD || "12345678").trim();
 
 if (!email || !password) {
-  console.error("ADMIN_EMAIL and ADMIN_PASSWORD must be non-empty (set in server/.env or use script defaults).");
+  console.error("ADMIN_EMAIL and ADMIN_PASSWORD must be non-empty (set in backend/.env or use script defaults).");
   process.exit(1);
 }
 
 if (!process.env.ADMIN_EMAIL?.trim() || !process.env.ADMIN_PASSWORD?.trim()) {
   console.warn(
-    "[seed:admin] Using default test credentials. Set ADMIN_EMAIL and ADMIN_PASSWORD in server/.env for production."
+    "[seed:admin] Using default test credentials. Set ADMIN_EMAIL and ADMIN_PASSWORD in backend/.env for production."
   );
 }
 
@@ -43,7 +43,7 @@ try {
 } catch (e) {
   console.error("[seed:admin] Failed:", e?.message || e);
   console.error(
-    "Check: MongoDB is running, MONGODB_URI in server/.env is correct, and you can write to the database."
+    "Check: MongoDB is running, MONGODB_URI in backend/.env is correct, and you can write to the database."
   );
   process.exit(1);
 }

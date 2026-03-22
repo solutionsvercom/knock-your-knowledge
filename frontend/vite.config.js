@@ -3,21 +3,21 @@ import { defineConfig, loadEnv } from 'vite'
 import path from 'node:path'
 import fs from 'node:fs'
 
-/** Read PORT from server/.env (strip UTF-8 BOM so regex always matches) */
+/** Read PORT from backend/.env (strip UTF-8 BOM so regex always matches) */
 function readPortFromServerEnv() {
   try {
-    const envPath = path.resolve(process.cwd(), 'server/.env')
+    const envPath = path.resolve(process.cwd(), '../backend/.env')
     let raw = fs.readFileSync(envPath, 'utf8')
     if (raw.charCodeAt(0) === 0xfeff) raw = raw.slice(1)
     const m = raw.match(/^\s*PORT\s*=\s*(\d+)/m)
     if (m) return Number(m[1])
   } catch {
-    // missing server/.env
+    // missing backend/.env
   }
   return null
 }
 
-/** Match server/.env PORT so /api proxy hits the same process as `npm --prefix server run dev` */
+/** Match backend/.env PORT so /api proxy hits the same process as the API workspace */
 function resolveApiProxyTarget(env = {}) {
   const fromEnv = env?.VITE_PROXY_TARGET
   if (fromEnv) return String(fromEnv).replace(/\/$/, '')

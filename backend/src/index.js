@@ -31,7 +31,7 @@ import resourcesRoutes from "./routes/resources.js";
 import certificatesRoutes from "./routes/certificates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-/** Always load server/.env even if the process was started from the repo root */
+/** Always load backend/.env even if the process was started from the repo root */
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 /** Comma-separated origins allowed (local + production). Example: http://localhost:5173,https://www.example.com */
@@ -44,7 +44,7 @@ function corsOriginOption(raw) {
   return parts;
 }
 
-/** Match vite.config.js proxy default and server/.env.example */
+/** Match frontend/vite.config.js proxy default and backend/.env.example */
 const PORT = Number(process.env.PORT || 5001);
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
 
@@ -148,7 +148,7 @@ try {
 } catch (e) {
   console.error("[MongoDB] Connection failed:", e?.message || e);
   console.error(
-    "[MongoDB] Start MongoDB locally or set MONGODB_URI in server/.env (see server/.env.example)"
+    "[MongoDB] Start MongoDB locally or set MONGODB_URI in backend/.env (see backend/.env.example)"
   );
   process.exit(1);
 }
@@ -165,7 +165,7 @@ try {
 } catch (err) {
   if (err?.code === "EADDRINUSE") {
     console.error(
-      `[API] Port ${PORT} is already in use. Stop the other process (or the old nodemon), or set PORT in server/.env to a free port.`
+      `[API] Port ${PORT} is already in use. Stop the other process (or the old nodemon), or set PORT in backend/.env to a free port.`
     );
     console.error(
       `[API] If you ran seed:admin while dev was running, that is fine — but do not start two API servers on the same PORT.`

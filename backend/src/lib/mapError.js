@@ -13,7 +13,7 @@ export function mapDbError(err) {
     name === "MongoWaitQueueTimeoutError"
   ) {
     const e = new Error(
-      "Database not reachable. Start MongoDB locally or fix MONGODB_URI in server/.env"
+      "Database not reachable. Start MongoDB locally or fix MONGODB_URI in backend/.env"
     );
     e.status = 503;
     e.code = "DB_UNAVAILABLE";
@@ -23,7 +23,7 @@ export function mapDbError(err) {
 
   if (name === "MongooseError" && /buffering timed out/i.test(String(err.message))) {
     const e = new Error(
-      "Database not reachable. Start MongoDB locally or fix MONGODB_URI in server/.env"
+      "Database not reachable. Start MongoDB locally or fix MONGODB_URI in backend/.env"
     );
     e.status = 503;
     e.code = "DB_UNAVAILABLE";

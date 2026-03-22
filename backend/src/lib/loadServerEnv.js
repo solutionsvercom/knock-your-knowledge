@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import dotenv from "dotenv";
 
 /**
- * Load `server/.env` no matter the current working directory (fixes seeds/CLI when run from repo root).
+ * Load `backend/.env` no matter the current working directory (fixes seeds/CLI when run from repo root).
  */
 export function loadServerEnv() {
   const dir = path.dirname(fileURLToPath(import.meta.url));

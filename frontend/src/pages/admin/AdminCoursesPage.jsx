@@ -23,7 +23,7 @@ export default function AdminCoursesPage() {
         <p className="text-sm" style={{ color: "#94a3b8" }}>
           <strong className="text-slate-200">Database only:</strong> this list shows courses stored in MongoDB — not the old static marketing catalog.
           Use <strong className="text-slate-300">Add Course</strong> for each new course, or run{" "}
-          <code className="text-violet-300 text-xs">npm --prefix server run seed:courses</code> to insert sample rows.
+          <code className="text-violet-300 text-xs">npm run seed:courses -w kyk-backend</code> to insert sample rows.
           <br />
           <strong className="text-slate-200">Live site:</strong> the public{" "}
           <Link to="/Courses" className="text-violet-400 hover:underline font-medium">
