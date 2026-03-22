@@ -1,8 +1,8 @@
 /**
- * KYK frontend API — Axios client; calls Express at API_BASE (see src/utils/apiBase.js).
+ * KYK frontend API — Axios client; `API_BASE` from src/config/api.js (runtime, no build env).
  */
 import axios from "axios";
-import { API_BASE } from "@/utils/apiBase";
+import { API_BASE } from "@/config/api";
 
 const getToken = () => {
   try {
@@ -88,10 +88,6 @@ httpClient.interceptors.response.use(
   }
 );
 
-/**
- * JSON request helper (returns parsed body only).
- * @param {string} path - e.g. `/courses` (becomes `${API_BASE}/api/courses`)
- */
 const http = async (path, { method = "GET", body, headers } = {}) => {
   const url = path.startsWith("/api/") ? path : `/api${path.startsWith("/") ? "" : "/"}${path}`;
   return httpClient.request({
@@ -116,26 +112,22 @@ export const api = {
   auth: {
     me: async () => http("/api/auth/me"),
     signup: async ({ email, full_name, password } = {}) => {
-      const result = await http("/api/auth/signup", {
-        method: "POST",
-        body: { email, full_name, password },
-      });
+      const result = await httpClient.post("/api/auth/signup", { email, full_name, password });
       if (result?.token) setToken(result.token);
       return result?.user;
     },
     register: async (body) => {
-      const result = await http("/api/auth/register", {
-        method: "POST",
-        body,
-      });
+      const result = await httpClient.post("/api/auth/register", body);
       if (result?.token) setToken(result.token);
       return result?.user;
     },
     login: async ({ email, password } = {}) => {
-      const result = await http("/api/auth/login", {
-        method: "POST",
-        body: { email, password },
-      });
+      const result = await httpClient.post("/api/auth/login", { email, password });
+      if (result?.token) setToken(result.token);
+      return result?.user;
+    },
+    adminLogin: async ({ email, password } = {}) => {
+      const result = await httpClient.post("/api/auth/admin/login", { email, password });
       if (result?.token) setToken(result.token);
       return result?.user;
     },

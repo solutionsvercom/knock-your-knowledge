@@ -34,8 +34,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** Always load backend/.env even if the process was started from the repo root */
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
-/** Match backend/.env.example and frontend/src/utils/apiBase.js */
-const PORT = Number(process.env.PORT || 5001);
+/** Match backend/.env.example and frontend/src/config/api.js (localhost:5000) */
+const PORT = Number(process.env.PORT || 5000);
 const UPLOAD_DIR = process.env.UPLOAD_DIR || "uploads";
 
 const app = express();

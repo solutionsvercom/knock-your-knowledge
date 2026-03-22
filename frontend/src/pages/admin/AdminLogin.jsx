@@ -27,7 +27,7 @@ export default function AdminLogin() {
     setLoading(true);
     setError(null);
     try {
-      const user = await api.auth.login({
+      const user = await api.auth.adminLogin({
         email: email.trim(),
         password,
       });

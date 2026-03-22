@@ -21,7 +21,7 @@ function resolveApiProxyTarget(env = {}) {
   const fromEnv = env?.VITE_PROXY_TARGET;
   if (fromEnv) return String(fromEnv).replace(/\/$/, "");
   const port = readPortFromBackendEnv();
-  return `http://localhost:${port ?? 5001}`;
+  return `http://localhost:${port ?? 5000}`;
 }
 
 export default defineConfig(({ mode }) => {
