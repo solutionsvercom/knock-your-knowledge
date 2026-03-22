@@ -2,9 +2,8 @@
 
 **Repo layout**
 
-- **`frontend/`** — Vite + React (UI, `src/`, Vercel `api/` proxy, `vercel.json`).
-- **`backend/`** — Express + MongoDB API.
-- **Root `package.json`** — npm workspaces; run `npm install` once at the repo root.
+- **`frontend/`** — Vite + React (UI, `src/`, Vercel `api/` proxy, `vercel.json`). Run `npm install` and `npm run dev` here.
+- **`backend/`** — Express + MongoDB API. Run `npm install` and `npm run dev` here.
 
 **Production (e.g. [knockyourknowledge.com](https://www.knockyourknowledge.com/))**
 
@@ -42,21 +41,23 @@ cp backend/.env.example backend/.env
 
 ### Install dependencies
 
-```bash
-npm install
-```
+Install in each app (two terminals or run sequentially):
 
-This installs **both** workspaces (`frontend` and `backend`) from the repo root.
+```bash
+cd backend && npm install
+cd ../frontend && npm install
+```
 
 ### Run locally (frontend + backend)
 
-```bash
-npm run dev
-```
+Use **two terminals**:
 
-This runs **`npm run kill:api`** first (frees the port from **`backend/.env`**, default 5001/5002) so a leftover Node process cannot block the API and make nodemon show **“app crashed”** / **Port already in use**. To free the port manually: `npm run kill:api`.
+1. **API:** `cd backend && npm run dev`
+2. **Web:** `cd frontend && npm run dev`
 
-**API returns 500 on `/api/courses` etc.?** In a terminal run `curl http://localhost:5001/api/health` (use the same port as in the server log). You should see `"ok":true` and `"db":"connected"`. If not, start **MongoDB** locally or set **`MONGODB_URI`** in **`backend/.env`**. The API loads **`backend/.env`** automatically (even if you start Node from the repo root). Check the **terminal where the API runs** for `[API]` error logs.
+If the API shows **“Port already in use”**, stop any other process on that port (see **`PORT`** in **`backend/.env`**, default 5001).
+
+**API returns 500 on `/api/courses` etc.?** In a terminal run `curl http://localhost:5001/api/health` (use the same port as in the server log). You should see `"ok":true` and `"db":"connected"`. If not, start **MongoDB** locally or set **`MONGODB_URI`** in **`backend/.env`**. The API loads **`backend/.env`** when started from **`backend/`**. Check the **terminal where the API runs** for `[API]` error logs.
 
 ### Login
 
@@ -86,22 +87,22 @@ Deploy frontend and backend as separate services:
   Same: **`VITE_API_BASE_URL`** at build time, or your host’s env UI.
 
 - **Backend service**
-  - Install: `npm install` (from repo root, workspaces) or `npm install` inside `backend/`
-  - Start: `npm run start:server`
+  - Install: `npm install` inside `backend/`
+  - Start: `npm run start` (from `backend/`)
   - Required env (`backend/.env`): `PORT`, `MONGODB_URI`, `JWT_SECRET`, **`FRONTEND_URL`** (comma-separated if you use multiple site origins)
 
 ## Admin seed
 
 **Default test administrator** (used if you omit env vars): `vinay@gmail.com` / `12345678`.  
-Run once so the user exists in MongoDB (uses **`backend/.env`** for `MONGODB_URI` even when you run the command from the repo root):
+Run once so the user exists in MongoDB (from **`backend/`**, uses **`backend/.env`** for `MONGODB_URI`):
 
 ```bash
-npm run seed:admin -w kyk-backend
+cd backend && npm run seed:admin
 ```
 
 If the script prints an error, check MongoDB is running and `MONGODB_URI` in **`backend/.env`** is correct. You can run seed while `npm run dev` is running — that does not block the API.
 
-If **admin login** returns “Internal Server Error”, confirm **`npm run dev`** shows `API listening on http://localhost:PORT` (not “Port … already in use”). Only one process should listen on that `PORT`. Vite’s proxy must target the same port (see **`frontend/vite.config.js`**, which reads `PORT` from **`backend/.env`**).
+If **admin login** returns “Internal Server Error”, confirm **`npm run dev`** in **`backend/`** shows `API listening on http://localhost:PORT` (not “Port … already in use”). Only one process should listen on that `PORT`. Vite’s proxy must target the same port (see **`frontend/vite.config.js`**, which reads `PORT` from **`backend/.env`**).
 
 Optional — override in `backend/.env`:
 
@@ -109,14 +110,14 @@ Optional — override in `backend/.env`:
 - `ADMIN_FULL_NAME`
 - `ADMIN_PASSWORD`
 
-Then run `npm run seed:admin -w kyk-backend` again to update that account.
+Then run `npm run seed:admin` from **`backend/`** again to update that account.
 
 **Admin UI URL:** `http://localhost:5173/admin/login` (not linked from the public site).
 
 **Admin course list** only shows what is stored in MongoDB (not the old static marketing catalog). To add several sample rows at once:
 
 ```bash
-npm run seed:courses -w kyk-backend
+cd backend && npm run seed:courses
 ```
 
 Titles starting with `Demo:` are skipped on later runs if they already exist.

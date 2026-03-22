@@ -148,7 +148,7 @@ if (hasFrontendDist) {
   });
 } else {
   console.warn(
-    "[API] frontend/dist not found — run `npm run build -w kyk-frontend` to serve the SPA from Express. API routes still work."
+    "[API] frontend/dist not found — run `npm run build` in `frontend/` to serve the SPA from Express. API routes still work."
   );
 }
 

@@ -37,7 +37,7 @@ export default function AdminLogin() {
         api.auth.clearSession();
         setError(
           "This account is not an administrator. Student and other accounts cannot open the admin panel. " +
-            "Sign in here only with an admin account (create one with: npm run seed:admin -w kyk-backend, or set role to admin in the database)."
+            "Sign in here only with an admin account (create one with: cd backend && npm run seed:admin, or set role to admin in the database)."
         );
         return;
       }
@@ -75,7 +75,7 @@ export default function AdminLogin() {
           {import.meta.env.DEV ? (
             <p className="mt-3 text-xs text-slate-500 rounded-md border border-slate-800 bg-slate-900/80 px-3 py-2">
               <strong className="text-slate-400">Local test:</strong> run{" "}
-              <code className="text-violet-300">npm run seed:admin -w kyk-backend</code>, then sign in as{" "}
+              <code className="text-violet-300">cd backend && npm run seed:admin</code>, then sign in as{" "}
               <code className="text-slate-300">vinay@gmail.com</code> / <code className="text-slate-300">12345678</code>
               .
             </p>
