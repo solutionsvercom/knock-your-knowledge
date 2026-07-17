@@ -29,7 +29,9 @@ Open **http://localhost:5173**
 
 ### Deploy (e.g. Vercel)
 
-Set the project **Root Directory** to **`frontend`**, then deploy. SPA rewrites are in `frontend/vercel.json`.
+Preferred: set the project **Root Directory** to **`frontend`**, then redeploy.  
+If Root Directory stays the repo root, `vercel.json` at the root builds `frontend/` for you.  
+`vite` and Tailwind are in **dependencies** so production installs include the build tools.
 
 ### Project layout
 
