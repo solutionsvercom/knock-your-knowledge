@@ -1,8 +1,8 @@
 /** Public contact — update these as needed. */
-export const WHATSAPP_APPLY_NUMBER = "919876543210";
+export const WHATSAPP_APPLY_NUMBER = "918384045913";
 export const CONTACT_EMAIL = "knockyourknowledge@gmail.com";
-export const CONTACT_PHONE = "+91 98765 43210";
-export const CONTACT_PHONE_TEL = "+919876543210";
+export const CONTACT_PHONE = "+91 83840 45913";
+export const CONTACT_PHONE_TEL = "+918384045913";
 
 export function whatsappApplyUrl(programName) {
   const message = `Hi, I am interested in applying for the "${programName}" internship program at Knock Your Knowledge. Please share the next steps.`;
