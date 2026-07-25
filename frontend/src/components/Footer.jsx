@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "../utils";
-import { GraduationCap, Instagram, Youtube, ArrowRight, Mail, Phone, ExternalLink } from "lucide-react";
+import { Instagram, Youtube, ArrowRight, Mail, Phone, ExternalLink } from "lucide-react";
 import {
   whatsappGetStartedUrl,
   CONTACT_EMAIL,
   CONTACT_PHONE,
   CONTACT_PHONE_TEL,
+  SOCIAL_INSTAGRAM_URL,
+  SOCIAL_FACEBOOK_URL,
+  KYK_LOGO_SRC,
 } from "@/config/contact";
 
 function FacebookIcon({ className }) {
@@ -29,8 +32,8 @@ const companyLinks = [
 ];
 
 const socials = [
-  { icon: Instagram, href: "#", label: "Instagram", color: "rgba(236,72,153,0.8)" },
-  { icon: FacebookIcon, href: "#", label: "Facebook", color: "rgba(59,130,246,0.8)" },
+  { icon: Instagram, href: SOCIAL_INSTAGRAM_URL, label: "Instagram", color: "rgba(236,72,153,0.8)" },
+  { icon: FacebookIcon, href: SOCIAL_FACEBOOK_URL, label: "Facebook", color: "rgba(59,130,246,0.8)" },
   { icon: Youtube, href: "#", label: "YouTube", color: "rgba(239,68,68,0.8)" },
 ];
 
@@ -49,15 +52,12 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 mb-5">
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, #7c3aed, #2563eb)",
-                  boxShadow: "0 0 18px rgba(124,58,237,0.5)",
-                }}
-              >
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
+              <img
+                src={KYK_LOGO_SRC}
+                alt="Knock Your Knowledge"
+                className="w-12 h-12 rounded-full object-cover"
+                style={{ boxShadow: "0 0 18px rgba(251,146,60,0.35)" }}
+              />
               <span
                 className="text-xl font-black"
                 style={{

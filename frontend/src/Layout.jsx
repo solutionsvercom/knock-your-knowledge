@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
-import { GraduationCap, Menu, X, Sparkles } from "lucide-react";
+import { Menu, X, Sparkles } from "lucide-react";
 import Footer from "@/components/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 import GetStartedLink from "@/components/navigation/GetStartedLink";
+import { KYK_LOGO_SRC } from "@/config/contact";
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -30,12 +31,14 @@ export default function Layout({ children, currentPageName }) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-12 md:h-16">
-            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                style={{ background: "linear-gradient(135deg, #7c3aed, #2563eb)", boxShadow: "0 0 16px rgba(124,58,237,0.5)" }}>
-                <GraduationCap className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-black"
+            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0">
+              <img
+                src={KYK_LOGO_SRC}
+                alt="Knock Your Knowledge"
+                className="w-10 h-10 md:w-11 md:h-11 rounded-full object-cover flex-shrink-0"
+                style={{ boxShadow: "0 0 16px rgba(251,146,60,0.4)" }}
+              />
+              <span className="text-base sm:text-xl font-black truncate"
                 style={{ fontFamily: "'Poppins', sans-serif", background: "linear-gradient(90deg, #a78bfa, #60a5fa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
                 Knock Your Knowledge
               </span>
