@@ -712,7 +712,7 @@ export const api = {
     },
     createCoursePayment: async ({ course_id, amount }) => {
       await delay();
-      const u = requireUser();
+      const u = currentUser();
       const list = read(KEYS.payments, []);
       const row = {
         id: uid("pay"),
@@ -720,8 +720,8 @@ export const api = {
         course_id,
         amount: Number(amount) || 0,
         status: "completed",
-        user_id: u.id,
-        user_email: u.email,
+        user_id: u?.id || null,
+        user_email: u?.email || "guest@checkout.local",
         created_date: new Date().toISOString(),
       };
       list.unshift(row);
@@ -730,7 +730,7 @@ export const api = {
     },
     createBundlePurchase: async ({ bundle_id }) => {
       await delay();
-      const u = requireUser();
+      const u = currentUser();
       const bundle = read(KEYS.bundles, DEMO_BUNDLES).find((b) => b.id === bundle_id);
       const list = read(KEYS.payments, []);
       const row = {
@@ -739,8 +739,8 @@ export const api = {
         bundle_id,
         amount: bundle?.price || 0,
         status: "completed",
-        user_id: u.id,
-        user_email: u.email,
+        user_id: u?.id || null,
+        user_email: u?.email || "guest@checkout.local",
         created_date: new Date().toISOString(),
       };
       list.unshift(row);
@@ -749,7 +749,7 @@ export const api = {
     },
     createInternshipPayment: async ({ internship_id, amount, title }) => {
       await delay();
-      const u = requireUser();
+      const u = currentUser();
       const list = read(KEYS.payments, []);
       const row = {
         id: uid("pay"),
@@ -758,8 +758,8 @@ export const api = {
         course_title: title || "",
         amount: Number(amount) || 3999,
         status: "completed",
-        user_id: u.id,
-        user_email: u.email,
+        user_id: u?.id || null,
+        user_email: u?.email || "guest@checkout.local",
         created_date: new Date().toISOString(),
       };
       list.unshift(row);

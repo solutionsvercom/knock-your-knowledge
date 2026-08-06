@@ -102,11 +102,9 @@ const AuthenticatedApp = () => {
       <Route
         path="/Checkout"
         element={
-          <RequireAuth>
-            <LayoutWrapper currentPageName="Checkout">
-              <Checkout />
-            </LayoutWrapper>
-          </RequireAuth>
+          <LayoutWrapper currentPageName="Checkout">
+            <Checkout />
+          </LayoutWrapper>
         }
       />
       <Route path="*" element={<PageNotFound />} />

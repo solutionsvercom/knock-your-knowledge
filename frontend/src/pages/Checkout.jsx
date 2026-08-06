@@ -25,7 +25,11 @@ export default function Checkout() {
             course_id: line.id,
             amount: Number(line.price) || 0,
           });
-          await api.enrollments.create({ course_id: line.id });
+          try {
+            await api.enrollments.create({ course_id: line.id });
+          } catch {
+            // Guest checkout does not create enrollments.
+          }
         } else if (line.type === "bundle") {
           await api.payments.createBundlePurchase({ bundle_id: line.id });
         } else if (line.type === "internship") {
@@ -39,7 +43,7 @@ export default function Checkout() {
       clear();
     },
     onSuccess: () => {
-      navigate("/Dashboard");
+      navigate("/Internships");
     },
   });
 
