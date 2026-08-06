@@ -86,7 +86,9 @@ export default function InternshipsPreview({
                     <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {item.location}</span>
                     <Badge className={`${typeColors[item.work_type]} border-0 text-xs`}>{item.work_type}</Badge>
                     <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {item.duration}</span>
-                    <span className="flex items-center gap-1 text-green-600 font-medium"><DollarSign className="w-3.5 h-3.5" /> {item.stipend}</span>
+                    <span className="flex items-center gap-1 text-green-600 font-medium">
+                      <DollarSign className="w-3.5 h-3.5" /> Internship Fee: {item.stipend || "₹3999/-"}
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">
                     {item.skills?.map((skill) => (

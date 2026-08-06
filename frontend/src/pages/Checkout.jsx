@@ -3,13 +3,18 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { useCart } from "@/lib/CartContext";
-import { Trash2, ShoppingBag, ArrowLeft, Loader2 } from "lucide-react";
+import { Trash2, ShoppingBag, ArrowLeft, Loader2, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+function formatInr(amount) {
+  return `₹${(Number(amount) || 0).toLocaleString("en-IN")}/-`;
+}
 
 export default function Checkout() {
   const { items, removeItem, clear, total } = useCart();
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+  const [method, setMethod] = useState("upi");
 
   const checkout = useMutation({
     mutationFn: async () => {
@@ -36,18 +41,26 @@ export default function Checkout() {
     <div className="min-h-screen" style={{ background: "#020817" }}>
       <div className="max-w-2xl mx-auto px-4 py-12">
         <Link
-          to="/Courses"
+          to="/Internships"
           className="inline-flex items-center gap-2 text-sm mb-8"
           style={{ color: "#94a3b8" }}
         >
-          <ArrowLeft className="w-4 h-4" /> Back to catalog
+          <ArrowLeft className="w-4 h-4" /> Back to internships
         </Link>
 
-        <h1 className="text-3xl font-black text-white mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-          Checkout
-        </h1>
+        <div className="flex items-center gap-3 mb-2">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)" }}
+          >
+            <CreditCard className="w-5 h-5" style={{ color: "#a78bfa" }} />
+          </div>
+          <h1 className="text-3xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Payment Gateway
+          </h1>
+        </div>
         <p className="text-sm mb-8" style={{ color: "#64748b" }}>
-          Review your cart and complete purchase (demo — payments recorded as completed).
+          Review your cart and complete payment securely.
         </p>
 
         {items.length === 0 ? (
@@ -58,12 +71,12 @@ export default function Checkout() {
             <ShoppingBag className="w-12 h-12 mx-auto mb-4 opacity-30" style={{ color: "#64748b" }} />
             <p className="text-slate-400 mb-4">Your cart is empty.</p>
             <Button asChild>
-              <Link to="/Courses">Browse courses</Link>
+              <Link to="/Internships">Browse internships & bundles</Link>
             </Button>
           </div>
         ) : (
           <>
-            <ul className="space-y-3 mb-8">
+            <ul className="space-y-3 mb-6">
               {items.map((line) => (
                 <li
                   key={`${line.type}-${line.id}`}
@@ -76,7 +89,7 @@ export default function Checkout() {
                     </p>
                     <p className="text-white font-semibold truncate">{line.title}</p>
                   </div>
-                  <p className="text-white font-bold">${Number(line.price).toFixed(2)}</p>
+                  <p className="text-white font-bold">{formatInr(line.price)}</p>
                   <button
                     type="button"
                     aria-label="Remove"
@@ -89,9 +102,39 @@ export default function Checkout() {
               ))}
             </ul>
 
+            <div
+              className="rounded-xl border p-4 mb-6"
+              style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(255,255,255,0.08)" }}
+            >
+              <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#a78bfa" }}>
+                Payment method
+              </p>
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { id: "upi", label: "UPI" },
+                  { id: "card", label: "Card" },
+                  { id: "netbanking", label: "Net Banking" },
+                ].map((m) => (
+                  <button
+                    key={m.id}
+                    type="button"
+                    onClick={() => setMethod(m.id)}
+                    className="h-10 rounded-lg text-sm font-medium transition-all"
+                    style={{
+                      background: method === m.id ? "rgba(124,58,237,0.2)" : "rgba(255,255,255,0.03)",
+                      border: method === m.id ? "1px solid rgba(167,139,250,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                      color: method === m.id ? "#e2e8f0" : "#64748b",
+                    }}
+                  >
+                    {m.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="flex items-center justify-between mb-6 pt-4 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
               <span className="text-slate-400">Total</span>
-              <span className="text-2xl font-black text-white">${total.toFixed(2)}</span>
+              <span className="text-2xl font-black text-white">{formatInr(total)}</span>
             </div>
 
             {error && (
@@ -105,18 +148,23 @@ export default function Checkout() {
               disabled={checkout.isPending}
               onClick={() => {
                 checkout.mutate(undefined, {
-                  onError: (e) => setError(e?.message || "Checkout failed"),
+                  onError: (e) => setError(e?.message || "Payment failed"),
                 });
               }}
             >
               {checkout.isPending ? (
                 <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Processing…
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Processing payment…
                 </>
               ) : (
-                "Complete purchase"
+                `Pay ${formatInr(total)}`
               )}
             </Button>
+
+            <p className="flex items-center justify-center gap-1.5 text-xs mt-4" style={{ color: "#475569" }}>
+              <ShieldCheck className="w-3.5 h-3.5" style={{ color: "#34d399" }} />
+              Secure demo checkout — payment recorded on completion
+            </p>
           </>
         )}
       </div>

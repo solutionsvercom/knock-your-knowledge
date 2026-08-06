@@ -87,7 +87,7 @@ export const DEMO_BUNDLES = [
     name: "Developer Starter Pack",
     title: "Developer Starter Pack",
     description: "Python, MERN Stack, and Data Science — everything to launch as a developer.",
-    price: 129,
+    price: 3999,
     course_ids: DEMO_COURSES.filter((c) =>
       ["Python Programming", "MERN Stack Development", "Data Science"].includes(c.title)
     ).map((c) => c.id),
@@ -99,7 +99,7 @@ export const DEMO_BUNDLES = [
     name: "AI Mastery Bundle",
     title: "AI Mastery Bundle",
     description: "AI Fundamentals, Prompt Engineering, and top AI productivity tools.",
-    price: 99,
+    price: 3999,
     course_ids: DEMO_COURSES.filter((c) =>
       [
         "Artificial Intelligence Fundamentals",
@@ -115,7 +115,7 @@ export const DEMO_BUNDLES = [
     name: "Digital Marketing Pro",
     title: "Digital Marketing Pro",
     description: "SEO, social growth, and AI marketing tools in one career track.",
-    price: 89,
+    price: 3999,
     course_ids: DEMO_COURSES.filter((c) =>
       [
         "SEO — Search Engine Optimization",
@@ -138,7 +138,7 @@ export const DEMO_INTERNSHIPS = [
     location: "Remote / Hybrid",
     work_type: "hybrid",
     duration: "3–6 months",
-    stipend: "Performance-based",
+    stipend: "₹3999/-",
     skills: ["Python", "React", "Node.js", "MongoDB", "Git"],
     deadline: "2026-12-31T00:00:00.000Z",
     applicants: 248,
@@ -155,7 +155,7 @@ export const DEMO_INTERNSHIPS = [
     location: "Remote",
     work_type: "remote",
     duration: "3–6 months",
-    stipend: "Performance-based",
+    stipend: "₹3999/-",
     skills: ["Prompt Engineering", "ChatGPT", "Claude", "AI Tools", "NLP"],
     deadline: "2026-12-31T00:00:00.000Z",
     applicants: 312,
@@ -172,7 +172,7 @@ export const DEMO_INTERNSHIPS = [
     location: "Remote / Hybrid",
     work_type: "hybrid",
     duration: "3–6 months",
-    stipend: "Performance-based",
+    stipend: "₹3999/-",
     skills: ["SQL", "Python", "Power BI", "Tableau", "Excel"],
     deadline: "2026-12-31T00:00:00.000Z",
     applicants: 198,
@@ -189,7 +189,7 @@ export const DEMO_INTERNSHIPS = [
     location: "Remote",
     work_type: "remote",
     duration: "3–6 months",
-    stipend: "Performance-based",
+    stipend: "₹3999/-",
     skills: ["SEO", "Google Ads", "Social Media", "Analytics", "Content"],
     deadline: "2026-12-31T00:00:00.000Z",
     applicants: 276,
