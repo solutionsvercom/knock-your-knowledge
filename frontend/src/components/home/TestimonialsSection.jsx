@@ -4,46 +4,51 @@ import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Aarav Mehta",
-    role: "Software Engineer at Google",
+    name: "Vinayak",
+    role: "MERN Developer at Infosys",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=120&fit=crop",
-    feedback: "Knock Your Knowledge completely changed how I learn. The courses explain concepts so well — I went from struggling with DSA to cracking a Google interview in 4 months!",
+    feedback:
+      "Knock Your Knowledge completely changed how I learn. The internship courses and mentor support helped me build real MERN projects and land my role at Infosys.",
     rating: 5,
     glow: "rgba(59,130,246,0.4)",
     accent: "#60a5fa",
   },
   {
-    name: "Priya Sharma",
-    role: "Data Scientist at Amazon",
+    name: "Shakshi",
+    role: "TCS Developer",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=120&fit=crop",
-    feedback: "The personalized learning path is insane! Within 6 months, I went from a complete beginner to landing a data science role at Amazon. Worth every rupee.",
+    feedback:
+      "The personalized learning path is amazing. Within months I went from beginner projects to interview-ready skills and joined TCS as a developer. Worth every rupee.",
     rating: 5,
     glow: "rgba(167,139,250,0.4)",
     accent: "#a78bfa",
   },
   {
-    name: "Marcus Johnson",
-    role: "Product Designer at Airbnb",
+    name: "Anand",
+    role: "Digital Marketing",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=120&fit=crop",
-    feedback: "Live doubt sessions saved me so many times. Having an expert available when you're stuck at 2 AM is a game-changer. Highly recommend for serious learners.",
+    feedback:
+      "Live sessions and practical campaigns made digital marketing click for me. KYK gave me hands-on experience I could show clients and employers confidently.",
     rating: 5,
     glow: "rgba(16,185,129,0.4)",
     accent: "#34d399",
   },
   {
-    name: "Sneha Iyer",
-    role: "Full-Stack Dev at Razorpay",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&h=120&fit=crop",
-    feedback: "I got my internship through SkyBrisk's partner program! The courses gave me real project experience that I could actually show in interviews. Amazing platform.",
+    name: "Rishav",
+    role: "Python Developer",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop",
+    feedback:
+      "I got my internship through KYK's partner programs. The Python projects gave me real experience I could show in interviews. Amazing platform.",
     rating: 5,
     glow: "rgba(249,115,22,0.4)",
     accent: "#fb923c",
   },
   {
-    name: "Rishi Kumar",
-    role: "ML Engineer at Microsoft",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&h=120&fit=crop",
-    feedback: "The gamification keeps me motivated every single day. Hitting streaks, earning badges — it makes studying feel like a game. Best investment in my career.",
+    name: "Harsh",
+    role: "Graphic Designer",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop",
+    feedback:
+      "The design-focused learning and mentor feedback kept me motivated every day. Building a strong portfolio through KYK helped me grow as a graphic designer.",
     rating: 5,
     glow: "rgba(236,72,153,0.4)",
     accent: "#f472b6",
