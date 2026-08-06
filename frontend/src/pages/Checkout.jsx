@@ -28,6 +28,12 @@ export default function Checkout() {
           await api.enrollments.create({ course_id: line.id });
         } else if (line.type === "bundle") {
           await api.payments.createBundlePurchase({ bundle_id: line.id });
+        } else if (line.type === "internship") {
+          await api.payments.createInternshipPayment({
+            internship_id: line.id,
+            amount: Number(line.price) || 3999,
+            title: line.title,
+          });
         }
       }
       clear();
@@ -85,7 +91,7 @@ export default function Checkout() {
                 >
                   <div className="flex-1 min-w-0">
                     <p className="text-xs uppercase font-semibold mb-0.5" style={{ color: "#64748b" }}>
-                      {line.type === "bundle" ? "Bundle" : "Course"}
+                      {line.type === "bundle" ? "Bundle" : line.type === "internship" ? "Internship" : "Course"}
                     </p>
                     <p className="text-white font-semibold truncate">{line.title}</p>
                   </div>

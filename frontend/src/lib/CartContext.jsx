@@ -3,7 +3,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 const STORAGE_KEY = "kyk_cart_v1";
 
 /**
- * @typedef {{ type: 'course' | 'bundle'; id: string; title: string; price: number; thumbnail?: string }} CartItem
+ * @typedef {{ type: 'course' | 'bundle' | 'internship'; id: string; title: string; price: number; thumbnail?: string }} CartItem
  */
 
 function loadCart() {

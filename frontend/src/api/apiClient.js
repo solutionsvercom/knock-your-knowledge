@@ -747,6 +747,25 @@ export const api = {
       write(KEYS.payments, list);
       return row;
     },
+    createInternshipPayment: async ({ internship_id, amount, title }) => {
+      await delay();
+      const u = requireUser();
+      const list = read(KEYS.payments, []);
+      const row = {
+        id: uid("pay"),
+        type: "internship",
+        internship_id,
+        course_title: title || "",
+        amount: Number(amount) || 3999,
+        status: "completed",
+        user_id: u.id,
+        user_email: u.email,
+        created_date: new Date().toISOString(),
+      };
+      list.unshift(row);
+      write(KEYS.payments, list);
+      return row;
+    },
     updateStatus: async (id, data) => {
       await delay();
       requireUser();

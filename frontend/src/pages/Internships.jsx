@@ -16,7 +16,6 @@ import {
   Users,
   ExternalLink,
   ShoppingCart,
-  Package,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -36,15 +35,11 @@ const STATS = [
   { value: "4", label: "Programs", color: "#06b6d4" },
 ];
 
-const INTERNSHIP_FEE = "₹3999/-";
+const INTERNSHIP_FEE_LABEL = "₹3999/-";
+const INTERNSHIP_FEE_AMOUNT = 3999;
 
 function applyOnWhatsApp(programTitle) {
   window.open(whatsappApplyUrl(programTitle), "_blank", "noopener,noreferrer");
-}
-
-function formatInr(amount) {
-  const n = Number(amount) || 0;
-  return `₹${n.toLocaleString("en-IN")}/-`;
 }
 
 export default function Internships() {
@@ -63,19 +58,7 @@ export default function Internships() {
     queryFn: () => api.internships.list(),
   });
 
-  const {
-    data: bundlesRaw,
-    isLoading: bundlesLoading,
-    isError: bundlesError,
-    error: bundlesErr,
-    refetch: refetchBundles,
-  } = useQuery({
-    queryKey: ["internship-bundles"],
-    queryFn: () => api.bundles.list(),
-  });
-
   const internships = asArray(internshipsRaw);
-  const bundles = asArray(bundlesRaw).filter((b) => b.status !== "draft");
 
   const filtered = internships.filter((item) => {
     if (!search) return true;
@@ -87,13 +70,13 @@ export default function Internships() {
     );
   });
 
-  const addBundleToCart = (bundle) => {
+  const addInternshipToCart = (item) => {
     addItem({
-      type: "bundle",
-      id: bundle.id,
-      title: bundle.title || bundle.name,
-      price: Number(bundle.price) || 3999,
-      thumbnail: bundle.thumbnail || "",
+      type: "internship",
+      id: item.id,
+      title: item.title,
+      price: INTERNSHIP_FEE_AMOUNT,
+      thumbnail: item.image || item.company_logo || "",
     });
     navigate("/Checkout");
   };
@@ -261,7 +244,7 @@ export default function Internships() {
                       </span>
                       <span className="flex items-center gap-1 font-semibold" style={{ color: "#34d399" }}>
                         <DollarSign className="w-3.5 h-3.5" />
-                        Internship Fee: {item.stipend || INTERNSHIP_FEE}
+                        Internship Fee: {item.stipend || INTERNSHIP_FEE_LABEL}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-3">
@@ -293,6 +276,18 @@ export default function Internships() {
                     >
                       Apply Now <ExternalLink className="w-4 h-4" />
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => addInternshipToCart(item)}
+                      className="w-full lg:w-auto min-h-[48px] px-6 rounded-xl text-base font-semibold text-white transition-all hover:scale-105 inline-flex items-center justify-center gap-2"
+                      style={{
+                        background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                        boxShadow: "0 0 16px rgba(124,58,237,0.35)",
+                      }}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      Add to cart
+                    </button>
                     <div className="text-xs text-center mt-1" style={{ color: "#334155" }}>
                       {item.deadline && (
                         <span className="flex items-center gap-1 justify-center">
@@ -314,86 +309,6 @@ export default function Internships() {
             </p>
           ) : null}
         </ApiQueryStatus>
-
-        {/* Course bundles */}
-        <div className="mt-16 pt-10 border-t" style={{ borderColor: "rgba(167,139,250,0.15)" }}>
-          <div className="mb-8">
-            <p className="text-xs font-semibold uppercase tracking-widest mb-2" style={{ color: "#a78bfa" }}>
-              Course Bundles
-            </p>
-            <h2 className="text-2xl lg:text-3xl font-black text-white mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-              Save with curated packs
-            </h2>
-            <p className="text-sm" style={{ color: "#475569" }}>
-              Add a bundle to cart and complete payment on the secure checkout page.
-            </p>
-          </div>
-
-          <ApiQueryStatus
-            isLoading={bundlesLoading}
-            isError={bundlesError}
-            error={bundlesErr}
-            onRetry={() => refetchBundles()}
-            loadingLabel="Loading bundles…"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-              {bundles.map((bundle) => (
-                <div
-                  key={bundle.id}
-                  className="rounded-2xl p-6 flex flex-col transition-all duration-300 hover:scale-[1.01]"
-                  style={{
-                    background: "rgba(255,255,255,0.03)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)";
-                    e.currentTarget.style.boxShadow = "0 0 28px rgba(167,139,250,0.1)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                >
-                  <div
-                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-4"
-                    style={{
-                      background: "rgba(167,139,250,0.12)",
-                      border: "1px solid rgba(167,139,250,0.25)",
-                    }}
-                  >
-                    <Package className="w-5 h-5" style={{ color: "#a78bfa" }} />
-                  </div>
-                  <h3 className="text-lg font-bold text-white mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                    {bundle.title || bundle.name}
-                  </h3>
-                  <p className="text-sm flex-1 mb-4" style={{ color: "#64748b" }}>
-                    {bundle.description}
-                  </p>
-                  <p className="text-xl font-black mb-4" style={{ color: "#34d399", fontFamily: "'Poppins', sans-serif" }}>
-                    {formatInr(bundle.price || 3999)}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => addBundleToCart(bundle)}
-                    className="w-full min-h-[48px] px-5 rounded-xl text-sm font-semibold text-white transition-all hover:scale-[1.02] inline-flex items-center justify-center gap-2"
-                    style={{
-                      background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
-                      boxShadow: "0 0 18px rgba(124,58,237,0.35)",
-                    }}
-                  >
-                    <ShoppingCart className="w-4 h-4" />
-                    Add to cart
-                  </button>
-                </div>
-              ))}
-            </div>
-            {!bundlesLoading && !bundlesError && bundles.length === 0 ? (
-              <p className="text-center py-10 text-sm" style={{ color: "#475569" }}>
-                No bundles available right now.
-              </p>
-            ) : null}
-          </ApiQueryStatus>
-        </div>
       </div>
     </div>
   );
