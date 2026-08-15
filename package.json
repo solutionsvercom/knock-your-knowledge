@@ -3,6 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "KYK website — Express serves the Vite frontend from backend/public",
+  "main": "backend/src/server.js",
   "engines": {
     "node": ">=18"
   },
