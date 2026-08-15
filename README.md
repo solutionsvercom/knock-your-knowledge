@@ -53,11 +53,12 @@ Pushing to `main` on GitHub rebuilds and restarts the site when Hostinger is con
 1. In hPanel go to **Websites** → **Add Website** (or open the existing site) → **Node.js web app**.
 2. Choose **Import Git repository** → connect GitHub → select `knock-your-knowledge`.
 3. Use these settings:
-   - **Node.js version:** 20
-   - **Root directory:** empty (repo root)
+   - **Node.js version:** 20 (or 18.x)
+   - **Root directory:** `./`
+   - **Package manager:** npm
    - **Build command:** `npm run build`
-   - **Entry file / start:** `backend/src/server.js`
-   - **Output directory:** `backend/public` (if the form asks for one)
+   - **Entry file:** `backend/src/server.js`
+   - **Output directory:** `backend/public`
 4. Add environment variables (do **not** put these in git):
 
 | Variable | Value |

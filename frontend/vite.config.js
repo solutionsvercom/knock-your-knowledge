@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
   const port = Number(env.VITE_API_PROXY_PORT) || backendPort();
 
   return {
-    logLevel: "error",
+    logLevel: "info",
     plugins: [react()],
     resolve: {
       alias: {
@@ -30,6 +30,8 @@ export default defineConfig(({ mode }) => {
     build: {
       outDir: path.resolve(process.cwd(), "../backend/public"),
       emptyOutDir: true,
+      reportCompressedSize: false,
+      chunkSizeWarningLimit: 2000,
     },
     server: {
       proxy: {
