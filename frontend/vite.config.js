@@ -27,6 +27,10 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(process.cwd(), "src"),
       },
     },
+    build: {
+      outDir: path.resolve(process.cwd(), "../backend/public"),
+      emptyOutDir: true,
+    },
     server: {
       proxy: {
         "/api": {

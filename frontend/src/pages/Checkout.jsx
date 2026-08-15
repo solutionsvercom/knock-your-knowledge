@@ -236,7 +236,7 @@ export default function Checkout() {
         setError("Payment was cancelled. You can try again anytime.");
       } else if (/whitelist|not enabled or approved/i.test(msg)) {
         setError(
-          "Cashfree live checkout cannot run on localhost. Open Merchant Dashboard → Developers → Whitelisting and add your live HTTPS website (example: https://yourdomain.com). Localhost and ports like :5173 are not allowed. After approval, pay from that live URL."
+          "Cashfree live checkout must run on https://knockyourknowledge.com. In Merchant Dashboard → Developers → Whitelisting, add https://knockyourknowledge.com (and https://www.knockyourknowledge.com). Localhost is not allowed."
         );
       } else {
         setError(msg);

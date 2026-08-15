@@ -1,0 +1,15 @@
+{
+  "name": "knock-your-knowledge",
+  "private": true,
+  "version": "1.0.0",
+  "description": "KYK website — Express serves the Vite frontend from backend/public",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "npm install --prefix frontend --include=dev && npm install --prefix backend && npm run build --prefix frontend",
+    "start": "node backend/src/server.js",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend"
+  }
+}

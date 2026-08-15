@@ -3,6 +3,7 @@ import { PaymentOrder } from "../models/PaymentOrder.js";
 import { Enrollment } from "../models/Enrollment.js";
 import { Coupon } from "../models/Coupon.js";
 import { cashfreeTwoFactorSignature } from "../utils/cashfreeAuth.js";
+import { LIVE_SITE_URL } from "../config/site.js";
 
 const router = Router();
 const CF_API_VERSION = process.env.CASHFREE_API_VERSION || "2023-08-01";
@@ -84,7 +85,7 @@ function frontendBase() {
     .replace(/\/$/, "");
 }
 
-/** Cashfree production requires an https return_url. */
+/** Cashfree production requires an https return_url on the live domain. */
 function cashfreeReturnUrl() {
   const override = String(process.env.CASHFREE_RETURN_URL || "").trim();
   if (override) {
@@ -94,8 +95,10 @@ function cashfreeReturnUrl() {
   }
   let base = frontendBase();
   const env = String(process.env.CASHFREE_ENV || "sandbox").toLowerCase();
-  if (env === "production" && base.startsWith("http://")) {
-    base = `https://${base.slice("http://".length)}`;
+  if (env === "production") {
+    if (!base.startsWith("https://") || /localhost|127\.0\.0\.1/i.test(base)) {
+      base = LIVE_SITE_URL;
+    }
   }
   return `${base}/Checkout?order_id={order_id}`;
 }

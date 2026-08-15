@@ -1,13 +1,17 @@
-## Knock Your Knowledge — MERN (frontend + API)
+## Knock Your Knowledge
 
-React (Vite) frontend + Express/MongoDB backend for **Get Started** contact leads.
+React (Vite) frontend is **built into** `backend/public` and served by Express. One Node app, one deploy.
+
+Live site: **https://knockyourknowledge.com**
 
 ### Prerequisites
 
 - Node.js 18+
-- MongoDB running locally **or** a MongoDB Atlas URI
+- MongoDB Atlas (or local MongoDB)
 
-### 1) Backend (API + MongoDB)
+### Local development
+
+Terminal 1 — API:
 
 ```bash
 cd backend
@@ -16,33 +20,9 @@ npm install
 npm run dev
 ```
 
-API runs on **http://localhost:5001**
+API: **http://localhost:5001**
 
-Edit `backend/.env`:
-
-- `MONGODB_URI` — e.g. `mongodb://127.0.0.1:27017/kyk` or your Atlas connection string
-- `PORT` — `5001`
-- `FRONTEND_URL` — `http://localhost:5173` (comma-separated for multiple origins)
-- `CASHFREE_APP_ID` / `CASHFREE_SECRET_KEY` — from [Cashfree Dashboard → Developers → API Keys](https://merchant.cashfree.com/merchants/login) (`CASHFREE_ENV=sandbox` for test, `production` for live)
-- `CASHFREE_PUBLIC_KEY_PATH` — Cashfree 2FA public key `.pem` (Dashboard → Developers → Two-Factor Authentication → Public Key)
-
-Health check: `http://localhost:5001/api/health` → `"db":"connected"`
-
-Contact endpoints:
-
-- `POST /api/contact` — save form (`email`, `phone`, `internshipInterest`)
-- `GET /api/contact` — list submissions
-- `GET /api/contact/options` — internship choices
-
-Payment (Cashfree) endpoints:
-
-- `GET /api/payments/config` — gateway status / mode
-- `POST /api/payments/create-order` — create Cashfree order (UPI, debit card, credit card)
-- `POST /api/payments/verify` — confirm order status after Checkout success
-
-Checkout flow: cart → coupon (optional) → **Pay with Cashfree** (UPI / debit / credit) → server verifies order status → order saved in MongoDB.
-
-### 2) Frontend
+Terminal 2 — UI:
 
 ```bash
 cd frontend
@@ -51,11 +31,58 @@ npm install
 npm run dev
 ```
 
-Open **http://localhost:5173**
+UI: **http://localhost:5173** (Vite proxies `/api` to the backend)
 
-**Get Started** opens a contact form (email, phone, internship of the 4 programs). Submissions are stored in MongoDB.
+Leave `VITE_API_BASE_URL` empty.
 
-Locally, Vite proxies `/api` → the Express server (no need to set `VITE_API_BASE_URL`).
+### Production build (same as Hostinger)
+
+From the repo root:
+
+```bash
+npm run build
+npm start
+```
+
+This installs frontend + backend, builds the React app into `backend/public`, then starts Express. Open **http://localhost:5001**.
+
+### Hostinger deploy (GitHub → live site)
+
+Pushing to `main` on GitHub rebuilds and restarts the site when Hostinger is connected.
+
+1. In hPanel go to **Websites** → **Add Website** (or open the existing site) → **Node.js web app**.
+2. Choose **Import Git repository** → connect GitHub → select `knock-your-knowledge`.
+3. Use these settings:
+   - **Node.js version:** 20
+   - **Root directory:** empty (repo root)
+   - **Build command:** `npm run build`
+   - **Entry file / start:** `backend/src/server.js`
+   - **Output directory:** `backend/public` (if the form asks for one)
+4. Add environment variables (do **not** put these in git):
+
+| Variable | Value |
+| --- | --- |
+| `PORT` | leave to Hostinger, or the port they assign |
+| `MONGODB_URI` | your Atlas URI |
+| `FRONTEND_URL` | `https://knockyourknowledge.com,https://www.knockyourknowledge.com` |
+| `CASHFREE_ENV` | `production` |
+| `CASHFREE_APP_ID` | Payment Gateway App ID |
+| `CASHFREE_SECRET_KEY` | Payment Gateway secret |
+| `CASHFREE_PUBLIC_KEY` | paste the full PEM (or upload the `.pem` and set `CASHFREE_PUBLIC_KEY_PATH`) |
+| `CASHFREE_RETURN_URL` | `https://knockyourknowledge.com/Checkout?order_id={order_id}` |
+| `ADMIN_API_KEY` | same value as `VITE_ADMIN_API_KEY` used at build time if you set one |
+
+5. Point the domain **knockyourknowledge.com** (and www) at this Node app. Enable HTTPS.
+6. Click **Deploy**. Later, `git push` to `main` triggers a new build automatically.
+
+### Cashfree live checkout
+
+In [Cashfree → Developers → Whitelisting](https://merchant.cashfree.com/merchants/pg/developers/whitelisting) add:
+
+- `https://knockyourknowledge.com`
+- `https://www.knockyourknowledge.com`
+
+Localhost cannot be used for live payments.
 
 ### Demo accounts (browser localStorage)
 
@@ -64,12 +91,7 @@ Locally, Vite proxies `/api` → the Express server (no need to set `VITE_API_BA
 | Admin | `vinay@gmail.com` | `12345678` |
 | Student | Sign up at `/login` | (any password) |
 
-### Deploy
-
-- **Frontend (Vercel):** Root Directory = `frontend`. Set `VITE_API_BASE_URL` to your live API URL **including `/api`**, then redeploy.
-- **Backend (Railway / Render / etc.):** start from `backend/` with `npm start`. Set `MONGODB_URI`, `FRONTEND_URL`, `PORT`, `CASHFREE_APP_ID`, `CASHFREE_SECRET_KEY`, `CASHFREE_ENV`.
-
 ### Project layout
 
-- **`frontend/`** — Vite + React UI
-- **`backend/`** — Express + MongoDB (contact leads + Cashfree payments)
+- **`frontend/`** — Vite + React (builds into `backend/public`)
+- **`backend/`** — Express + MongoDB; serves `/api` and the built UI

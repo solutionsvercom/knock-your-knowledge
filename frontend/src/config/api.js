@@ -1,8 +1,7 @@
 /**
  * Backend API base URL.
- * Dev: leave empty to use Vite proxy (`/api` → localhost:5001).
- * Prod: set VITE_API_BASE_URL to your API host including `/api`
- *   e.g. https://kyk-api.up.railway.app/api
+ * Leave empty so the UI calls same-origin `/api` (local Vite proxy and
+ * Hostinger, where Express serves the built frontend from backend/public).
  */
 const raw = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 export const API_BASE = raw;
