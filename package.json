@@ -11,10 +11,10 @@
     "backend"
   ],
   "scripts": {
-    "build": "node scripts/ensure-linux-rollup.mjs && npm run build --workspace=kyk-frontend",
+    "build": "node scripts/ensure-linux-rollup.mjs && npm run build --workspace=frontend",
     "start": "node backend/src/server.js",
-    "dev:backend": "npm run dev --workspace=kyk-backend",
-    "dev:frontend": "npm run dev --workspace=kyk-frontend"
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend"
   },
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "^4.60.0"
