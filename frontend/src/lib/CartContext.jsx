@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
-const STORAGE_KEY = "kyk_cart_v1";
+const STORAGE_KEY = "kyk_cart_v2";
 
 /**
  * @typedef {{ type: 'course' | 'bundle' | 'internship'; id: string; title: string; price: number; thumbnail?: string }} CartItem

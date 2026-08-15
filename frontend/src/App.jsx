@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'r
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import { CartProvider } from '@/lib/CartContext';
+import { ContactFormProvider } from '@/lib/ContactFormContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import CourseLearning from './pages/CourseLearning';
 import Dashboard from './pages/Dashboard';
@@ -18,6 +19,11 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminCoursesPage from './pages/admin/AdminCoursesPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminEnrollmentsPage from './pages/admin/AdminEnrollmentsPage';
+import AdminPaymentsPage from './pages/admin/AdminPaymentsPage';
+import AdminSalesPage from './pages/admin/AdminSalesPage';
+import AdminTicketsPage from './pages/admin/AdminTicketsPage';
+import AdminLeadsPage from './pages/admin/AdminLeadsPage';
 import BlogPost from './pages/BlogPost';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -48,7 +54,8 @@ const RequireAuth = ({ children }) => {
     const adminArea =
       location.pathname.startsWith("/admin") && location.pathname !== "/admin/login";
     const loginPath = adminArea ? "/admin/login" : "/login";
-    return <Navigate to={`${loginPath}?next=${next}`} replace />;
+    const signupHint = location.pathname === "/Checkout" && !adminArea ? "&mode=signup" : "";
+    return <Navigate to={`${loginPath}?next=${next}${signupHint}`} replace />;
   }
   return children;
 };
@@ -96,15 +103,22 @@ const AuthenticatedApp = () => {
       >
         <Route index element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="dashboard" element={<AdminDashboardPage />} />
+        <Route path="enrollments" element={<AdminEnrollmentsPage />} />
+        <Route path="payments" element={<AdminPaymentsPage />} />
+        <Route path="sales" element={<AdminSalesPage />} />
+        <Route path="tickets" element={<AdminTicketsPage />} />
+        <Route path="leads" element={<AdminLeadsPage />} />
         <Route path="courses" element={<AdminCoursesPage />} />
         <Route path="users" element={<AdminUsersPage />} />
       </Route>
       <Route
         path="/Checkout"
         element={
-          <LayoutWrapper currentPageName="Checkout">
-            <Checkout />
-          </LayoutWrapper>
+          <RequireAuth>
+            <LayoutWrapper currentPageName="Checkout">
+              <Checkout />
+            </LayoutWrapper>
+          </RequireAuth>
         }
       />
       <Route path="*" element={<PageNotFound />} />
@@ -119,6 +133,7 @@ function App() {
     <AuthProvider>
       <QueryClientProvider client={queryClientInstance}>
         <CartProvider>
+          <ContactFormProvider>
           <Router
             future={{
               v7_startTransition: true,
@@ -129,6 +144,7 @@ function App() {
             <AuthenticatedApp />
           </Router>
           <Toaster />
+          </ContactFormProvider>
         </CartProvider>
       </QueryClientProvider>
     </AuthProvider>

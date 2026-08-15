@@ -35,7 +35,7 @@ export default function PaymentHistorySection({ payments }) {
       </head>
       <body>
         <div class="receipt">
-          <div class="logo">SkyBrisk</div>
+          <div class="logo">KYK</div>
           <div class="tag">Payment Receipt</div>
           <h2>Purchase Confirmation</h2>
           <div class="row"><span class="label">Course</span><span class="value">${p.course_title || "—"}</span></div>
@@ -45,7 +45,7 @@ export default function PaymentHistorySection({ payments }) {
           <div class="row"><span class="label">Status</span><span class="value" style="color:#34d399">${p.status}</span></div>
           <div class="row"><span class="label">Date</span><span class="value">${p.created_date ? new Date(p.created_date).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" }) : "—"}</span></div>
           <div class="total-row"><span class="total-label">Amount Paid</span><span class="total-value">$${p.amount}</span></div>
-          <div class="footer"><p>Thank you for learning with SkyBrisk!</p><p>For support: support@skybrisk.com</p></div>
+          <div class="footer"><p>Thank you for learning with KYK!</p><p>For support: knockyourknowledge@gmail.com</p></div>
         </div>
         <script>setTimeout(() => window.print(), 500);</script>
       </body></html>

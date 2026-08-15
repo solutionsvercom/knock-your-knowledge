@@ -11,7 +11,7 @@ export default function PageNotFound({}) {
         queryKey: ['user'],
         queryFn: async () => {
             try {
-                if (!localStorage.getItem("token")) {
+                if (!localStorage.getItem("kyk_token_v2")) {
                     return { user: null, isAuthenticated: false };
                 }
                 const user = await api.auth.me();

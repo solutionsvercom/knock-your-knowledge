@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!localStorage.getItem("token")) {
+    if (!localStorage.getItem("kyk_token_v2")) {
       setLoading(false);
       api.auth.redirectToLogin("/Dashboard");
       return;

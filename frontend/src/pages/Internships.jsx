@@ -5,7 +5,9 @@ import { api } from "@/api/apiClient";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
+import { useAuth } from "@/lib/AuthContext";
 import { whatsappApplyUrl } from "@/config/contact";
+import { INTERNSHIP_FEE_AMOUNT, feeLabelWithGst } from "@/config/pricing";
 import {
   Search,
   MapPin,
@@ -35,9 +37,6 @@ const STATS = [
   { value: "4", label: "Programs", color: "#06b6d4" },
 ];
 
-const INTERNSHIP_FEE_LABEL = "₹3999/-";
-const INTERNSHIP_FEE_AMOUNT = 3999;
-
 function applyOnWhatsApp(programTitle) {
   window.open(whatsappApplyUrl(programTitle), "_blank", "noopener,noreferrer");
 }
@@ -46,6 +45,7 @@ export default function Internships() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { addItem } = useCart();
+  const { isAuthenticated, isLoadingAuth } = useAuth();
 
   const {
     data: internshipsRaw,
@@ -78,6 +78,14 @@ export default function Internships() {
       price: INTERNSHIP_FEE_AMOUNT,
       thumbnail: item.image || item.company_logo || "",
     });
+
+    if (isLoadingAuth) return;
+
+    if (!isAuthenticated) {
+      navigate(`/login?mode=signup&next=${encodeURIComponent("/Checkout")}`);
+      return;
+    }
+
     navigate("/Checkout");
   };
 
@@ -244,7 +252,7 @@ export default function Internships() {
                       </span>
                       <span className="flex items-center gap-1 font-semibold" style={{ color: "#34d399" }}>
                         <DollarSign className="w-3.5 h-3.5" />
-                        Internship Fee: {item.stipend || INTERNSHIP_FEE_LABEL}
+                        Internship Fee: {feeLabelWithGst(INTERNSHIP_FEE_AMOUNT)}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-3">

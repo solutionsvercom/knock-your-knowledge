@@ -10,10 +10,20 @@ import {
   BookOpen,
   Shield,
   Home,
+  Users,
+  Receipt,
+  Tag,
+  Ticket,
+  Mail,
 } from "lucide-react";
 
 const NAV = [
   { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/admin/enrollments", label: "Students", icon: Users },
+  { to: "/admin/payments", label: "Payments", icon: Receipt },
+  { to: "/admin/sales", label: "Sales & Coupons", icon: Tag },
+  { to: "/admin/tickets", label: "Tickets", icon: Ticket },
+  { to: "/admin/leads", label: "Leads", icon: Mail },
   { to: "/admin/courses", label: "Courses", icon: BookOpen },
   { to: "/admin/users", label: "Users", icon: Shield },
 ];

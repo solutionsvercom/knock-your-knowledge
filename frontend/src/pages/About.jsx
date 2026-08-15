@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "@/utils";
-import { whatsappGetStartedUrl } from "@/config/contact";
+import GetStartedLink from "@/components/navigation/GetStartedLink";
 import {
   Target,
   Users,
@@ -9,7 +9,6 @@ import {
   Briefcase,
   HeartHandshake,
   Sparkles,
-  ExternalLink,
   ArrowRight,
 } from "lucide-react";
 
@@ -196,17 +195,15 @@ export default function About() {
           <p className="text-sm max-w-2xl mx-auto mb-8" style={{ color: "#94a3b8" }}>
             To empower every learner with internship-ready skills, mentor support, and opportunities that turn learning into a career journey — across 10+ states and 25+ partner companies.
           </p>
-          <button
-            type="button"
-            onClick={() => window.open(whatsappGetStartedUrl(), "_blank", "noopener,noreferrer")}
+          <GetStartedLink
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, #25d366, #128c7e)",
-              boxShadow: "0 0 16px rgba(37,211,102,0.35)",
+              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              boxShadow: "0 0 16px rgba(124,58,237,0.35)",
             }}
           >
-            <Sparkles className="w-4 h-4" /> Get Started on WhatsApp <ExternalLink className="w-4 h-4" />
-          </button>
+            <Sparkles className="w-4 h-4" /> Get Started
+          </GetStartedLink>
         </div>
       </div>
     </div>

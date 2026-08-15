@@ -56,7 +56,7 @@ export default function CertificatesSection({ user, enrollments }) {
       <body>
         <div class="cert">
           <div class="border-inner"></div>
-          <h1>SkyBrisk</h1>
+          <h1>KYK</h1>
           <p class="subtitle">Certificate of Completion</p>
           <p class="presented">This is to certify that</p>
           <p class="name">${cert.student_name}</p>
@@ -74,7 +74,7 @@ export default function CertificatesSection({ user, enrollments }) {
             </div>
             <div class="sig">
               <div class="sig-line"></div>
-              <p class="sig-label">SkyBrisk Platform</p>
+              <p class="sig-label">KYK Platform</p>
               <p style="font-size:11px;color:#94a3b8">Authorized Signature</p>
             </div>
           </div>

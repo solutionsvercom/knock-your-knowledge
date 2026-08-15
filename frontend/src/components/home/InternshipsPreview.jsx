@@ -87,7 +87,7 @@ export default function InternshipsPreview({
                     <Badge className={`${typeColors[item.work_type]} border-0 text-xs`}>{item.work_type}</Badge>
                     <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {item.duration}</span>
                     <span className="flex items-center gap-1 text-green-600 font-medium">
-                      <DollarSign className="w-3.5 h-3.5" /> Internship Fee: {item.stipend || "₹3999/-"}
+                      <DollarSign className="w-3.5 h-3.5" /> Internship Fee: {item.stipend || "₹3999/-"} + 18% GST
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">

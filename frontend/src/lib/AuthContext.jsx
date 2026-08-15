@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
       setIsLoadingAuth(true);
       setAuthError(null);
       try {
-        hadToken = !!localStorage.getItem('token');
+        hadToken = !!localStorage.getItem('kyk_token_v2');
       } catch {
         hadToken = false;
       }

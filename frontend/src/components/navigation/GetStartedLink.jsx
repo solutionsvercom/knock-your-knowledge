@@ -1,14 +1,16 @@
 import React from "react";
-import { whatsappGetStartedUrl } from "@/config/contact";
+import { useContactForm } from "@/lib/ContactFormContext";
 
 /**
- * Opens WhatsApp so students can contact us directly.
+ * Opens the Get Started contact form (email, phone, internship interest).
  */
 export default function GetStartedLink({ children, className, style, withNext: _withNext, onClick, ...rest }) {
-  const openWhatsApp = (e) => {
+  const { openContactForm } = useContactForm();
+
+  const handleClick = (e) => {
     onClick?.(e);
     if (e.defaultPrevented) return;
-    window.open(whatsappGetStartedUrl(), "_blank", "noopener,noreferrer");
+    openContactForm();
   };
 
   return (
@@ -16,7 +18,7 @@ export default function GetStartedLink({ children, className, style, withNext: _
       type="button"
       className={className}
       style={{ ...style, cursor: "pointer" }}
-      onClick={openWhatsApp}
+      onClick={handleClick}
       {...rest}
     >
       {children}

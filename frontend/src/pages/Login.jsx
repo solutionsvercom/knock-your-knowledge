@@ -5,7 +5,14 @@ import { GraduationCap } from "lucide-react";
 
 /** Learner / public account only. Admin panel is not linked here — use `/admin/login` directly (dev). */
 export default function Login() {
-  const [mode, setMode] = useState("login");
+  const [mode, setMode] = useState(() => {
+    try {
+      const url = new URL(window.location.href);
+      return url.searchParams.get("mode") === "signup" ? "signup" : "login";
+    } catch {
+      return "login";
+    }
+  });
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");

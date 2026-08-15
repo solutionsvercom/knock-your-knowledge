@@ -11,14 +11,14 @@ import {
 } from "@/data/demoData";
 
 const KEYS = {
-  token: "token",
-  users: "kyk_users",
+  token: "kyk_token_v2",
+  users: "kyk_users_v4",
   courses: "kyk_courses_v3",
   bundles: "kyk_bundles_v2",
   internships: "kyk_internships_v3",
   liveClasses: "kyk_live_classes",
-  enrollments: "kyk_enrollments",
-  payments: "kyk_payments",
+  enrollments: "kyk_enrollments_v2",
+  payments: "kyk_payments_v2",
   tickets: "kyk_tickets",
   ticketReplies: "kyk_ticket_replies",
   notifications: "kyk_notifications",
@@ -29,8 +29,27 @@ const KEYS = {
   lessons: "kyk_lessons_v3",
   quizzes: "kyk_quizzes",
   resources: "kyk_resources",
-  certificates: "kyk_certificates",
+  certificates: "kyk_certificates_v2",
 };
+
+/** Drop old local auth/user data so accounts start fresh. */
+function clearLegacyAuthStorage() {
+  const legacy = [
+    "token",
+    "kyk_users",
+    "kyk_users_v2",
+    "kyk_users_v3",
+    "kyk_enrollments",
+    "kyk_payments",
+    "kyk_certificates",
+    "kyk_cart_v1",
+  ];
+  try {
+    for (const key of legacy) localStorage.removeItem(key);
+  } catch {
+    // ignore
+  }
+}
 
 function delay(ms = 80) {
   return new Promise((r) => setTimeout(r, ms));
@@ -76,6 +95,9 @@ function setToken(token) {
 }
 
 function ensureSeed() {
+  clearLegacyAuthStorage();
+
+  // Fresh learner accounts: do not keep old signups. Only seed default admin.
   if (!read(KEYS.users, null)) {
     write(KEYS.users, [
       {
@@ -747,7 +769,7 @@ export const api = {
       write(KEYS.payments, list);
       return row;
     },
-    createInternshipPayment: async ({ internship_id, amount, title }) => {
+    createInternshipPayment: async ({ internship_id, amount, title, payment_method, transaction_id }) => {
       await delay();
       const u = currentUser();
       const list = read(KEYS.payments, []);
@@ -758,6 +780,8 @@ export const api = {
         course_title: title || "",
         amount: Number(amount) || 3999,
         status: "completed",
+        payment_method: payment_method || "cashfree",
+        transaction_id: transaction_id || "",
         user_id: u?.id || null,
         user_email: u?.email || "guest@checkout.local",
         created_date: new Date().toISOString(),

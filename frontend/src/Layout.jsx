@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { createPageUrl } from "./utils";
 import { Menu, X, Sparkles } from "lucide-react";
@@ -6,9 +6,20 @@ import Footer from "@/components/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 import GetStartedLink from "@/components/navigation/GetStartedLink";
 import { KYK_LOGO_SRC } from "@/config/contact";
+import { useAuth } from "@/lib/AuthContext";
+
+function userInitial(user) {
+  const name = String(user?.full_name || user?.name || "").trim();
+  if (name) return name.charAt(0).toUpperCase();
+  const email = String(user?.email || "").trim();
+  if (email) return email.charAt(0).toUpperCase();
+  return "U";
+}
 
 export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
+  const initial = useMemo(() => userInitial(user), [user]);
 
   const navLinks = [
     { name: "Internships", page: "Internships" },
@@ -84,15 +95,77 @@ export default function Layout({ children, currentPageName }) {
               >
                 <Sparkles className="w-3.5 h-3.5" /> Get Started
               </GetStartedLink>
+
+              {isAuthenticated && user ? (
+                <div className="relative group">
+                  <Link
+                    to="/Dashboard"
+                    title={user.full_name || user.email || "Account"}
+                    aria-label={`Account: ${user.full_name || user.email || "User"}`}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white transition-transform hover:scale-105"
+                    style={{
+                      background: "linear-gradient(135deg, #7c3aed, #2563eb)",
+                      boxShadow: "0 0 14px rgba(124,58,237,0.45)",
+                      fontFamily: "'Poppins', sans-serif",
+                    }}
+                  >
+                    {initial}
+                  </Link>
+                  <div
+                    className="absolute right-0 top-full mt-2 w-44 rounded-xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50"
+                    style={{
+                      background: "rgba(15,23,42,0.98)",
+                      border: "1px solid rgba(167,139,250,0.25)",
+                      boxShadow: "0 12px 30px rgba(0,0,0,0.45)",
+                    }}
+                  >
+                    <p className="px-3 pb-2 text-xs truncate" style={{ color: "#94a3b8" }}>
+                      {user.full_name || user.email}
+                    </p>
+                    <Link
+                      to="/Dashboard"
+                      className="block px-3 py-2 text-sm hover:bg-white/5"
+                      style={{ color: "#e2e8f0" }}
+                    >
+                      Dashboard
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => logout(true)}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-white/5"
+                      style={{ color: "#f87171" }}
+                    >
+                      Log out
+                    </button>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
-            <button
-              className="md:hidden p-2 rounded-lg transition-colors"
-              style={{ color: "#64748b" }}
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+            <div className="md:hidden flex items-center gap-2">
+              {isAuthenticated && user ? (
+                <Link
+                  to="/Dashboard"
+                  title={user.full_name || user.email || "Account"}
+                  aria-label={`Account: ${user.full_name || user.email || "User"}`}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                  style={{
+                    background: "linear-gradient(135deg, #7c3aed, #2563eb)",
+                    boxShadow: "0 0 12px rgba(124,58,237,0.4)",
+                    fontFamily: "'Poppins', sans-serif",
+                  }}
+                >
+                  {initial}
+                </Link>
+              ) : null}
+              <button
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: "#64748b" }}
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -122,6 +195,35 @@ export default function Layout({ children, currentPageName }) {
                     {link.name}
                   </Link>
                 ))}
+                {isAuthenticated && user ? (
+                  <div className="px-4 py-2 flex items-center justify-between gap-3">
+                    <Link
+                      to="/Dashboard"
+                      className="flex items-center gap-2 text-sm min-w-0"
+                      style={{ color: "#e2e8f0" }}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <span
+                        className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                        style={{ background: "linear-gradient(135deg, #7c3aed, #2563eb)" }}
+                      >
+                        {initial}
+                      </span>
+                      <span className="truncate">{user.full_name || user.email}</span>
+                    </Link>
+                    <button
+                      type="button"
+                      className="text-xs font-medium flex-shrink-0"
+                      style={{ color: "#f87171" }}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        logout(true);
+                      }}
+                    >
+                      Log out
+                    </button>
+                  </div>
+                ) : null}
                 <div className="pt-3 pb-1 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                   <GetStartedLink
                     className="flex w-full items-center justify-center py-3.5 rounded-xl text-base font-semibold text-white min-h-[52px]"

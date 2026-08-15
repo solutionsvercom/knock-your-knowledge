@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
+import { fetchMyReferralTickets } from "@/api/ticketsApi";
 import CRMLayout from "./CRMLayout";
 import StatCard from "./StatCard";
-import { BookOpen, Trophy, TicketCheck, LayoutDashboard, Video, Calendar, Clock, ExternalLink, Award, Bell, CreditCard, Sparkles } from "lucide-react";
+import { BookOpen, Trophy, TicketCheck, LayoutDashboard, Video, Calendar, Clock, ExternalLink, Award, Bell, CreditCard, ShoppingCart, Copy, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import CertificatesSection from "./student/CertificatesSection";
 import NotificationsSection from "./student/NotificationsSection";
 import PaymentHistorySection from "./student/PaymentHistorySection";
-import AIHistorySection from "./student/AIHistorySection";
+import BrowseInternshipsSection from "./student/BrowseInternshipsSection";
 
 const NAV = [
   { id: "overview", label: "My Learning", icon: LayoutDashboard, default: true },
   { id: "courses", label: "My Courses", icon: BookOpen },
+  { id: "add-internships", label: "Add to Cart", icon: ShoppingCart },
   { id: "doubt-classes", label: "Doubt Classes", icon: Video },
-  { id: "ai-history", label: "AI History", icon: Sparkles },
   { id: "certificates", label: "Certificates", icon: Award },
   { id: "payments", label: "Payment History", icon: CreditCard },
   { id: "notifications", label: "Notifications", icon: Bell },
@@ -24,6 +25,7 @@ const NAV = [
 
 export default function StudentDashboard({ user }) {
   const [hash, setHash] = useState(window.location.hash.replace("#", "") || "overview");
+  const [copiedCode, setCopiedCode] = useState("");
   useEffect(() => {
     const handler = () => setHash(window.location.hash.replace("#", "") || "overview");
     window.addEventListener("hashchange", handler);
@@ -34,10 +36,14 @@ export default function StudentDashboard({ user }) {
     queryKey: ["s-enrollments"],
     queryFn: () => api.enrollments.mine()
   });
-  const { data: tickets = [] } = useQuery({
-    queryKey: ["s-tickets"],
-    queryFn: () => api.supportTickets.mine()
+  const { data: ticketData, isLoading: ticketsLoading } = useQuery({
+    queryKey: ["s-referral-tickets", user?.email],
+    queryFn: () => fetchMyReferralTickets(user?.email),
+    enabled: Boolean(user?.email),
+    refetchInterval: 15000,
   });
+  const tickets = ticketData?.tickets || [];
+  const ticketWallet = ticketData?.walletValue || 0;
   const { data: payments = [] } = useQuery({
     queryKey: ["s-payments"],
     queryFn: () => api.payments.mine()
@@ -62,6 +68,16 @@ export default function StudentDashboard({ user }) {
   const upcomingSessions = mySessions.filter(s => new Date(s.session_date) > new Date());
   const pastSessions = mySessions.filter(s => new Date(s.session_date) <= new Date());
 
+  const copyReferral = async (code) => {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(""), 1500);
+    } catch {
+      /* ignore */
+    }
+  };
+
   return (
     <CRMLayout user={user} navItems={NAV} accentColor="#34d399" roleLabel="Student">
       {hash === "overview" && (
@@ -73,8 +89,28 @@ export default function StudentDashboard({ user }) {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <StatCard label="Enrolled Courses" value={enrollments.length} icon={BookOpen} color="#60a5fa" />
             <StatCard label="Completed" value={completed.length} icon={Trophy} color="#34d399" />
-            <StatCard label="Avg Progress" value={`${avgProgress}%`} icon={LayoutDashboard} color="#a78bfa" />
-            <StatCard label="Notifications" value={notifications.filter(n => !n.is_read).length} icon={Bell} color="#fbbf24" sub="unread" />
+            <StatCard label="My Tickets" value={tickets.length} icon={TicketCheck} color="#fbbf24" sub={ticketWallet ? `₹${ticketWallet.toLocaleString("en-IN")} wallet` : "from admin"} />
+            <StatCard label="Notifications" value={notifications.filter(n => !n.is_read).length} icon={Bell} color="#a78bfa" sub="unread" />
+          </div>
+
+          <div
+            className="rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
+            style={{ background: "rgba(124,58,237,0.08)", border: "1px solid rgba(167,139,250,0.25)" }}
+          >
+            <div>
+              <p className="text-sm font-bold text-white">Want another internship program?</p>
+              <p className="text-xs mt-1" style={{ color: "#94a3b8" }}>
+                Add it to cart from your dashboard and pay via UPI, debit, or credit card — fee ₹3,999/- + 18% GST
+              </p>
+            </div>
+            <a
+              href="#add-internships"
+              onClick={() => setHash("add-internships")}
+              className="inline-flex items-center justify-center gap-2 px-4 h-10 rounded-xl text-sm font-semibold text-white flex-shrink-0"
+              style={{ background: "linear-gradient(135deg, #7c3aed, #4f46e5)" }}
+            >
+              <ShoppingCart className="w-4 h-4" /> Add to Cart
+            </a>
           </div>
 
           {/* Upcoming Doubt Classes preview */}
@@ -262,35 +298,106 @@ export default function StudentDashboard({ user }) {
         </div>
       )}
 
-      {hash === "ai-history" && <AIHistorySection user={user} enrollments={enrollments} />}
+      {hash === "add-internships" && <BrowseInternshipsSection />}
       {hash === "certificates" && <CertificatesSection user={user} enrollments={enrollments} />}
       {hash === "payments" && <PaymentHistorySection payments={payments} />}
       {hash === "notifications" && <NotificationsSection user={user} />}
 
       {hash === "tickets" && (
         <div className="space-y-6">
-          <h1 className="text-2xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>My Support Tickets</h1>
-          <div className="space-y-3">
-            {tickets.map(t => (
-              <div key={t.id} className="rounded-2xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}>
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-semibold text-white">{t.subject}</p>
-                    <p className="text-xs mt-1" style={{ color: "#475569" }}>{t.category} · {t.created_date ? new Date(t.created_date).toLocaleDateString() : ""}</p>
-                  </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0"
-                    style={{ background: t.status === "resolved" ? "rgba(52,211,153,0.12)" : "rgba(251,191,36,0.12)", color: t.status === "resolved" ? "#34d399" : "#fbbf24" }}>
-                    {t.status}
-                  </span>
-                </div>
-                {t.resolution && (
-                  <div className="mt-3 px-3 py-2 rounded-xl text-xs" style={{ background: "rgba(52,211,153,0.06)", border: "1px solid rgba(52,211,153,0.15)", color: "#94a3b8" }}>
-                    <strong style={{ color: "#34d399" }}>Resolution:</strong> {t.resolution}
-                  </div>
-                )}
+          <div>
+            <h1 className="text-2xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              My Tickets
+            </h1>
+            <p className="text-sm mt-0.5" style={{ color: "#475569" }}>
+              Referral tickets raised for you by KYK admin · 1 ticket = ₹500
+            </p>
+          </div>
+
+          {(tickets.length > 0 || ticketWallet > 0) && (
+            <div
+              className="rounded-2xl p-4 flex flex-wrap gap-4 items-center justify-between"
+              style={{ background: "rgba(251,191,36,0.08)", border: "1px solid rgba(251,191,36,0.22)" }}
+            >
+              <div>
+                <p className="text-sm font-bold text-white">Ticket wallet</p>
+                <p className="text-xs mt-0.5" style={{ color: "#94a3b8" }}>
+                  Share your referral code so friends can enroll with your discount
+                </p>
               </div>
-            ))}
-            {tickets.length === 0 && <p className="text-center py-8 text-sm" style={{ color: "#334155" }}>No tickets raised yet</p>}
+              <p className="text-2xl font-black text-amber-300">
+                ₹{Number(ticketWallet).toLocaleString("en-IN")}
+              </p>
+            </div>
+          )}
+
+          <div className="space-y-3">
+            {ticketsLoading && (
+              <p className="text-center py-6 text-sm" style={{ color: "#475569" }}>
+                Loading your tickets…
+              </p>
+            )}
+            {!ticketsLoading &&
+              tickets.map((t) => (
+                <div
+                  key={t.id}
+                  className="rounded-2xl p-4"
+                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white">Referral ticket · ₹{t.valueInr || 500}</p>
+                      <p className="text-xs mt-1" style={{ color: "#475569" }}>
+                        Raised by {t.raisedBy || "admin"}
+                        {t.createdAt ? ` · ${new Date(t.createdAt).toLocaleDateString("en-IN")}` : ""}
+                      </p>
+                      {t.notes ? (
+                        <p className="text-xs mt-2" style={{ color: "#94a3b8" }}>
+                          {t.notes}
+                        </p>
+                      ) : null}
+                      <button
+                        type="button"
+                        onClick={() => copyReferral(t.referralCode)}
+                        className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold"
+                        style={{
+                          background: "rgba(251,191,36,0.12)",
+                          color: "#fbbf24",
+                          border: "1px solid rgba(251,191,36,0.3)",
+                        }}
+                      >
+                        {t.referralCode}
+                        {copiedCode === t.referralCode ? (
+                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        ) : (
+                          <Copy className="w-3.5 h-3.5 opacity-70" />
+                        )}
+                      </button>
+                      <p className="text-[11px] mt-1.5" style={{ color: "#64748b" }}>
+                        Friends can enter this code at checkout
+                      </p>
+                    </div>
+                    <span
+                      className="px-2.5 py-0.5 rounded-full text-xs font-medium flex-shrink-0 capitalize"
+                      style={{
+                        background:
+                          t.status === "closed" || t.status === "used"
+                            ? "rgba(148,163,184,0.12)"
+                            : "rgba(52,211,153,0.12)",
+                        color:
+                          t.status === "closed" || t.status === "used" ? "#94a3b8" : "#34d399",
+                      }}
+                    >
+                      {t.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            {!ticketsLoading && tickets.length === 0 && (
+              <p className="text-center py-8 text-sm" style={{ color: "#334155" }}>
+                No tickets yet. When admin raises a ticket for your account, it will appear here.
+              </p>
+            )}
           </div>
         </div>
       )}

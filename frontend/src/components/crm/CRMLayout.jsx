@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { api } from "@/api/apiClient";
-import { GraduationCap, LogOut, Menu, X, ChevronRight } from "lucide-react";
+import { LogOut, Menu, X, ChevronRight } from "lucide-react";
+import { KYK_LOGO_SRC } from "@/config/contact";
 
 export default function CRMLayout({ user, navItems, children, accentColor = "#a78bfa", roleLabel }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,12 +17,14 @@ export default function CRMLayout({ user, navItems, children, accentColor = "#a7
         style={{ background: "rgba(5,10,30,0.98)", borderRight: "1px solid rgba(255,255,255,0.07)" }}>
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 py-5 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center"
-            style={{ background: `linear-gradient(135deg, ${accentColor}, #2563eb)` }}>
-            <GraduationCap className="w-4 h-4 text-white" />
-          </div>
+          <img
+            src={KYK_LOGO_SRC}
+            alt="KYK"
+            className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+            style={{ boxShadow: "0 0 12px rgba(251,146,60,0.35)" }}
+          />
           <div>
-            <span className="text-sm font-black text-white">SkyBrisk</span>
+            <span className="text-sm font-black text-white">KYK</span>
             <p className="text-xs" style={{ color: accentColor }}>{roleLabel}</p>
           </div>
         </div>
