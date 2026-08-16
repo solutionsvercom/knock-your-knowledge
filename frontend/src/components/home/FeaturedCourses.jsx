@@ -119,10 +119,7 @@ export default function FeaturedCourses({
                   </div>
 
                   <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-2xl font-bold text-gray-900">${course.price}</span>
-                      <span className="text-sm text-gray-400 line-through">${course.original_price}</span>
-                    </div>
+                    <span className="text-sm font-medium text-gray-600">1–3 months internship</span>
                   </div>
                 </div>
               </div>

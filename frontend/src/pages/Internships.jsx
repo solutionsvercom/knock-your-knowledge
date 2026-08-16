@@ -12,7 +12,6 @@ import {
   Search,
   MapPin,
   Clock,
-  DollarSign,
   Building2,
   Calendar,
   Users,
@@ -251,7 +250,6 @@ export default function Internships() {
                         {item.duration}
                       </span>
                       <span className="flex items-center gap-1 font-semibold" style={{ color: "#34d399" }}>
-                        <DollarSign className="w-3.5 h-3.5" />
                         Internship Fee: {internshipFeeLabel(item)}
                       </span>
                     </div>

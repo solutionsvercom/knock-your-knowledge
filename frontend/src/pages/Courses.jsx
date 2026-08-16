@@ -114,7 +114,7 @@ function CourseCard({ course }) {
       {/* Stats row */}
       <div className="px-5 py-3 flex items-center gap-4 border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
         <span className="flex items-center gap-1 text-xs" style={{ color: "#475569" }}>
-          <Clock className="w-3 h-3" /> {course.duration}
+          <Clock className="w-3 h-3" /> 1–3 months internship
         </span>
         {course.students && (
           <span className="flex items-center gap-1 text-xs" style={{ color: "#475569" }}>

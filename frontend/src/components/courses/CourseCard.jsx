@@ -69,10 +69,7 @@ export default function CourseCard({ course }) {
         </div>
 
         <div className="flex items-center justify-between pt-4" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <div className="flex items-baseline gap-2">
-            <span className="text-xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>${course.price}</span>
-            <span className="text-sm line-through" style={{ color: "#1e293b" }}>${course.original_price}</span>
-          </div>
+          <span className="text-sm font-medium" style={{ color: "#94a3b8" }}>1–3 months internship</span>
         </div>
       </div>
     </div>
