@@ -86,7 +86,7 @@ nodejs/                  (repo root, or hbuilds/current/nodejs on GitHub deploys
 | `CASHFREE_ENV` | `production` |
 | `CASHFREE_APP_ID` | Payment Gateway App ID |
 | `CASHFREE_SECRET_KEY` | Payment Gateway secret |
-| `CASHFREE_PUBLIC_KEY` | paste the **full PEM text** (BEGIN/END lines). Do **not** set `CASHFREE_PUBLIC_KEY_PATH` on Hostinger |
+| `CASHFREE_PUBLIC_KEY` | one line: `-----BEGIN PUBLIC KEY-----\\n<base64>\\n-----END PUBLIC KEY-----`. Do **not** set `CASHFREE_PUBLIC_KEY_PATH` |
 | `CASHFREE_RETURN_URL` | `https://knockyourknowledge.com/Checkout?order_id={order_id}` |
 | `ADMIN_API_KEY` | same value as `VITE_ADMIN_API_KEY` used at build time if you set one |
 

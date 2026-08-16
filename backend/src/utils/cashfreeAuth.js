@@ -13,17 +13,32 @@ function envText(name) {
     .trim();
 }
 
-function normalizePem(raw) {
-  const text = String(raw || "")
+/** Rebuild a valid PEM. Hostinger env vars often flatten newlines into spaces or \n. */
+export function normalizePem(raw) {
+  let text = String(raw || "")
     .trim()
     .replace(/^['"]|['"]$/g, "")
     .replace(/\r/g, "")
     .replace(/\\n/g, "\n");
   if (!text) return "";
-  if (text.includes("BEGIN")) return text;
-  const body = text.replace(/\s+/g, "");
+
+  const labeled = text.match(
+    /-----BEGIN ([A-Z0-9 ]+)-----([\s\S]*?)-----END \1-----/
+  );
+  let type = "PUBLIC KEY";
+  let body = "";
+  if (labeled) {
+    type = labeled[1].trim();
+    body = labeled[2];
+  } else {
+    body = text
+      .replace(/-----BEGIN [A-Z0-9 ]+-----/g, "")
+      .replace(/-----END [A-Z0-9 ]+-----/g, "");
+  }
+  body = body.replace(/\s+/g, "");
+  if (body.length < 120 || /[^A-Za-z0-9+/=]/.test(body)) return "";
   const lines = body.match(/.{1,64}/g) || [body];
-  return `-----BEGIN PUBLIC KEY-----\n${lines.join("\n")}\n-----END PUBLIC KEY-----`;
+  return `-----BEGIN ${type}-----\n${lines.join("\n")}\n-----END ${type}-----`;
 }
 
 function readPemFile(filePath) {
@@ -37,7 +52,7 @@ function readPemFile(filePath) {
 
 function hostingerKeyError(detail) {
   const err = new Error(
-    `${detail} On Hostinger, open the Node.js app → Environment variables, remove CASHFREE_PUBLIC_KEY_PATH, and set CASHFREE_PUBLIC_KEY to the full PEM text from backend/keys/cashfree_public_key.pem (including BEGIN/END lines). Redeploy after saving.`
+    `${detail} Paste CASHFREE_PUBLIC_KEY as one line using \\n between PEM lines (copy from local backend/keys/cashfree_public_key.pem). Remove CASHFREE_PUBLIC_KEY_PATH. Save and redeploy.`
   );
   err.status = 503;
   return err;
@@ -47,7 +62,7 @@ export function loadCashfreePublicKey() {
   const inline = normalizePem(
     envText("CASHFREE_PUBLIC_KEY") || envText("CASHFREE_2FA_PUBLIC_KEY")
   );
-  if (inline.includes("BEGIN")) return inline;
+  if (inline) return inline;
 
   const configuredPath = envText("CASHFREE_PUBLIC_KEY_PATH");
   const candidates = [
@@ -65,16 +80,26 @@ export function loadCashfreePublicKey() {
 
   for (const filePath of candidates) {
     const pem = readPemFile(filePath);
-    if (pem.includes("BEGIN")) return pem;
+    if (pem) return pem;
   }
 
-  if (inline || configuredPath) {
-    throw hostingerKeyError(
-      "Cashfree 2FA public key was not found on the server (the .pem file is not deployed)."
-    );
+  if (envText("CASHFREE_PUBLIC_KEY") || envText("CASHFREE_2FA_PUBLIC_KEY") || configuredPath) {
+    throw hostingerKeyError("Cashfree 2FA public key is set but is not a valid PEM.");
   }
 
   return "";
+}
+
+function encryptWithPublicKey(publicKey, payload) {
+  const keyObject = crypto.createPublicKey(publicKey);
+  return crypto.publicEncrypt(
+    {
+      key: keyObject,
+      padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
+      oaepHash: "sha1",
+    },
+    Buffer.from(payload, "utf8")
+  );
 }
 
 /** RSA-OAEP signature for Cashfree X-Cf-Signature (clientId.unixTimestamp). */
@@ -84,18 +109,11 @@ export function cashfreeTwoFactorSignature(clientId) {
 
   const payload = `${clientId}.${Math.floor(Date.now() / 1000)}`;
   try {
-    const encrypted = crypto.publicEncrypt(
-      {
-        key: publicKey,
-        padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-        oaepHash: "sha1",
-      },
-      Buffer.from(payload, "utf8")
-    );
-    return encrypted.toString("base64");
+    return encryptWithPublicKey(publicKey, payload).toString("base64");
   } catch (cause) {
+    const reason = cause?.message || "unknown crypto error";
     const err = hostingerKeyError(
-      "Could not build the Cashfree 2FA signature from CASHFREE_PUBLIC_KEY."
+      `Could not build the Cashfree 2FA signature (${reason}).`
     );
     err.cause = cause;
     throw err;
