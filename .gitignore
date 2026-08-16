@@ -1,4 +1,5 @@
-# Built frontend (Vite → backend/public/dist; Hostinger rebuilds on git push)
+# Vite production build (Hostinger nodejs/public — index.html + assets)
+/public/
 backend/public/
 
 #env

@@ -26,17 +26,17 @@ const PORT = Number(process.env.PORT) || 5001;
 
 function resolvePublicDir() {
   const candidates = [
-    path.join(backendRoot, "public/dist"),
+    path.join(repoRoot, "public"),
+    path.join(process.cwd(), "public"),
     path.join(backendRoot, "public"),
-    path.join(repoRoot, "backend/public/dist"),
+    path.join(backendRoot, "public/dist"),
     path.join(process.cwd(), "backend/public/dist"),
     path.join(process.cwd(), "public/dist"),
     path.join(process.cwd(), "dist"),
-    path.join(process.cwd(), "public"),
   ];
   return (
     candidates.find((dir) => fs.existsSync(path.join(dir, "index.html"))) ||
-    path.join(backendRoot, "public/dist")
+    path.join(repoRoot, "public")
   );
 }
 

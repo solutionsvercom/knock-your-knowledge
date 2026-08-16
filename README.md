@@ -1,6 +1,6 @@
 ## Knock Your Knowledge
 
-React (Vite) frontend is **built into** `backend/public/dist` and served by Express. One Node app, one deploy.
+React (Vite) frontend is **built into** `./public` and served by Express. One Node app, one deploy. The layout matches Hostinger’s Node.js folder: `server.js` + `public/` at the app root.
 
 Live site: **https://knockyourknowledge.com**
 
@@ -44,7 +44,7 @@ npm run build
 npm start
 ```
 
-This installs frontend + backend, builds the React app into `backend/public/dist`, then starts Express. Open **http://localhost:5001**.
+This installs frontend + backend, builds the React app into `./public` (`index.html` + `assets`), then starts Express. Open **http://localhost:5001**.
 
 ### Hostinger deploy (GitHub → live site)
 
@@ -52,15 +52,28 @@ Pushing to `main` on GitHub rebuilds and restarts the site when Hostinger is con
 
 1. In hPanel go to **Websites** → **Add Website** (or open the existing site) → **Node.js web app**.
 2. Choose **Import Git repository** → connect GitHub → select `knock-your-knowledge`.
-3. Use these settings:
+3. Use these settings (same shape as a working Hostinger Node.js site):
    - **Node.js version:** 20 (or 18.x)
    - **Root directory:** `./`
    - **Package manager:** npm
    - **Build command:** `npm run build`
-   - **Entry file:** `backend/src/server.js`
-   - **Output directory:** leave **empty** (do not set `dist` here — Express serves `backend/public/dist` itself)
+   - **Entry file:** `server.js`  ← must be this, not `backend/src/server.js`
+   - **Output directory:** leave **empty** (do not set `dist` or `public` — Express serves `./public` itself)
 
-`hbuilds` and `current` are Hostinger system folders (build cache + the live release). Do not put the project there. The running app is the Node.js site; after deploy you should see `backend/public/dist/assets` inside the release.
+After a successful build the live app folder looks like Hostinger’s classic `nodejs` layout:
+
+```
+nodejs/                  (repo root, or hbuilds/current/nodejs on GitHub deploys)
+  server.js              ← entry file
+  package.json
+  public/
+    index.html
+    assets/
+  backend/
+  frontend/
+```
+
+`hbuilds`, `current`, and `versions` are Hostinger system folders. You cannot remove them on a GitHub-connected Node app. The files that must match the working site live **inside** `hbuilds/current/nodejs/` (that folder is this repo).
 4. Add environment variables (do **not** put these in git):
 
 | Variable | Value |
@@ -96,5 +109,7 @@ Localhost cannot be used for live payments.
 
 ### Project layout
 
-- **`frontend/`** — Vite + React (builds into `backend/public/dist`)
-- **`backend/`** — Express + MongoDB; serves `/api` and `public/dist`
+- **`server.js`** — Hostinger entry file (starts Express)
+- **`public/`** — Vite production build (`index.html` + `assets`); created by `npm run build`
+- **`frontend/`** — Vite + React source
+- **`backend/`** — Express + MongoDB; serves `/api` and `./public`

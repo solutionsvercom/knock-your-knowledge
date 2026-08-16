@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
-      outDir: path.resolve(process.cwd(), "../backend/public/dist"),
+      outDir: path.resolve(process.cwd(), "../public"),
       emptyOutDir: true,
       reportCompressedSize: false,
       chunkSizeWarningLimit: 2000,

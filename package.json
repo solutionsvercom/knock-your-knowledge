@@ -2,8 +2,9 @@
   "name": "knock-your-knowledge",
   "private": true,
   "version": "1.0.0",
-  "description": "KYK website — Express serves the Vite frontend from backend/public",
-  "main": "backend/src/server.js",
+  "description": "KYK website — Express serves the Vite frontend from ./public",
+  "type": "module",
+  "main": "server.js",
   "engines": {
     "node": ">=18"
   },
@@ -13,7 +14,7 @@
   ],
   "scripts": {
     "build": "node scripts/ensure-linux-rollup.mjs && npm run build --workspace=frontend",
-    "start": "node backend/src/server.js",
+    "start": "node server.js",
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend"
   },
