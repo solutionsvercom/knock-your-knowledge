@@ -4,10 +4,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const backendRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
+const repoRoot = path.resolve(backendRoot, "..");
+
+function envText(name) {
+  return String(process.env[name] || "")
+    .trim()
+    .replace(/^['"]|['"]$/g, "")
+    .trim();
+}
 
 function normalizePem(raw) {
   const text = String(raw || "")
     .trim()
+    .replace(/^['"]|['"]$/g, "")
+    .replace(/\r/g, "")
     .replace(/\\n/g, "\n");
   if (!text) return "";
   if (text.includes("BEGIN")) return text;
@@ -16,35 +26,55 @@ function normalizePem(raw) {
   return `-----BEGIN PUBLIC KEY-----\n${lines.join("\n")}\n-----END PUBLIC KEY-----`;
 }
 
-export function loadCashfreePublicKey() {
-  const inline = normalizePem(process.env.CASHFREE_PUBLIC_KEY);
-  if (inline) return assertUsablePublicKey(inline);
-
-  const keyPath = String(process.env.CASHFREE_PUBLIC_KEY_PATH || "").trim();
-  if (!keyPath) return "";
-
-  const resolved = path.isAbsolute(keyPath)
-    ? keyPath
-    : path.resolve(backendRoot, keyPath);
-  if (!fs.existsSync(resolved)) {
-    const err = new Error(
-      "Cashfree 2FA public key file not found. Extract the .pem from public-key.zip into backend/keys/cashfree_public_key.pem (Cashfree emails the zip password)."
-    );
-    err.status = 503;
-    throw err;
+function readPemFile(filePath) {
+  if (!filePath || !fs.existsSync(filePath)) return "";
+  try {
+    return normalizePem(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    return "";
   }
-  return assertUsablePublicKey(normalizePem(fs.readFileSync(resolved, "utf8")));
 }
 
-function assertUsablePublicKey(pem) {
-  if (!pem || !pem.includes("BEGIN")) {
-    const err = new Error(
-      "Cashfree 2FA public key file is empty or invalid. Extract the .pem from public-key.zip into backend/keys/cashfree_public_key.pem (Cashfree emails the zip password)."
-    );
-    err.status = 503;
-    throw err;
+function hostingerKeyError(detail) {
+  const err = new Error(
+    `${detail} On Hostinger, open the Node.js app → Environment variables, remove CASHFREE_PUBLIC_KEY_PATH, and set CASHFREE_PUBLIC_KEY to the full PEM text from backend/keys/cashfree_public_key.pem (including BEGIN/END lines). Redeploy after saving.`
+  );
+  err.status = 503;
+  return err;
+}
+
+export function loadCashfreePublicKey() {
+  const inline = normalizePem(
+    envText("CASHFREE_PUBLIC_KEY") || envText("CASHFREE_2FA_PUBLIC_KEY")
+  );
+  if (inline.includes("BEGIN")) return inline;
+
+  const configuredPath = envText("CASHFREE_PUBLIC_KEY_PATH");
+  const candidates = [
+    configuredPath
+      ? path.isAbsolute(configuredPath)
+        ? configuredPath
+        : path.resolve(backendRoot, configuredPath)
+      : "",
+    configuredPath ? path.resolve(process.cwd(), configuredPath) : "",
+    path.join(backendRoot, "keys/cashfree_public_key.pem"),
+    path.join(repoRoot, "backend/keys/cashfree_public_key.pem"),
+    path.join(process.cwd(), "backend/keys/cashfree_public_key.pem"),
+    path.join(process.cwd(), "keys/cashfree_public_key.pem"),
+  ].filter(Boolean);
+
+  for (const filePath of candidates) {
+    const pem = readPemFile(filePath);
+    if (pem.includes("BEGIN")) return pem;
   }
-  return pem;
+
+  if (inline || configuredPath) {
+    throw hostingerKeyError(
+      "Cashfree 2FA public key was not found on the server (the .pem file is not deployed)."
+    );
+  }
+
+  return "";
 }
 
 /** RSA-OAEP signature for Cashfree X-Cf-Signature (clientId.unixTimestamp). */
@@ -64,10 +94,9 @@ export function cashfreeTwoFactorSignature(clientId) {
     );
     return encrypted.toString("base64");
   } catch (cause) {
-    const err = new Error(
-      "Could not build Cashfree 2FA signature. Check that CASHFREE_PUBLIC_KEY_PATH points to the Cashfree public key .pem file."
+    const err = hostingerKeyError(
+      "Could not build the Cashfree 2FA signature from CASHFREE_PUBLIC_KEY."
     );
-    err.status = 503;
     err.cause = cause;
     throw err;
   }
