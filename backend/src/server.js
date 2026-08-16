@@ -21,8 +21,7 @@ dotenv.config({ path: path.join(backendRoot, ".env") });
 dotenv.config({ path: path.join(repoRoot, ".env") });
 dotenv.config({ path: path.join(process.cwd(), ".env") });
 
-const app = express();
-const PORT = Number(process.env.PORT) || 5001;
+export const app = express();
 
 function resolvePublicDir() {
   const candidates = [
@@ -55,17 +54,25 @@ app.use(
   cors({
     origin(origin, cb) {
       if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error(`CORS blocked for origin: ${origin}`));
+      return cb(null, false);
     },
   })
 );
 app.use(express.json({ limit: "100kb" }));
 
-app.get("/api/health", (_req, res) => {
+function healthPayload() {
   const dbState = mongoose.connection.readyState;
   const db =
     dbState === 1 ? "connected" : dbState === 2 ? "connecting" : "disconnected";
-  res.json({ ok: true, db, service: "kyk-api", publicDir });
+  return { ok: true, db, service: "kyk-api", publicDir };
+}
+
+app.get("/health", (_req, res) => {
+  res.json(healthPayload());
+});
+
+app.get("/api/health", (_req, res) => {
+  res.json(healthPayload());
 });
 
 app.use("/api/contact", contactRouter);
@@ -82,9 +89,12 @@ app.get("*", (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   const indexFile = path.join(publicDir, "index.html");
   if (!fs.existsSync(indexFile)) {
-    return res.status(503).json({
-      message: "Frontend is not built yet. Run npm run build from the repo root.",
-    });
+    return res
+      .status(200)
+      .type("html")
+      .send(
+        "<!doctype html><html><body><p>Knock Your Knowledge API is running. Frontend is not in public/ yet.</p></body></html>"
+      );
   }
   res.sendFile(indexFile);
 });
@@ -94,21 +104,32 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ message: err?.message || "Server error" });
 });
 
-async function start() {
-  if (process.env.MONGODB_URI) {
-    try {
-      await connectDb(process.env.MONGODB_URI);
-    } catch (err) {
-      console.error("[API] MongoDB connection failed:", err.message);
-    }
-  } else {
-    console.warn("[API] MONGODB_URI is not set; API routes that need the database will fail.");
+export function connectMongoInBackground() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    console.warn(
+      "[API] MONGODB_URI is not set; API routes that need the database will fail."
+    );
+    return;
   }
+  connectDb(uri).catch((err) => {
+    console.error("[API] MongoDB connection failed:", err.message);
+  });
+}
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[API] listening on http://0.0.0.0:${PORT}`);
+export function startServer() {
+  const port = process.env.PORT || 3000;
+  connectMongoInBackground();
+  return app.listen(port, "0.0.0.0", () => {
+    console.log(`[API] listening on http://0.0.0.0:${port}`);
     console.log(`[API] serving frontend from ${publicDir}`);
   });
 }
 
-start();
+const isMain =
+  Boolean(process.argv[1]) &&
+  path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url));
+
+if (isMain) {
+  startServer();
+}

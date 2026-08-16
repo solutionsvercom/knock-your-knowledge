@@ -5,8 +5,10 @@ export async function connectDb(uri) {
     throw new Error("MONGODB_URI is missing. Copy backend/.env.example to backend/.env");
   }
   mongoose.set("strictQuery", true);
+  mongoose.set("bufferCommands", false);
   await mongoose.connect(uri, {
     serverSelectionTimeoutMS: 8000,
+    connectTimeoutMS: 8000,
   });
   console.log("[API] MongoDB connected");
 }

@@ -57,8 +57,10 @@ Pushing to `main` on GitHub rebuilds and restarts the site when Hostinger is con
    - **Root directory:** `./`
    - **Package manager:** npm
    - **Build command:** `npm run build`
+   - **Start command:** `npm start` (this runs `node server.js`)
    - **Entry file:** `server.js`  ← must be this, not `backend/src/server.js`
    - **Output directory:** leave **empty** (do not set `dist` or `public` — Express serves `./public` itself)
+   - **PORT:** do **not** set this yourself — Hostinger injects it; the app listens on `process.env.PORT` and `0.0.0.0`
 
 After a successful build the live app folder looks like Hostinger’s classic `nodejs` layout:
 
@@ -78,8 +80,8 @@ nodejs/                  (repo root, or hbuilds/current/nodejs on GitHub deploys
 
 | Variable | Value |
 | --- | --- |
-| `PORT` | leave to Hostinger, or the port they assign |
-| `MONGODB_URI` | your Atlas URI |
+| `PORT` | **do not add this** — Hostinger provides it |
+| `MONGODB_URI` | your Atlas URI (Atlas Network Access must allow Hostinger, or `0.0.0.0/0`) |
 | `FRONTEND_URL` | `https://knockyourknowledge.com,https://www.knockyourknowledge.com` |
 | `CASHFREE_ENV` | `production` |
 | `CASHFREE_APP_ID` | Payment Gateway App ID |
