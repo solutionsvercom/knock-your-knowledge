@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { asArray } from "@/lib/asArray";
 import { useCart } from "@/lib/CartContext";
-import { INTERNSHIP_FEE_AMOUNT, feeLabelWithGst } from "@/config/pricing";
+import { internshipUnitPrice, internshipFeeLabel } from "@/config/pricing";
 import { ShoppingCart, Plus, Check, ArrowRight, Briefcase } from "lucide-react";
 
 export default function BrowseInternshipsSection() {
@@ -28,7 +28,7 @@ export default function BrowseInternshipsSection() {
       type: "internship",
       id: program.id,
       title: program.title,
-      price: INTERNSHIP_FEE_AMOUNT,
+      price: internshipUnitPrice(program),
       thumbnail: program.image || program.company_logo || "",
     });
     navigate("/Checkout");
@@ -98,7 +98,7 @@ export default function BrowseInternshipsSection() {
                     {program.description}
                   </p>
                   <p className="text-sm font-semibold mt-2" style={{ color: "#34d399" }}>
-                    Internship Fee: {feeLabelWithGst(INTERNSHIP_FEE_AMOUNT)}
+                    Internship Fee: {internshipFeeLabel(program)}
                   </p>
                 </div>
 

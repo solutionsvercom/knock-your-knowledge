@@ -7,7 +7,7 @@ import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 import { whatsappApplyUrl } from "@/config/contact";
-import { INTERNSHIP_FEE_AMOUNT, feeLabelWithGst } from "@/config/pricing";
+import { internshipUnitPrice, internshipFeeLabel } from "@/config/pricing";
 import {
   Search,
   MapPin,
@@ -75,7 +75,7 @@ export default function Internships() {
       type: "internship",
       id: item.id,
       title: item.title,
-      price: INTERNSHIP_FEE_AMOUNT,
+      price: internshipUnitPrice(item),
       thumbnail: item.image || item.company_logo || "",
     });
 
@@ -252,7 +252,7 @@ export default function Internships() {
                       </span>
                       <span className="flex items-center gap-1 font-semibold" style={{ color: "#34d399" }}>
                         <DollarSign className="w-3.5 h-3.5" />
-                        Internship Fee: {feeLabelWithGst(INTERNSHIP_FEE_AMOUNT)}
+                        Internship Fee: {internshipFeeLabel(item)}
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-2 mt-3">

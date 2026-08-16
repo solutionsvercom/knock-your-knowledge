@@ -15,7 +15,7 @@ const KEYS = {
   users: "kyk_users_v4",
   courses: "kyk_courses_v3",
   bundles: "kyk_bundles_v2",
-  internships: "kyk_internships_v3",
+  internships: "kyk_internships_v4",
   liveClasses: "kyk_live_classes",
   enrollments: "kyk_enrollments_v2",
   payments: "kyk_payments_v2",

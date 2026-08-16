@@ -130,6 +130,25 @@ export const DEMO_BUNDLES = [
 
 export const DEMO_INTERNSHIPS = [
   {
+    id: "intern-payment-demo",
+    title: "Payment Test (Demo)",
+    company: "Knock Your Knowledge",
+    description:
+      "₹1 test internship so you can complete a live Cashfree payment (UPI / card) without paying the full program fee.",
+    location: "Remote",
+    work_type: "remote",
+    duration: "Test only",
+    stipend: "₹1/-",
+    price: 1,
+    demo: true,
+    skills: ["UPI", "Cards", "Cashfree"],
+    deadline: "2026-12-31T00:00:00.000Z",
+    applicants: 0,
+    openings: 99,
+    company_logo: "",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
+  },
+  {
     id: "intern-development",
     title: "Development",
     company: "Knock Your Knowledge",

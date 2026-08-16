@@ -5,7 +5,7 @@ import { MapPin, Clock, DollarSign, ArrowRight, Building2, Loader2, AlertCircle 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { whatsappApplyUrl } from "@/config/contact";
+import { internshipFeeLabel } from "@/config/pricing";
 
 const typeColors = {
   remote: "bg-green-100 text-green-700",
@@ -23,7 +23,7 @@ export default function InternshipsPreview({
   error = null,
   onRetry,
 }) {
-  const rows = Array.isArray(internships) ? internships : [];
+  const rows = (Array.isArray(internships) ? internships : []).filter((item) => !item?.demo);
   return (
     <section className="py-20 lg:py-28 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,7 +87,7 @@ export default function InternshipsPreview({
                     <Badge className={`${typeColors[item.work_type]} border-0 text-xs`}>{item.work_type}</Badge>
                     <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {item.duration}</span>
                     <span className="flex items-center gap-1 text-green-600 font-medium">
-                      <DollarSign className="w-3.5 h-3.5" /> Internship Fee: {item.stipend || "₹3999/-"} + 18% GST
+                      <DollarSign className="w-3.5 h-3.5" /> Internship Fee: {internshipFeeLabel(item)}
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2 mt-3">

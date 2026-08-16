@@ -1,6 +1,8 @@
 /** Shared internship / checkout pricing */
 export const INTERNSHIP_FEE_AMOUNT = 3999;
 export const INTERNSHIP_FEE_LABEL = "₹3999/-";
+export const DEMO_INTERNSHIP_ID = "intern-payment-demo";
+export const DEMO_INTERNSHIP_FEE_AMOUNT = 1;
 export const GST_RATE = 0.18; // 18% GST as applicable
 
 export function formatInr(amount) {
@@ -24,4 +26,18 @@ export function withGst(baseAmount) {
 
 export function feeLabelWithGst(base = INTERNSHIP_FEE_AMOUNT) {
   return `${formatInr(base)} + 18% GST`;
+}
+
+export function internshipUnitPrice(item) {
+  const n = Number(item?.price);
+  if (Number.isFinite(n) && n > 0) return Math.round(n);
+  return INTERNSHIP_FEE_AMOUNT;
+}
+
+export function internshipFeeLabel(item) {
+  const price = internshipUnitPrice(item);
+  if (item?.id === DEMO_INTERNSHIP_ID || price <= 1) {
+    return "₹1/- (test payment)";
+  }
+  return feeLabelWithGst(price);
 }

@@ -7,11 +7,13 @@ import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 import { resolveCoupon } from "@/config/coupons";
 import {
-  INTERNSHIP_FEE_AMOUNT,
   GST_RATE,
   formatInr,
   discountedPrice,
   withGst,
+  internshipUnitPrice,
+  internshipFeeLabel,
+  DEMO_INTERNSHIP_ID,
 } from "@/config/pricing";
 import { CONTACT_PHONE, whatsappGetStartedUrl } from "@/config/contact";
 import {
@@ -69,7 +71,12 @@ export default function Checkout() {
     () =>
       items.map((line) => {
         const original = Number(line.price) || 0;
-        const taxable = discountedPrice(original, payFraction);
+        const isDemo = line.id === DEMO_INTERNSHIP_ID;
+        const taxable = discountedPrice(original, isDemo ? 1 : payFraction);
+        if (isDemo) {
+          const payable = Math.max(1, taxable);
+          return { ...line, original, taxable: payable, gst: 0, payable };
+        }
         const { gst, total: withTax } = withGst(taxable);
         return { ...line, original, taxable, gst, payable: withTax };
       }),
@@ -98,7 +105,7 @@ export default function Checkout() {
       type: "internship",
       id: program.id,
       title: program.title,
-      price: INTERNSHIP_FEE_AMOUNT,
+      price: internshipUnitPrice(program),
       thumbnail: program.image || program.company_logo || "",
     });
   };
@@ -351,11 +358,7 @@ export default function Checkout() {
                       <div className="flex-1 min-w-0">
                         <p className="text-white text-sm font-semibold truncate">{program.title}</p>
                         <p className="text-xs mt-0.5" style={{ color: "#34d399" }}>
-                          Fee: {formatInr(INTERNSHIP_FEE_AMOUNT)}
-                          {appliedCoupon
-                            ? ` → ${formatInr(discountedPrice(INTERNSHIP_FEE_AMOUNT, payFraction))}`
-                            : ""}{" "}
-                          + 18% GST
+                          Fee: {internshipFeeLabel(program)}
                         </p>
                       </div>
                       <button
