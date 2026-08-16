@@ -83,8 +83,18 @@ export default function CRMLayout({ user, navItems, children, accentColor = "#a7
         {/* Top bar */}
         <header className="sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 h-14 border-b"
           style={{ background: "rgba(2,8,23,0.9)", backdropFilter: "blur(20px)", borderColor: "rgba(255,255,255,0.07)" }}>
-          <button className="md:hidden p-2 rounded-lg" style={{ color: "#64748b" }} onClick={() => setSidebarOpen(true)}>
-            <Menu className="w-5 h-5" />
+          <button
+            type="button"
+            aria-label="Open menu"
+            className="md:hidden flex items-center justify-center min-h-11 min-w-11 rounded-lg"
+            style={{ color: "#e2e8f0", WebkitTapHighlightColor: "transparent" }}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSidebarOpen(true);
+            }}
+          >
+            <Menu className="w-6 h-6 pointer-events-none" />
           </button>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: accentColor }} />

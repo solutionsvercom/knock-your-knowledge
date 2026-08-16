@@ -36,6 +36,10 @@ export default function ContactFormModal({ open, onOpenChange }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!form.internshipInterest) {
+      setError("Please select an internship program.");
+      return;
+    }
     setError("");
     setSubmitting(true);
     try {
@@ -130,30 +134,30 @@ export default function ContactFormModal({ open, onOpenChange }) {
             </div>
 
             <div>
-              <label className="text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5" style={{ color: "#a78bfa" }}>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5" style={{ color: "#a78bfa" }}>
                 <GraduationCap className="w-3.5 h-3.5" /> Internship interested in
-              </label>
-              <select
-                required
-                name="internshipInterest"
-                value={form.internshipInterest}
-                onChange={onChange}
-                className="w-full h-11 px-3 rounded-xl text-sm outline-none"
-                style={{
-                  background: "rgba(255,255,255,0.04)",
-                  border: "1px solid rgba(255,255,255,0.1)",
-                  color: form.internshipInterest ? "#e2e8f0" : "#64748b",
-                }}
-              >
-                <option value="" disabled>
-                  Select a program
-                </option>
-                {INTERNSHIP_OPTIONS.map((opt) => (
-                  <option key={opt} value={opt} style={{ color: "#0f172a" }}>
-                    {opt}
-                  </option>
-                ))}
-              </select>
+              </p>
+              <div className="grid grid-cols-1 gap-2">
+                {INTERNSHIP_OPTIONS.map((opt) => {
+                  const selected = form.internshipInterest === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setForm((prev) => ({ ...prev, internshipInterest: opt }))}
+                      className="w-full min-h-11 px-3 rounded-xl text-sm text-left font-medium"
+                      style={{
+                        background: selected ? "rgba(167,139,250,0.18)" : "rgba(255,255,255,0.04)",
+                        border: selected ? "1px solid rgba(167,139,250,0.45)" : "1px solid rgba(255,255,255,0.1)",
+                        color: selected ? "#e2e8f0" : "#94a3b8",
+                        WebkitTapHighlightColor: "transparent",
+                      }}
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {error ? (

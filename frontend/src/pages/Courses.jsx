@@ -30,10 +30,8 @@ function CourseCard({ course }) {
 
   return (
     <div
-      className="rounded-2xl flex flex-col transition-all duration-300 hover:translate-y-[-2px] overflow-hidden"
+      className="rounded-2xl flex flex-col transition-all duration-300 hover:-translate-y-0.5 overflow-hidden hover:border-violet-400/35"
       style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 2px 20px rgba(0,0,0,0.2)" }}
-      onMouseEnter={e => e.currentTarget.style.borderColor = "rgba(167,139,250,0.35)"}
-      onMouseLeave={e => e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"}
     >
       {cover ? (
         <div className="relative h-36 w-full flex-shrink-0 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
@@ -91,8 +89,8 @@ function CourseCard({ course }) {
         {/* Modules accordion */}
         {course.modules && (
           <div className="mb-3">
-            <button onClick={() => setExpanded(v => !v)}
-              className="flex items-center gap-1.5 text-xs font-medium transition-colors"
+            <button type="button" onClick={() => setExpanded((v) => !v)}
+              className="flex items-center gap-1.5 min-h-11 text-xs font-medium transition-colors"
               style={{ color: expanded ? "#a78bfa" : "#475569" }}>
               <BookOpen className="w-3.5 h-3.5" />
               {course.modules.length} Modules
@@ -217,8 +215,9 @@ export default function Courses() {
           <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide"
             style={{ scrollbarWidth: "none" }}>
             <button
+              type="button"
               onClick={() => setActiveCategory("all")}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
+              className="flex items-center gap-2 px-4 min-h-11 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
               style={{
                 background: activeCategory === "all" ? "rgba(167,139,250,0.15)" : "transparent",
                 color: activeCategory === "all" ? "#a78bfa" : "#475569",
@@ -230,8 +229,8 @@ export default function Courses() {
               const Icon = cat.icon;
               const isActive = activeCategory === cat.id;
               return (
-                <button key={cat.id} onClick={() => setActiveCategory(cat.id)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
+                <button key={cat.id} type="button" onClick={() => setActiveCategory(cat.id)}
+                  className="flex items-center gap-2 px-4 min-h-11 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
                   style={{
                     background: isActive ? `${cat.glow}` : "transparent",
                     color: isActive ? cat.color : "#475569",

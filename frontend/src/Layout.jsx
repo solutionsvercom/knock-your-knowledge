@@ -159,11 +159,18 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
               ) : null}
               <button
-                className="p-2 rounded-lg transition-colors"
-                style={{ color: "#64748b" }}
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                type="button"
+                aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileMenuOpen}
+                className="relative z-50 flex items-center justify-center min-h-11 min-w-11 rounded-lg"
+                style={{ color: "#e2e8f0", WebkitTapHighlightColor: "transparent" }}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setMobileMenuOpen((open) => !open);
+                }}
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? <X className="w-6 h-6 pointer-events-none" /> : <Menu className="w-6 h-6 pointer-events-none" />}
               </button>
             </div>
           </div>
@@ -185,7 +192,7 @@ export default function Layout({ children, currentPageName }) {
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
-                    className="flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all"
+                    className="flex items-center px-4 min-h-12 rounded-xl text-sm font-medium transition-all"
                     style={{
                       color: currentPageName === link.page ? "#a78bfa" : "#94a3b8",
                       background: currentPageName === link.page ? "rgba(167,139,250,0.1)" : "transparent",

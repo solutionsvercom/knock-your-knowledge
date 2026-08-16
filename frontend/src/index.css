@@ -85,4 +85,13 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* First tap should click on mobile (avoid 300ms delay / hover-first). */
+  a,
+  button,
+  summary,
+  select,
+  [role="button"] {
+    touch-action: manipulation;
+  }
 }
