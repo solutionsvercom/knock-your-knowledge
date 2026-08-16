@@ -1,4 +1,4 @@
-# Built frontend (Vite outputs here; Hostinger rebuilds on git push)
+# Built frontend (Vite → backend/public/dist; Hostinger rebuilds on git push)
 backend/public/
 
 #env

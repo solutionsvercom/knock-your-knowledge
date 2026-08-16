@@ -1,6 +1,6 @@
 ## Knock Your Knowledge
 
-React (Vite) frontend is **built into** `backend/public` and served by Express. One Node app, one deploy.
+React (Vite) frontend is **built into** `backend/public/dist` and served by Express. One Node app, one deploy.
 
 Live site: **https://knockyourknowledge.com**
 
@@ -44,7 +44,7 @@ npm run build
 npm start
 ```
 
-This installs frontend + backend, builds the React app into `backend/public`, then starts Express. Open **http://localhost:5001**.
+This installs frontend + backend, builds the React app into `backend/public/dist`, then starts Express. Open **http://localhost:5001**.
 
 ### Hostinger deploy (GitHub → live site)
 
@@ -58,7 +58,9 @@ Pushing to `main` on GitHub rebuilds and restarts the site when Hostinger is con
    - **Package manager:** npm
    - **Build command:** `npm run build`
    - **Entry file:** `backend/src/server.js`
-   - **Output directory:** `backend/public`
+   - **Output directory:** leave **empty** (do not set `dist` here — Express serves `backend/public/dist` itself)
+
+`hbuilds` and `current` are Hostinger system folders (build cache + the live release). Do not put the project there. The running app is the Node.js site; after deploy you should see `backend/public/dist/assets` inside the release.
 4. Add environment variables (do **not** put these in git):
 
 | Variable | Value |
@@ -94,5 +96,5 @@ Localhost cannot be used for live payments.
 
 ### Project layout
 
-- **`frontend/`** — Vite + React (builds into `backend/public`)
-- **`backend/`** — Express + MongoDB; serves `/api` and the built UI
+- **`frontend/`** — Vite + React (builds into `backend/public/dist`)
+- **`backend/`** — Express + MongoDB; serves `/api` and `public/dist`

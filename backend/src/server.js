@@ -14,11 +14,33 @@ import ticketsRouter from "./routes/tickets.js";
 import mongoose from "mongoose";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-dotenv.config({ path: path.join(__dirname, "../.env") });
+const backendRoot = path.resolve(__dirname, "..");
+const repoRoot = path.resolve(backendRoot, "..");
+
+dotenv.config({ path: path.join(backendRoot, ".env") });
+dotenv.config({ path: path.join(repoRoot, ".env") });
+dotenv.config({ path: path.join(process.cwd(), ".env") });
 
 const app = express();
 const PORT = Number(process.env.PORT) || 5001;
-const publicDir = path.join(__dirname, "../public");
+
+function resolvePublicDir() {
+  const candidates = [
+    path.join(backendRoot, "public/dist"),
+    path.join(backendRoot, "public"),
+    path.join(repoRoot, "backend/public/dist"),
+    path.join(process.cwd(), "backend/public/dist"),
+    path.join(process.cwd(), "public/dist"),
+    path.join(process.cwd(), "dist"),
+    path.join(process.cwd(), "public"),
+  ];
+  return (
+    candidates.find((dir) => fs.existsSync(path.join(dir, "index.html"))) ||
+    path.join(backendRoot, "public/dist")
+  );
+}
+
+const publicDir = resolvePublicDir();
 
 app.set("trust proxy", 1);
 
@@ -43,7 +65,7 @@ app.get("/api/health", (_req, res) => {
   const dbState = mongoose.connection.readyState;
   const db =
     dbState === 1 ? "connected" : dbState === 2 ? "connecting" : "disconnected";
-  res.json({ ok: true, db, service: "kyk-api" });
+  res.json({ ok: true, db, service: "kyk-api", publicDir });
 });
 
 app.use("/api/contact", contactRouter);
@@ -73,15 +95,20 @@ app.use((err, _req, res, _next) => {
 });
 
 async function start() {
-  try {
-    await connectDb(process.env.MONGODB_URI);
-    app.listen(PORT, "0.0.0.0", () => {
-      console.log(`[API] listening on http://0.0.0.0:${PORT}`);
-    });
-  } catch (err) {
-    console.error("[API] failed to start:", err.message);
-    process.exit(1);
+  if (process.env.MONGODB_URI) {
+    try {
+      await connectDb(process.env.MONGODB_URI);
+    } catch (err) {
+      console.error("[API] MongoDB connection failed:", err.message);
+    }
+  } else {
+    console.warn("[API] MONGODB_URI is not set; API routes that need the database will fail.");
   }
+
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`[API] listening on http://0.0.0.0:${PORT}`);
+    console.log(`[API] serving frontend from ${publicDir}`);
+  });
 }
 
 start();
