@@ -31,22 +31,30 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
-      <nav className="sticky top-0 z-50 border-b"
+      <nav className="sticky top-0 z-50 border-b isolate"
         style={{
-          background: "rgba(2,8,23,0.85)",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
+          background: "rgba(2,8,23,0.92)",
           borderColor: "rgba(167,139,250,0.15)",
         }}>
-        <div className="h-px w-full" style={{ background: "linear-gradient(90deg, transparent, rgba(96,165,250,0.6), rgba(167,139,250,0.6), transparent)" }} />
+        {/* Blur on a non-interactive layer so Safari does not offset hamburger taps */}
+        <div
+          aria-hidden
+          className="absolute inset-0 -z-10 pointer-events-none"
+          style={{
+            background: "rgba(2,8,23,0.85)",
+            backdropFilter: "blur(20px)",
+            WebkitBackdropFilter: "blur(20px)",
+          }}
+        />
+        <div className="h-px w-full pointer-events-none" style={{ background: "linear-gradient(90deg, transparent, rgba(96,165,250,0.6), rgba(167,139,250,0.6), transparent)" }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-12 md:h-16">
-            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0">
+          <div className="flex items-center justify-between gap-2 h-14 md:h-16">
+            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden relative z-0">
               <img
                 src={KYK_LOGO_SRC}
                 alt="Knock Your Knowledge"
-                className="w-10 h-10 md:w-11 md:h-11 rounded-full object-cover flex-shrink-0"
+                className="!w-10 !h-10 md:!w-11 md:!h-11 rounded-full object-cover flex-shrink-0"
                 style={{ boxShadow: "0 0 16px rgba(251,146,60,0.4)" }}
               />
               <span className="text-base sm:text-xl font-black truncate"
@@ -142,7 +150,7 @@ export default function Layout({ children, currentPageName }) {
               ) : null}
             </div>
 
-            <div className="md:hidden flex items-center gap-2">
+            <div className="md:hidden relative z-20 flex items-center gap-2 shrink-0">
               {isAuthenticated && user ? (
                 <Link
                   to="/Dashboard"
@@ -162,15 +170,12 @@ export default function Layout({ children, currentPageName }) {
                 type="button"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
-                className="relative z-50 flex items-center justify-center min-h-11 min-w-11 rounded-lg"
+                className="relative flex items-center justify-center h-11 w-11 shrink-0 rounded-lg"
                 style={{ color: "#e2e8f0", WebkitTapHighlightColor: "transparent" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setMobileMenuOpen((open) => !open);
-                }}
+                onClick={() => setMobileMenuOpen((open) => !open)}
               >
-                {mobileMenuOpen ? <X className="w-6 h-6 pointer-events-none" /> : <Menu className="w-6 h-6 pointer-events-none" />}
+                <span className="absolute -inset-3" aria-hidden />
+                {mobileMenuOpen ? <X className="w-6 h-6 relative z-10 pointer-events-none" /> : <Menu className="w-6 h-6 relative z-10 pointer-events-none" />}
               </button>
             </div>
           </div>

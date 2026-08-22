@@ -111,7 +111,7 @@ body, #root {
 
 /* Scroll padding so sticky navbar doesn't cover anchor targets */
 html {
-  scroll-padding-top: 4rem; /* matches mobile navbar height (~48px) */
+  scroll-padding-top: 3.5rem; /* matches mobile navbar height (h-14) */
 }
 
 @media (min-width: 768px) {

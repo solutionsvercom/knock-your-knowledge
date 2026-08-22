@@ -209,7 +209,7 @@ export default function Courses() {
         loadingLabel="Loading courses from server…"
       >
       {/* ── Category Filter Tabs ── */}
-      <div className="sticky top-[48px] md:top-[64px] z-30 border-b"
+      <div className="sticky top-14 md:top-16 z-30 border-b"
         style={{ background: "rgba(2,8,23,0.95)", backdropFilter: "blur(20px)", borderColor: "rgba(255,255,255,0.06)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-1 overflow-x-auto py-3 scrollbar-hide"
