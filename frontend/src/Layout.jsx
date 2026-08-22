@@ -31,7 +31,7 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
-      <nav className="sticky top-0 z-50 border-b isolate"
+      <nav className="sticky top-0 z-[200] border-b isolate">
         style={{
           background: "rgba(2,8,23,0.92)",
           borderColor: "rgba(167,139,250,0.15)",
@@ -150,7 +150,7 @@ export default function Layout({ children, currentPageName }) {
               ) : null}
             </div>
 
-            <div className="md:hidden relative z-20 flex items-center gap-2 shrink-0">
+            <div className="md:hidden relative z-20 flex items-center shrink-0 -mr-2">
               {isAuthenticated && user ? (
                 <Link
                   to="/Dashboard"
@@ -170,12 +170,15 @@ export default function Layout({ children, currentPageName }) {
                 type="button"
                 aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileMenuOpen}
-                className="relative flex items-center justify-center h-11 w-11 shrink-0 rounded-lg"
+                className="flex items-center justify-center h-14 w-14 shrink-0"
                 style={{ color: "#e2e8f0", WebkitTapHighlightColor: "transparent" }}
                 onClick={() => setMobileMenuOpen((open) => !open)}
               >
-                <span className="absolute -inset-3" aria-hidden />
-                {mobileMenuOpen ? <X className="w-6 h-6 relative z-10 pointer-events-none" /> : <Menu className="w-6 h-6 relative z-10 pointer-events-none" />}
+                {mobileMenuOpen ? (
+                  <X className="w-7 h-7 pointer-events-none" strokeWidth={2} />
+                ) : (
+                  <Menu className="w-7 h-7 pointer-events-none" strokeWidth={2} />
+                )}
               </button>
             </div>
           </div>
@@ -251,7 +254,7 @@ export default function Layout({ children, currentPageName }) {
         </AnimatePresence>
       </nav>
 
-      <main className="overflow-x-hidden w-full max-w-[100vw]">{children}</main>
+      <main className="relative z-0 overflow-x-hidden w-full max-w-[100vw]">{children}</main>
       <Footer />
     </div>
   );

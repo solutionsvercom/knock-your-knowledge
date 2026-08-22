@@ -130,7 +130,7 @@ export default function HeroSection() {
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
   return (
     <section
-      className="relative min-h-screen overflow-hidden flex items-center"
+      className="relative z-0 min-h-screen overflow-hidden flex items-center"
       style={{ background: "linear-gradient(135deg, #020817 0%, #0f0a2e 30%, #1a0a3e 60%, #0d1b4b 100%)" }}
     >
       {/* Grid */}
