@@ -31,11 +31,13 @@ export default function Layout({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
-      <nav className="sticky top-0 z-[200] border-b isolate">
+      <nav
+        className="sticky top-0 z-[200] border-b isolate"
         style={{
           background: "rgba(2,8,23,0.92)",
           borderColor: "rgba(167,139,250,0.15)",
-        }}>
+        }}
+      >
         {/* Blur on a non-interactive layer so Safari does not offset hamburger taps */}
         <div
           aria-hidden
