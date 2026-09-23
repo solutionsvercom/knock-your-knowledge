@@ -11,6 +11,8 @@ import paymentsRouter from "./routes/payments.js";
 import adminRouter from "./routes/admin.js";
 import couponsRouter from "./routes/coupons.js";
 import ticketsRouter from "./routes/tickets.js";
+import liveClassesRouter from "./routes/liveClasses.js";
+import notificationsRouter from "./routes/notifications.js";
 import mongoose from "mongoose";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -79,6 +81,8 @@ app.use("/api/contact", contactRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/coupons", couponsRouter);
 app.use("/api/tickets", ticketsRouter);
+app.use("/api/live-classes", liveClassesRouter);
+app.use("/api/notifications", notificationsRouter);
 app.use("/api/admin", adminRouter);
 
 if (fs.existsSync(publicDir)) {

@@ -25,7 +25,7 @@ export default function AdminLeadsPage() {
           Contact leads
         </h1>
         <p className="text-sm mt-0.5 text-slate-500">
-          {leads.length} submissions from Get Started / contact form
+          {leads.length} submissions from Get Started and internship Apply Now
         </p>
       </div>
 
@@ -40,7 +40,8 @@ export default function AdminLeadsPage() {
                 <th className="px-5 py-3 font-medium">Name</th>
                 <th className="px-3 py-3 font-medium">Email</th>
                 <th className="px-3 py-3 font-medium">Phone</th>
-                <th className="px-3 py-3 font-medium">Interest</th>
+                <th className="px-3 py-3 font-medium">Internship course</th>
+                <th className="px-3 py-3 font-medium">Source</th>
                 <th className="px-5 py-3 font-medium">Date</th>
               </tr>
             </thead>
@@ -53,6 +54,7 @@ export default function AdminLeadsPage() {
                   <td className="px-3 py-3 text-slate-300 text-xs">
                     {l.internshipInterest || l.program || l.message || "—"}
                   </td>
+                  <td className="px-3 py-3 text-xs text-slate-500">{l.source || "—"}</td>
                   <td className="px-5 py-3 text-xs text-slate-500">{formatDate(l.createdAt)}</td>
                 </tr>
               ))}

@@ -28,7 +28,7 @@ const platformLinks = [
 
 const companyLinks = [
   { name: "About Us", page: "About" },
-  { name: "Blog", page: "Blog" },
+  { name: "Career Guide", page: "Blog" },
 ];
 
 const socials = [

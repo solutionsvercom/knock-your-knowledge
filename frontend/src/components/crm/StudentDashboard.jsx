@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { fetchMyReferralTickets } from "@/api/ticketsApi";
+import { fetchLiveClasses, fetchMyNotifications } from "@/api/liveClassesApi";
+import { fetchMyPurchases } from "@/api/purchasesApi";
 import CRMLayout from "./CRMLayout";
 import StatCard from "./StatCard";
 import { BookOpen, Trophy, TicketCheck, LayoutDashboard, Video, Calendar, Clock, ExternalLink, Award, Bell, CreditCard, ShoppingCart, Copy, Check } from "lucide-react";
@@ -32,10 +34,38 @@ export default function StudentDashboard({ user }) {
     return () => window.removeEventListener("hashchange", handler);
   }, []);
 
-  const { data: enrollments = [] } = useQuery({
+  const { data: localEnrollments = [] } = useQuery({
     queryKey: ["s-enrollments"],
     queryFn: () => api.enrollments.mine()
   });
+  const { data: localPayments = [] } = useQuery({
+    queryKey: ["s-payments"],
+    queryFn: () => api.payments.mine()
+  });
+  const { data: purchases } = useQuery({
+    queryKey: ["s-purchases", user?.email],
+    queryFn: () => fetchMyPurchases(user.email),
+    enabled: Boolean(user?.email),
+    refetchInterval: 15000,
+  });
+
+  const enrollments = (() => {
+    const remote = purchases?.enrollments || [];
+    const local = Array.isArray(localEnrollments) ? localEnrollments : [];
+    const map = new Map();
+    for (const e of [...local, ...remote]) {
+      const key = String(e.course_id || e.id || e.course_title);
+      map.set(key, { ...e, status: e.status || "active", progress: e.progress || 0 });
+    }
+    return Array.from(map.values());
+  })();
+
+  const payments = (() => {
+    const remote = purchases?.payments || [];
+    const local = Array.isArray(localPayments) ? localPayments : [];
+    if (remote.length) return remote;
+    return local;
+  })();
   const { data: ticketData, isLoading: ticketsLoading } = useQuery({
     queryKey: ["s-referral-tickets", user?.email],
     queryFn: () => fetchMyReferralTickets(user?.email),
@@ -44,17 +74,39 @@ export default function StudentDashboard({ user }) {
   });
   const tickets = ticketData?.tickets || [];
   const ticketWallet = ticketData?.walletValue || 0;
-  const { data: payments = [] } = useQuery({
-    queryKey: ["s-payments"],
-    queryFn: () => api.payments.mine()
-  });
   const { data: allSessions = [] } = useQuery({
     queryKey: ["s-doubt-sessions"],
     queryFn: () => api.doubtSessions.list()
   });
   const { data: notifications = [] } = useQuery({
     queryKey: ["s-notifications", user.email],
-    queryFn: () => api.notifications.mine()
+    queryFn: async () => {
+      try {
+        const data = await fetchMyNotifications(user.email);
+        return data.notifications || [];
+      } catch {
+        return api.notifications.mine();
+      }
+    },
+    refetchInterval: 20000,
+  });
+  const { data: liveClasses = [] } = useQuery({
+    queryKey: ["live-classes"],
+    queryFn: async () => {
+      try {
+        const data = await fetchLiveClasses();
+        return data.classes || [];
+      } catch {
+        return [];
+      }
+    },
+    refetchInterval: 20000,
+  });
+
+  const todayKey = new Date().toDateString();
+  const todaysLive = (Array.isArray(liveClasses) ? liveClasses : []).filter((c) => {
+    if (!c?.date) return false;
+    return new Date(c.date).toDateString() === todayKey || c.is_live;
   });
 
   const completed = enrollments.filter(e => e.status === "completed");
@@ -90,7 +142,7 @@ export default function StudentDashboard({ user }) {
             <StatCard label="Enrolled Courses" value={enrollments.length} icon={BookOpen} color="#60a5fa" />
             <StatCard label="Completed" value={completed.length} icon={Trophy} color="#34d399" />
             <StatCard label="My Tickets" value={tickets.length} icon={TicketCheck} color="#fbbf24" sub={ticketWallet ? `₹${ticketWallet.toLocaleString("en-IN")} wallet` : "from admin"} />
-            <StatCard label="Notifications" value={notifications.filter(n => !n.is_read).length} icon={Bell} color="#a78bfa" sub="unread" />
+            <StatCard label="Notifications" value={notifications.filter((n) => !n.is_read).length + todaysLive.filter((c) => !notifications.some((n) => n.live_class_id === c.id)).length} icon={Bell} color="#a78bfa" sub="unread" />
           </div>
 
           <div
@@ -112,6 +164,49 @@ export default function StudentDashboard({ user }) {
               <ShoppingCart className="w-4 h-4" /> Add to Cart
             </a>
           </div>
+
+          {/* Today's live classes from admin */}
+          {todaysLive.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-white">Today&apos;s Live Classes</h2>
+                <Link to="/LiveClasses" className="text-xs font-semibold" style={{ color: "#34d399" }}>View schedule →</Link>
+              </div>
+              <div className="space-y-3">
+                {todaysLive.map((s) => {
+                  const date = new Date(s.date);
+                  return (
+                    <div key={s.id} className="flex items-center justify-between px-4 py-3 rounded-xl"
+                      style={{ background: "rgba(167,139,250,0.06)", border: "1px solid rgba(167,139,250,0.2)" }}>
+                      <div>
+                        <p className="text-sm font-semibold text-white">{s.title}</p>
+                        <p className="text-xs mt-0.5" style={{ color: "#475569" }}>
+                          {s.track_title} · {s.instructor}
+                        </p>
+                        <p className="text-xs mt-0.5" style={{ color: "#a78bfa" }}>
+                          {date.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })} · {s.duration_mins} mins
+                          {s.is_live ? " · Live now" : ""}
+                        </p>
+                      </div>
+                      {s.meet_link ? (
+                        <a href={s.meet_link} target="_blank" rel="noopener noreferrer"
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-white flex-shrink-0 transition-all hover:scale-105"
+                          style={{ background: "linear-gradient(135deg, #7c3aed, #4f46e5)" }}>
+                          <Video className="w-3 h-3" /> Join
+                        </a>
+                      ) : (
+                        <Link to="/LiveClasses"
+                          className="text-xs font-semibold flex-shrink-0"
+                          style={{ color: "#a78bfa" }}>
+                          Details
+                        </Link>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Upcoming Doubt Classes preview */}
           {upcomingSessions.length > 0 && (
@@ -158,11 +253,19 @@ export default function StudentDashboard({ user }) {
                   <div className="w-full h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.08)" }}>
                     <div className="h-full rounded-full transition-all" style={{ width: `${e.progress || 0}%`, background: "linear-gradient(90deg, #34d399, #06b6d4)" }} />
                   </div>
-                  <Link to={`/CourseLearning?id=${e.course_id}`}
-                    className="inline-block mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:scale-105"
-                    style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399" }}>
-                    Continue →
-                  </Link>
+                  {e.item_type === "internship" || String(e.course_id || "").startsWith("intern-") ? (
+                    <Link to="/LiveClasses"
+                      className="inline-block mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:scale-105"
+                      style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399" }}>
+                      View live classes →
+                    </Link>
+                  ) : (
+                    <Link to={`/CourseLearning?id=${e.course_id}`}
+                      className="inline-block mt-3 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:scale-105"
+                      style={{ background: "rgba(52,211,153,0.1)", border: "1px solid rgba(52,211,153,0.25)", color: "#34d399" }}>
+                      Continue →
+                    </Link>
+                  )}
                 </div>
               ))}
               {enrollments.filter(e => e.status === "active").length === 0 && (

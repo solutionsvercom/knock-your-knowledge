@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { internshipFeeLabel } from "@/config/pricing";
+import { useContactForm } from "@/lib/ContactFormContext";
 
 const typeColors = {
   remote: "bg-green-100 text-green-700",
@@ -23,7 +24,19 @@ export default function InternshipsPreview({
   error = null,
   onRetry,
 }) {
+  const { openContactForm } = useContactForm();
   const rows = (Array.isArray(internships) ? internships : []).filter((item) => !item?.demo);
+
+  const openApplyForm = (programTitle) => {
+    openContactForm({
+      internshipInterest: programTitle,
+      source: "internship-apply",
+      heading: "Apply for internship",
+      description:
+        "Enter your name, phone, mail ID, and the internship course you want to enroll in. Our team will contact you soon.",
+    });
+  };
+
   return (
     <section className="py-20 lg:py-28 bg-white dark:bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,10 +112,8 @@ export default function InternshipsPreview({
 
                 <Button
                   type="button"
-                  className="bg-emerald-600 hover:bg-emerald-700 rounded-xl h-10 px-6 self-start sm:self-center w-full sm:w-auto"
-                  onClick={() =>
-                    window.open(whatsappApplyUrl(item.title), "_blank", "noopener,noreferrer")
-                  }
+                  className="bg-violet-600 hover:bg-violet-700 rounded-xl h-10 px-6 self-start sm:self-center w-full sm:w-auto"
+                  onClick={() => openApplyForm(item.title)}
                 >
                   Apply Now
                 </Button>

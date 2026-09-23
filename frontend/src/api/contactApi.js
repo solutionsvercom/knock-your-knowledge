@@ -7,11 +7,32 @@ export const INTERNSHIP_OPTIONS = [
   "Advanced Digital Marketing",
 ];
 
-export async function submitContactLead({ email, phone, internshipInterest, source = "get-started" }) {
+export function matchInternshipOption(title) {
+  const t = String(title || "").trim();
+  if (INTERNSHIP_OPTIONS.includes(t)) return t;
+  const lower = t.toLowerCase();
+  const exact = INTERNSHIP_OPTIONS.find((opt) => opt.toLowerCase() === lower);
+  if (exact) return exact;
+  if (lower.includes("prompt") || (lower.includes("ai") && lower.includes("engineer"))) {
+    return "AI & Prompt Engineering";
+  }
+  if (lower.includes("develop")) return "Development";
+  if (lower.includes("analytic")) return "Business Analytics";
+  if (lower.includes("market")) return "Advanced Digital Marketing";
+  return "";
+}
+
+export async function submitContactLead({
+  name,
+  email,
+  phone,
+  internshipInterest,
+  source = "get-started",
+}) {
   const res = await fetch(apiUrl("/contact"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, phone, internshipInterest, source }),
+    body: JSON.stringify({ name, email, phone, internshipInterest, source }),
   });
 
   let data = null;

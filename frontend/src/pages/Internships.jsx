@@ -6,8 +6,8 @@ import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
-import { whatsappApplyUrl } from "@/config/contact";
 import { internshipUnitPrice, internshipFeeLabel } from "@/config/pricing";
+import { useContactForm } from "@/lib/ContactFormContext";
 import {
   Search,
   MapPin,
@@ -15,7 +15,6 @@ import {
   Building2,
   Calendar,
   Users,
-  ExternalLink,
   ShoppingCart,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -36,15 +35,22 @@ const STATS = [
   { value: "4", label: "Programs", color: "#06b6d4" },
 ];
 
-function applyOnWhatsApp(programTitle) {
-  window.open(whatsappApplyUrl(programTitle), "_blank", "noopener,noreferrer");
-}
-
 export default function Internships() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { addItem } = useCart();
   const { isAuthenticated, isLoadingAuth } = useAuth();
+  const { openContactForm } = useContactForm();
+
+  const openApplyForm = (programTitle) => {
+    openContactForm({
+      internshipInterest: programTitle,
+      source: "internship-apply",
+      heading: "Apply for internship",
+      description:
+        "Enter your name, phone, mail ID, and the internship course you want to enroll in. Our team will contact you soon.",
+    });
+  };
 
   const {
     data: internshipsRaw,
@@ -273,14 +279,14 @@ export default function Internships() {
                   <div className="flex flex-col gap-2 self-start lg:self-center flex-shrink-0 w-full lg:w-auto">
                     <button
                       type="button"
-                      onClick={() => applyOnWhatsApp(item.title)}
+                      onClick={() => openApplyForm(item.title)}
                       className="w-full lg:w-auto min-h-[48px] px-6 rounded-xl text-base font-semibold text-white transition-all hover:scale-105 inline-flex items-center justify-center gap-2"
                       style={{
-                        background: "linear-gradient(135deg, #25d366, #128c7e)",
-                        boxShadow: "0 0 16px rgba(37,211,102,0.35)",
+                        background: "linear-gradient(135deg, #2563eb, #06b6d4)",
+                        boxShadow: "0 0 16px rgba(37,99,235,0.35)",
                       }}
                     >
-                      Apply Now <ExternalLink className="w-4 h-4" />
+                      Apply Now
                     </button>
                     <button
                       type="button"

@@ -117,7 +117,7 @@ export default function About() {
                   color: "#94a3b8",
                 }}
               >
-                Read our blogs
+                Career Guide
               </Link>
             </div>
           </div>

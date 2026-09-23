@@ -1,7 +1,16 @@
 import { Router } from "express";
-import { ContactLead, INTERNSHIP_OPTIONS } from "../models/ContactLead.js";
+import {
+  ContactLead,
+  INTERNSHIP_OPTIONS,
+  normalizeInternshipInterest,
+} from "../models/ContactLead.js";
 
 const router = Router();
+
+function isValidName(name) {
+  const n = String(name || "").trim();
+  return n.length >= 2 && n.length <= 80;
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || "").trim());
@@ -17,31 +26,39 @@ router.get("/options", (_req, res) => {
   res.json({ internships: INTERNSHIP_OPTIONS });
 });
 
-/** POST /api/contact — save Get Started contact form */
+/** POST /api/contact — save Get Started / internship apply form */
 router.post("/", async (req, res) => {
   try {
+    const name = String(req.body?.name || "").trim();
     const email = String(req.body?.email || "").trim().toLowerCase();
     const phone = String(req.body?.phone || "").trim();
-    const internshipInterest = String(req.body?.internshipInterest || "").trim();
+    const internshipInterest = normalizeInternshipInterest(req.body?.internshipInterest);
 
+    if (!isValidName(name)) {
+      return res.status(400).json({ message: "Please enter your full name." });
+    }
     if (!isValidEmail(email)) {
       return res.status(400).json({ message: "Please enter a valid email address." });
     }
     if (!isValidPhone(phone)) {
       return res.status(400).json({ message: "Please enter a valid phone number (10+ digits)." });
     }
-    if (!INTERNSHIP_OPTIONS.includes(internshipInterest)) {
+    if (!internshipInterest) {
       return res.status(400).json({
         message: "Please select an internship program.",
         options: INTERNSHIP_OPTIONS,
       });
     }
 
+    const sourceRaw = String(req.body?.source || "get-started").trim().slice(0, 40);
+    const source = sourceRaw || "get-started";
+
     const lead = await ContactLead.create({
+      name,
       email,
       phone,
       internshipInterest,
-      source: String(req.body?.source || "get-started"),
+      source,
     });
 
     return res.status(201).json({
@@ -49,9 +66,11 @@ router.post("/", async (req, res) => {
       message: "Thanks! We received your details and will contact you soon.",
       lead: {
         id: lead._id,
+        name: lead.name,
         email: lead.email,
         phone: lead.phone,
         internshipInterest: lead.internshipInterest,
+        source: lead.source,
         createdAt: lead.createdAt,
       },
     });
@@ -69,6 +88,7 @@ router.get("/", async (_req, res) => {
       count: leads.length,
       leads: leads.map((l) => ({
         id: l._id,
+        name: l.name || "",
         email: l.email,
         phone: l.phone,
         internshipInterest: l.internshipInterest,

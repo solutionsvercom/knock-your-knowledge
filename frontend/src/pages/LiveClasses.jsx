@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/api/apiClient";
+import { fetchLiveClasses } from "@/api/liveClassesApi";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
-import { Calendar as CalendarIcon, Users, Play, Bell } from "lucide-react";
+import { Calendar as CalendarIcon, Users, Play, ExternalLink } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 
@@ -35,12 +35,42 @@ export default function LiveClasses() {
     refetch,
   } = useQuery({
     queryKey: ["live-classes"],
-    queryFn: () => api.liveClasses.list(),
+        queryFn: async () => {
+          try {
+            const data = await fetchLiveClasses();
+            return data.classes || [];
+          } catch {
+            return [];
+          }
+        },
+    refetchInterval: 20000,
   });
 
   const classes = asArray(classesRaw);
-  const liveNow = classes.find((c) => c.is_live);
-  const upcoming = classes.filter((c) => !c.is_live);
+  const selectedKey = format(selectedDate, "yyyy-MM-dd");
+  const todayKey = format(new Date(), "yyyy-MM-dd");
+  const onSelectedDay = useMemo(
+    () =>
+      classes.filter((c) => {
+        if (!c?.date) return false;
+        try {
+          return format(new Date(c.date), "yyyy-MM-dd") === selectedKey;
+        } catch {
+          return false;
+        }
+      }),
+    [classes, selectedKey]
+  );
+  const liveNow =
+    onSelectedDay.find((c) => c.is_live) ||
+    (selectedKey === todayKey ? classes.find((c) => c.is_live) : null);
+  const upcoming = onSelectedDay.filter((c) => c.id !== liveNow?.id);
+
+  const joinClass = (cls) => {
+    if (cls?.meet_link) {
+      window.open(cls.meet_link, "_blank", "noopener,noreferrer");
+    }
+  };
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
@@ -58,7 +88,9 @@ export default function LiveClasses() {
               Live Sessions
             </span>
           </h1>
-          <p style={{ color: "#475569" }}>Join live lectures, doubt sessions, and workshops with expert instructors</p>
+          <p style={{ color: "#475569" }}>
+            Today&apos;s sessions for Development, AI & Prompt Engineering, Business Analytics, and Advanced Digital Marketing — updated from the KYK admin panel
+          </p>
         </div>
       </div>
 
@@ -94,10 +126,10 @@ export default function LiveClasses() {
               onRetry={() => refetch()}
               loadingLabel="Loading live classes from API…"
             >
-            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
               <div className="flex gap-1 p-1 rounded-xl" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
                 {["upcoming", "my"].map((t) => (
-                  <button key={t} onClick={() => setTab(t)}
+                  <button key={t} type="button" onClick={() => setTab(t)}
                     className="px-4 py-1.5 rounded-lg text-sm font-medium capitalize transition-all"
                     style={{
                       background: tab === t ? "rgba(167,139,250,0.2)" : "transparent",
@@ -108,11 +140,10 @@ export default function LiveClasses() {
                   </button>
                 ))}
               </div>
-              <button className="flex items-center gap-2 px-4 h-9 rounded-xl text-sm transition-all"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#64748b" }}>
-                <Bell className="w-4 h-4" /> Get Reminders
-              </button>
-            </div>
+              <p className="text-xs" style={{ color: "#475569" }}>
+                Showing {format(selectedDate, "MMM d, yyyy")}
+              </p>
+              </div>
 
             {/* Live Now */}
             {liveNow && (
@@ -123,10 +154,16 @@ export default function LiveClasses() {
                   <span className="text-sm font-semibold">Live Now</span>
                 </div>
                 <h2 className="text-2xl font-bold mb-2" style={{ fontFamily: "'Poppins', sans-serif" }}>{liveNow.title}</h2>
-                <p className="text-white/70 mb-4">Join {liveNow.live_students} students learning {liveNow.description?.toLowerCase()}</p>
-                <button className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105"
-                  style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)" }}>
-                  <Play className="w-4 h-4" /> Join Now
+                <p className="text-white/70 mb-1 text-sm">{liveNow.track_title}</p>
+                <p className="text-white/70 mb-4">{liveNow.description || "Join this live internship session."}</p>
+                <button
+                  type="button"
+                  onClick={() => joinClass(liveNow)}
+                  disabled={!liveNow.meet_link}
+                  className="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all hover:scale-105 disabled:opacity-50"
+                  style={{ background: "rgba(255,255,255,0.15)", border: "1px solid rgba(255,255,255,0.2)" }}
+                >
+                  <Play className="w-4 h-4" /> {liveNow.meet_link ? "Join Now" : "Link coming soon"}
                 </button>
               </div>
             )}
@@ -156,8 +193,14 @@ export default function LiveClasses() {
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-2 mb-2">
                           <span className="px-2.5 py-0.5 rounded-full text-xs font-medium" style={classTypeStyles[cls.class_type] || {}}>
-                            {classTypeLabels[cls.class_type]}
+                            {classTypeLabels[cls.class_type] || "Session"}
                           </span>
+                          {cls.track_title ? (
+                            <span className="px-2.5 py-0.5 rounded-full text-xs font-medium"
+                              style={{ background: "rgba(167,139,250,0.1)", color: "#a78bfa", border: "1px solid rgba(167,139,250,0.25)" }}>
+                              {cls.track_title}
+                            </span>
+                          ) : null}
                           {cls.is_free && (
                             <span className="px-2.5 py-0.5 rounded-full text-xs font-medium"
                               style={{ background: "rgba(52,211,153,0.1)", color: "#34d399", border: "1px solid rgba(52,211,153,0.25)" }}>
@@ -181,18 +224,27 @@ export default function LiveClasses() {
                         </div>
                       </div>
 
-                      <button className="w-full md:w-auto min-h-[48px] px-6 rounded-xl text-base font-semibold text-white self-start md:self-center transition-all hover:scale-105"
-                        style={{ background: "linear-gradient(135deg, #3b82f6, #6366f1)", boxShadow: "0 0 16px rgba(59,130,246,0.3)" }}>
-                        Register
+                      <button
+                        type="button"
+                        onClick={() => joinClass(cls)}
+                        disabled={!cls.meet_link}
+                        className="w-full md:w-auto min-h-[48px] px-6 rounded-xl text-base font-semibold text-white self-start md:self-center transition-all hover:scale-105 disabled:opacity-50 inline-flex items-center justify-center gap-2"
+                        style={{ background: "linear-gradient(135deg, #3b82f6, #6366f1)", boxShadow: "0 0 16px rgba(59,130,246,0.3)" }}
+                      >
+                        {cls.meet_link ? (
+                          <>Join <ExternalLink className="w-4 h-4" /></>
+                        ) : (
+                          "Link soon"
+                        )}
                       </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-            {!isLoading && !isError && classes.length === 0 ? (
+            {!isLoading && !isError && upcoming.length === 0 && !liveNow ? (
               <p className="text-center py-12 text-sm" style={{ color: "#475569" }}>
-                No live sessions scheduled right now.
+                No live sessions scheduled for this date yet. Check back after admin posts today&apos;s classes.
               </p>
             ) : null}
             </ApiQueryStatus>

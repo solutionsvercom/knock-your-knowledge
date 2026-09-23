@@ -2,7 +2,7 @@ import React from "react";
 import { useContactForm } from "@/lib/ContactFormContext";
 
 /**
- * Opens the Get Started contact form (email, phone, internship interest).
+ * Opens the contact form (name, phone, mail ID, internship course).
  */
 export default function GetStartedLink({ children, className, style, withNext: _withNext, onClick, ...rest }) {
   const { openContactForm } = useContactForm();

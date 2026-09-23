@@ -9,7 +9,12 @@ const statusConfig = {
 };
 
 export default function PaymentHistorySection({ payments }) {
-  const totalSpent = payments.filter(p => p.status === "completed").reduce((s, p) => s + (p.amount || 0), 0);
+  const rows = Array.isArray(payments) ? payments : [];
+  const totalSpent = rows
+    .filter((p) => p.status === "completed" || p.status === "paid")
+    .reduce((s, p) => s + (Number(p.amount) || 0), 0);
+
+  const formatMoney = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
   const printReceipt = (p) => {
     const win = window.open("", "_blank");
@@ -44,7 +49,7 @@ export default function PaymentHistorySection({ payments }) {
           <div class="row"><span class="label">Transaction ID</span><span class="value">${p.transaction_id || "—"}</span></div>
           <div class="row"><span class="label">Status</span><span class="value" style="color:#34d399">${p.status}</span></div>
           <div class="row"><span class="label">Date</span><span class="value">${p.created_date ? new Date(p.created_date).toLocaleDateString("en-US", { year:"numeric", month:"long", day:"numeric" }) : "—"}</span></div>
-          <div class="total-row"><span class="total-label">Amount Paid</span><span class="total-value">$${p.amount}</span></div>
+          <div class="total-row"><span class="total-label">Amount Paid</span><span class="total-value">₹${Number(p.amount || 0).toLocaleString("en-IN")}</span></div>
           <div class="footer"><p>Thank you for learning with KYK!</p><p>For support: knockyourknowledge@gmail.com</p></div>
         </div>
         <script>setTimeout(() => window.print(), 500);</script>
@@ -62,7 +67,7 @@ export default function PaymentHistorySection({ payments }) {
         </div>
         <div className="text-right px-4 py-2.5 rounded-2xl" style={{ background: "rgba(52,211,153,0.08)", border: "1px solid rgba(52,211,153,0.2)" }}>
           <p className="text-xs" style={{ color: "#475569" }}>Total Spent</p>
-          <p className="text-xl font-black" style={{ color: "#34d399" }}>${totalSpent.toLocaleString()}</p>
+          <p className="text-xl font-black" style={{ color: "#34d399" }}>{formatMoney(totalSpent)}</p>
         </div>
       </div>
 
@@ -70,7 +75,7 @@ export default function PaymentHistorySection({ payments }) {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {Object.entries(statusConfig).map(([status, cfg]) => {
           const Icon = cfg.icon;
-          const count = payments.filter(p => p.status === status).length;
+          const count = rows.filter((p) => p.status === status || (status === "completed" && p.status === "paid")).length;
           return (
             <div key={status} className="rounded-xl p-3" style={{ background: cfg.bg, border: `1px solid ${cfg.color}20` }}>
               <div className="flex items-center gap-2">
@@ -85,7 +90,7 @@ export default function PaymentHistorySection({ payments }) {
 
       {/* Payments list */}
       <div className="space-y-3">
-        {payments.map(p => {
+        {rows.map(p => {
           const cfg = statusConfig[p.status] || statusConfig.pending;
           const Icon = cfg.icon;
           return (
@@ -105,13 +110,13 @@ export default function PaymentHistorySection({ payments }) {
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                  <p className="text-lg font-black" style={{ color: "#34d399" }}>${p.amount}</p>
+                  <p className="text-lg font-black" style={{ color: "#34d399" }}>{formatMoney(p.amount)}</p>
                   <div className="flex items-center gap-2">
                     <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
                       style={{ background: cfg.bg, color: cfg.color }}>
                       <Icon className="w-3 h-3" />{cfg.label}
                     </span>
-                    {p.status === "completed" && (
+                    {(p.status === "completed" || p.status === "paid") && (
                       <button onClick={() => printReceipt(p)}
                         className="flex items-center gap-1 px-2 py-0.5 rounded-full text-xs transition-all hover:scale-105"
                         style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", color: "#64748b" }}>
@@ -126,7 +131,7 @@ export default function PaymentHistorySection({ payments }) {
         })}
       </div>
 
-      {payments.length === 0 && (
+      {rows.length === 0 && (
         <div className="text-center py-16">
           <CreditCard className="w-10 h-10 mx-auto mb-3" style={{ color: "#1e293b" }} />
           <p className="text-base font-semibold text-white mb-1">No payments yet</p>

@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { getWebsiteCourseCatalog } from "@/data/courseCatalog";
+import { slugifyTitle, getBlogBySlug } from "@/data/courseBlogs";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import {
@@ -14,6 +16,7 @@ import {
   BookOpen,
   Filter,
   Search,
+  ArrowRight,
 } from "lucide-react";
 
 const LEVEL_STYLES = {
@@ -22,11 +25,17 @@ const LEVEL_STYLES = {
   Advanced:     { bg: "rgba(248,113,113,0.12)", color: "#f87171",  border: "rgba(248,113,113,0.3)" },
 };
 
+function courseBlogPath(course) {
+  const slug = slugifyTitle(course?.title);
+  return slug && getBlogBySlug(slug) ? `/Blog/${slug}` : null;
+}
+
 function CourseCard({ course }) {
   const [expanded, setExpanded] = useState(false);
   const Icon = course.icon;
   const lvl = LEVEL_STYLES[course.level] || LEVEL_STYLES.Beginner;
   const cover = course.thumbnail || course.image;
+  const blogPath = courseBlogPath(course);
 
   return (
     <div
@@ -109,6 +118,20 @@ function CourseCard({ course }) {
             )}
           </div>
         )}
+
+        {blogPath ? (
+          <Link
+            to={blogPath}
+            className="mt-1 inline-flex items-center justify-center gap-2 w-full min-h-11 px-4 rounded-xl text-sm font-semibold text-white transition-all hover:scale-[1.02]"
+            style={{
+              background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+              boxShadow: "0 0 14px rgba(124,58,237,0.28)",
+            }}
+          >
+            Know more
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        ) : null}
       </div>
 
       {/* Stats row */}

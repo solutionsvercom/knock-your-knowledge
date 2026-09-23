@@ -15,6 +15,7 @@ import {
   Tag,
   Ticket,
   Mail,
+  Video,
 } from "lucide-react";
 
 const NAV = [
@@ -23,6 +24,7 @@ const NAV = [
   { to: "/admin/payments", label: "Payments", icon: Receipt },
   { to: "/admin/sales", label: "Sales & Coupons", icon: Tag },
   { to: "/admin/tickets", label: "Tickets", icon: Ticket },
+  { to: "/admin/live-classes", label: "Live Classes", icon: Video },
   { to: "/admin/leads", label: "Leads", icon: Mail },
   { to: "/admin/courses", label: "Courses", icon: BookOpen },
   { to: "/admin/users", label: "Users", icon: Shield },

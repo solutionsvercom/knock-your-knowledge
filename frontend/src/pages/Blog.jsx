@@ -1,26 +1,19 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { COURSE_BLOGS } from "@/data/courseBlogs";
+import { CAREER_BLOGS } from "@/data/courseBlogs";
 import { Clock, BookOpen, Search, ArrowRight, Star } from "lucide-react";
 
 export default function Blog() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
 
-  const categories = useMemo(() => {
-    const set = new Set(COURSE_BLOGS.map((b) => b.category));
-    return ["all", ...Array.from(set)];
-  }, []);
-
-  const filtered = COURSE_BLOGS.filter((b) => {
+  const filtered = CAREER_BLOGS.filter((b) => {
     const q = search.toLowerCase();
-    const matchSearch =
+    return (
       !q ||
       b.title.toLowerCase().includes(q) ||
       b.category.toLowerCase().includes(q) ||
-      b.tags?.some((t) => String(t).toLowerCase().includes(q));
-    const matchCat = category === "all" || b.category === category;
-    return matchSearch && matchCat;
+      b.tags?.some((t) => String(t).toLowerCase().includes(q))
+    );
   });
 
   return (
@@ -34,13 +27,13 @@ export default function Blog() {
       >
         <div className="max-w-4xl mx-auto px-4">
           <p className="text-xs font-semibold uppercase tracking-widest mb-3" style={{ color: "#a78bfa" }}>
-            KYK Blog
+            KYK Career Guide
           </p>
           <h1
             className="text-4xl lg:text-5xl font-black text-white mb-4"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Internship{" "}
+            Career{" "}
             <span
               style={{
                 background: "linear-gradient(90deg, #60a5fa, #a78bfa)",
@@ -49,17 +42,17 @@ export default function Blog() {
                 backgroundClip: "text",
               }}
             >
-              Course Guides
+              Guide
             </span>
           </h1>
           <p className="text-base max-w-2xl mx-auto mb-8" style={{ color: "#475569" }}>
-            {COURSE_BLOGS.length} articles covering our internship courses and career tips — written from KYK programs.
+            {CAREER_BLOGS.length} career articles to help you land internships and prepare for interviews.
           </p>
 
           <div className="relative max-w-md mx-auto">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: "#475569" }} />
             <input
-              placeholder="Search courses, skills, guides…"
+              placeholder="Search career guides…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full pl-11 pr-4 h-12 rounded-xl text-sm outline-none"
@@ -74,33 +67,12 @@ export default function Blog() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex items-center gap-2 overflow-x-auto pb-6 scrollbar-hide" style={{ scrollbarWidth: "none" }}>
-          {categories.map((cat) => {
-            const active = category === cat;
-            return (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setCategory(cat)}
-                className="px-4 py-2 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
-                style={{
-                  background: active ? "rgba(167,139,250,0.15)" : "transparent",
-                  color: active ? "#a78bfa" : "#475569",
-                  border: active ? "1px solid rgba(167,139,250,0.3)" : "1px solid transparent",
-                }}
-              >
-                {cat === "all" ? "All posts" : cat}
-              </button>
-            );
-          })}
-        </div>
-
         <p className="text-sm mb-6" style={{ color: "#475569" }}>
           Showing{" "}
           <span className="font-semibold" style={{ color: "#a78bfa" }}>
             {filtered.length}
           </span>{" "}
-          posts
+          {filtered.length === 1 ? "guide" : "guides"}
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -173,7 +145,7 @@ export default function Blog() {
           <div className="text-center py-16">
             <BookOpen className="w-10 h-10 mx-auto mb-3" style={{ color: "#334155" }} />
             <p className="text-sm" style={{ color: "#475569" }}>
-              No posts match your search.
+              No career guides match your search.
             </p>
           </div>
         ) : null}

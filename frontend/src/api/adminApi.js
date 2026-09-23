@@ -38,4 +38,13 @@ export const adminApi = {
       adminFetch(`/tickets/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   },
   leads: () => adminFetch("/leads"),
+  liveClasses: {
+    list: () => adminFetch("/live-classes"),
+    upsertTrack: (trackId, body) =>
+      adminFetch(`/live-classes/${encodeURIComponent(trackId)}`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
+    remove: (id) => adminFetch(`/live-classes/${id}`, { method: "DELETE" }),
+  },
 };

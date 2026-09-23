@@ -6,6 +6,9 @@ import { StudentTicket, TICKET_VALUE_INR } from "../models/StudentTicket.js";
 import { Enrollment } from "../models/Enrollment.js";
 import { PaymentOrder } from "../models/PaymentOrder.js";
 import { ContactLead } from "../models/ContactLead.js";
+import { LiveClass, serializeLiveClass } from "../models/LiveClass.js";
+import { INTERNSHIP_TRACKS, LIVE_CLASS_TYPES, getTrack, dayBounds } from "../config/tracks.js";
+import { notifyStudentsForLiveClass } from "../utils/notifyLiveClass.js";
 
 const router = Router();
 
@@ -402,6 +405,106 @@ router.get("/leads", async (_req, res) => {
     return res.json({ count: leads.length, leads });
   } catch (err) {
     return res.status(500).json({ message: "Could not load leads." });
+  }
+});
+
+/** GET /api/admin/live-classes */
+router.get("/live-classes", async (_req, res) => {
+  try {
+    const since = new Date();
+    since.setDate(since.getDate() - 1);
+    const classes = await LiveClass.find({ date: { $gte: since } }).sort({ date: 1 }).lean();
+    const { start, end } = dayBounds(new Date());
+    const todayByTrack = {};
+    for (const track of INTERNSHIP_TRACKS) {
+      const todays = classes.find(
+        (c) => c.trackId === track.id && c.date >= start && c.date <= end
+      );
+      todayByTrack[track.id] = todays ? serializeLiveClass(todays) : null;
+    }
+    return res.json({
+      ok: true,
+      tracks: INTERNSHIP_TRACKS,
+      classTypes: LIVE_CLASS_TYPES,
+      todayByTrack,
+      classes: classes.map(serializeLiveClass),
+    });
+  } catch (err) {
+    console.error("[API] GET /api/admin/live-classes", err);
+    return res.status(500).json({ message: "Could not load live classes." });
+  }
+});
+
+/** PUT /api/admin/live-classes/:trackId — upsert today's (or chosen day's) class for one internship track */
+router.put("/live-classes/:trackId", async (req, res) => {
+  try {
+    const track = getTrack(req.params.trackId);
+    if (!track) {
+      return res.status(400).json({ message: "Unknown internship track.", tracks: INTERNSHIP_TRACKS });
+    }
+
+    const title = String(req.body?.title || "").trim();
+    if (title.length < 3) {
+      return res.status(400).json({ message: "Enter a class title (at least 3 characters)." });
+    }
+
+    const date = req.body?.date ? new Date(req.body.date) : new Date();
+    if (Number.isNaN(date.getTime())) {
+      return res.status(400).json({ message: "Please set a valid date and time." });
+    }
+
+    const classType = LIVE_CLASS_TYPES.includes(req.body?.classType)
+      ? req.body.classType
+      : "lecture";
+    const durationMins = Math.max(15, Math.min(240, Number(req.body?.durationMins) || 60));
+    const payload = {
+      trackId: track.id,
+      trackTitle: track.title,
+      title,
+      description: String(req.body?.description || "").trim(),
+      instructor: String(req.body?.instructor || "KYK Mentor").trim() || "KYK Mentor",
+      classType,
+      date,
+      durationMins,
+      meetLink: String(req.body?.meetLink || "").trim(),
+      isLive: Boolean(req.body?.isLive),
+      isFree: req.body?.isFree !== false,
+    };
+
+    const { start, end } = dayBounds(date);
+    const existing = await LiveClass.findOne({
+      trackId: track.id,
+      date: { $gte: start, $lte: end },
+    });
+
+    const liveClass = existing
+      ? await LiveClass.findByIdAndUpdate(existing._id, payload, { new: true })
+      : await LiveClass.create(payload);
+
+    const notified = await notifyStudentsForLiveClass(track, liveClass);
+
+    return res.json({
+      ok: true,
+      message: existing
+        ? `Updated today's ${track.title} class and notified ${notified} student${notified === 1 ? "" : "s"}.`
+        : `Saved today's ${track.title} class and notified ${notified} student${notified === 1 ? "" : "s"}.`,
+      notified,
+      liveClass: serializeLiveClass(liveClass),
+    });
+  } catch (err) {
+    console.error("[API] PUT /api/admin/live-classes/:trackId", err);
+    return res.status(500).json({ message: "Could not save the live class." });
+  }
+});
+
+/** DELETE /api/admin/live-classes/:id */
+router.delete("/live-classes/:id", async (req, res) => {
+  try {
+    const removed = await LiveClass.findByIdAndDelete(req.params.id);
+    if (!removed) return res.status(404).json({ message: "Live class not found." });
+    return res.json({ ok: true });
+  } catch (err) {
+    return res.status(500).json({ message: "Could not delete live class." });
   }
 });
 

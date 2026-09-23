@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,25 +7,36 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { INTERNSHIP_OPTIONS, submitContactLead } from "@/api/contactApi";
-import { Loader2, CheckCircle2, Mail, Phone, GraduationCap } from "lucide-react";
+import { Loader2, CheckCircle2, Mail, Phone, GraduationCap, User } from "lucide-react";
 
-const empty = { email: "", phone: "", internshipInterest: "" };
+const empty = { name: "", email: "", phone: "", internshipInterest: "" };
 
-export default function ContactFormModal({ open, onOpenChange }) {
+export default function ContactFormModal({ open, onOpenChange, defaults }) {
   const [form, setForm] = useState(empty);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
 
-  const reset = () => {
-    setForm(empty);
+  const heading = defaults?.heading || "Get Started";
+  const description =
+    defaults?.description ||
+    "Share your details and the internship you are interested in. We will contact you soon.";
+  const source = defaults?.source || "get-started";
+
+  useEffect(() => {
+    if (!open) return;
+    setForm({
+      name: "",
+      email: "",
+      phone: "",
+      internshipInterest: defaults?.internshipInterest || "",
+    });
     setError("");
     setDone(false);
     setSubmitting(false);
-  };
+  }, [open, defaults]);
 
   const handleOpenChange = (next) => {
-    if (!next) reset();
     onOpenChange(next);
   };
 
@@ -36,6 +47,10 @@ export default function ContactFormModal({ open, onOpenChange }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    if (!String(form.name || "").trim()) {
+      setError("Please enter your name.");
+      return;
+    }
     if (!form.internshipInterest) {
       setError("Please select an internship program.");
       return;
@@ -44,10 +59,11 @@ export default function ContactFormModal({ open, onOpenChange }) {
     setSubmitting(true);
     try {
       await submitContactLead({
+        name: form.name,
         email: form.email,
         phone: form.phone,
         internshipInterest: form.internshipInterest,
-        source: "get-started",
+        source,
       });
       setDone(true);
     } catch (err) {
@@ -68,11 +84,9 @@ export default function ContactFormModal({ open, onOpenChange }) {
       >
         <DialogHeader>
           <DialogTitle className="text-xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            Get Started
+            {heading}
           </DialogTitle>
-          <DialogDescription style={{ color: "#64748b" }}>
-            Share your details and the internship you are interested in. We will contact you soon.
-          </DialogDescription>
+          <DialogDescription style={{ color: "#64748b" }}>{description}</DialogDescription>
         </DialogHeader>
 
         {done ? (
@@ -80,7 +94,7 @@ export default function ContactFormModal({ open, onOpenChange }) {
             <CheckCircle2 className="w-12 h-12 mx-auto mb-3" style={{ color: "#34d399" }} />
             <p className="text-white font-semibold mb-1">Thank you!</p>
             <p className="text-sm mb-6" style={{ color: "#64748b" }}>
-              Your details were saved. Our team will reach out shortly.
+              Your application was saved. Our team will reach out shortly.
             </p>
             <button
               type="button"
@@ -95,15 +109,16 @@ export default function ContactFormModal({ open, onOpenChange }) {
           <form onSubmit={onSubmit} className="space-y-4 pt-1">
             <div>
               <label className="text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5" style={{ color: "#a78bfa" }}>
-                <Mail className="w-3.5 h-3.5" /> Email
+                <User className="w-3.5 h-3.5" /> Name
               </label>
               <input
                 required
-                type="email"
-                name="email"
-                value={form.email}
+                type="text"
+                name="name"
+                autoComplete="name"
+                value={form.name}
                 onChange={onChange}
-                placeholder="you@example.com"
+                placeholder="Your full name"
                 className="w-full h-11 px-3 rounded-xl text-sm outline-none"
                 style={{
                   background: "rgba(255,255,255,0.04)",
@@ -121,6 +136,7 @@ export default function ContactFormModal({ open, onOpenChange }) {
                 required
                 type="tel"
                 name="phone"
+                autoComplete="tel"
                 value={form.phone}
                 onChange={onChange}
                 placeholder="10-digit mobile number"
@@ -134,8 +150,29 @@ export default function ContactFormModal({ open, onOpenChange }) {
             </div>
 
             <div>
+              <label className="text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5" style={{ color: "#a78bfa" }}>
+                <Mail className="w-3.5 h-3.5" /> Mail ID
+              </label>
+              <input
+                required
+                type="email"
+                name="email"
+                autoComplete="email"
+                value={form.email}
+                onChange={onChange}
+                placeholder="you@example.com"
+                className="w-full h-11 px-3 rounded-xl text-sm outline-none"
+                style={{
+                  background: "rgba(255,255,255,0.04)",
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  color: "#e2e8f0",
+                }}
+              />
+            </div>
+
+            <div>
               <p className="text-xs font-semibold uppercase tracking-wider mb-1.5 flex items-center gap-1.5" style={{ color: "#a78bfa" }}>
-                <GraduationCap className="w-3.5 h-3.5" /> Internship interested in
+                <GraduationCap className="w-3.5 h-3.5" /> Internship course enrolled
               </p>
               <div className="grid grid-cols-1 gap-2">
                 {INTERNSHIP_OPTIONS.map((opt) => {
@@ -177,7 +214,7 @@ export default function ContactFormModal({ open, onOpenChange }) {
                   <Loader2 className="w-4 h-4 animate-spin" /> Submitting…
                 </>
               ) : (
-                "Submit"
+                "Submit application"
               )}
             </button>
           </form>

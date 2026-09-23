@@ -125,14 +125,21 @@ const EXTRA_BLOGS = [
 
 export const COURSE_BLOGS = [...buildFromCatalog(), ...EXTRA_BLOGS];
 
+export function isCareerGuide(post) {
+  return post?.categoryId === "career" || post?.category === "Career Guide";
+}
+
+export const CAREER_BLOGS = COURSE_BLOGS.filter(isCareerGuide);
+
 export function getBlogBySlug(slug) {
   return COURSE_BLOGS.find((p) => p.slug === slug) || null;
 }
 
 export function getRelatedBlogs(slug, limit = 3) {
   const current = getBlogBySlug(slug);
-  if (!current) return COURSE_BLOGS.slice(0, limit);
-  const same = COURSE_BLOGS.filter((p) => p.slug !== slug && p.categoryId === current.categoryId);
-  const rest = COURSE_BLOGS.filter((p) => p.slug !== slug && p.categoryId !== current.categoryId);
+  const pool = isCareerGuide(current) ? CAREER_BLOGS : COURSE_BLOGS.filter((p) => !isCareerGuide(p));
+  if (!current) return CAREER_BLOGS.slice(0, limit);
+  const same = pool.filter((p) => p.slug !== slug && p.categoryId === current.categoryId);
+  const rest = pool.filter((p) => p.slug !== slug && p.categoryId !== current.categoryId);
   return [...same, ...rest].slice(0, limit);
 }

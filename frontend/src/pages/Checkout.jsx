@@ -136,7 +136,11 @@ export default function Checkout() {
           amount: line.payable,
         });
         try {
-          await api.enrollments.create({ course_id: line.id });
+          await api.enrollments.create({
+            course_id: line.id,
+            course_title: line.title,
+            amount: line.payable,
+          });
         } catch {
           // ignore enrollment if unavailable
         }
@@ -150,6 +154,15 @@ export default function Checkout() {
           payment_method: "cashfree",
           transaction_id: paymentMeta.paymentId || paymentMeta.orderId || "",
         });
+        try {
+          await api.enrollments.create({
+            course_id: line.id,
+            course_title: line.title,
+            amount: line.payable,
+          });
+        } catch {
+          // ignore
+        }
       }
     }
   };
@@ -211,6 +224,8 @@ export default function Checkout() {
           id: line.id,
           title: line.title,
           original: line.original,
+          taxable: line.taxable,
+          gst: line.gst,
           payable: line.payable,
         })),
         customer: {

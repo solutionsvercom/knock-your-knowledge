@@ -4,6 +4,15 @@ import { createPageUrl } from "../../utils";
 import { ArrowRight, ChevronDown, Zap, Brain, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import GetStartedLink from "@/components/navigation/GetStartedLink";
+import { whatsappGetStartedUrl } from "@/config/contact";
+
+function WhatsAppIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M20.52 3.48A11.86 11.86 0 0012.06 0C5.45 0 .1 5.35.1 11.94c0 2.1.55 4.16 1.6 5.97L0 24l6.26-1.64a11.94 11.94 0 005.8 1.48h.01c6.6 0 11.95-5.35 11.95-11.94 0-3.19-1.24-6.19-3.5-8.42zM12.07 21.85h-.01a9.9 9.9 0 01-5.04-1.38l-.36-.21-3.72.98.99-3.62-.24-.37a9.86 9.86 0 01-1.51-5.29c0-5.44 4.43-9.87 9.88-9.87 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 012.89 6.98c0 5.44-4.43 9.88-9.87 9.88zm5.41-7.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.48-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.87 1.21 3.07.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35z" />
+    </svg>
+  );
+}
 
 /* ─── Neural Network Canvas ─────────────────────────────────────── */
 function NeuralCanvas() {
@@ -192,7 +201,7 @@ export default function HeroSection() {
 
             {/* CTA Buttons */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-14 w-full sm:w-auto">
+              className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 mb-14 w-full sm:w-auto">
 
               <motion.div
                 className="w-full sm:w-auto"
@@ -223,6 +232,28 @@ export default function HeroSection() {
                   Explore Skills
                 </motion.button>
               </Link>
+
+              <a
+                href={whatsappGetStartedUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto"
+              >
+                <motion.span
+                  whileHover={{ scale: 1.06, boxShadow: "0 0 30px rgba(37,211,102,0.55), 0 0 60px rgba(37,211,102,0.2)" }}
+                  whileTap={{ scale: 0.97 }}
+                  className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-8 py-4 rounded-2xl font-bold text-white text-base transition-all min-h-[52px]"
+                  style={{
+                    background: "linear-gradient(135deg, #25d366, #128c7e)",
+                    boxShadow: "0 0 20px rgba(37,211,102,0.45), 0 0 40px rgba(18,140,126,0.2)",
+                    border: "1px solid rgba(37,211,102,0.55)",
+                    fontFamily: "'Inter', sans-serif",
+                  }}
+                >
+                  <WhatsAppIcon className="w-5 h-5" />
+                  WhatsApp
+                </motion.span>
+              </a>
             </motion.div>
 
             {/* Stats */}

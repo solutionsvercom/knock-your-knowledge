@@ -23,6 +23,7 @@ export default function AdminPaymentsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-payments"],
     queryFn: () => adminApi.payments(),
+    refetchInterval: 15000,
   });
 
   const payments = data?.payments || [];

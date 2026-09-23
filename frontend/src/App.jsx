@@ -24,6 +24,7 @@ import AdminPaymentsPage from './pages/admin/AdminPaymentsPage';
 import AdminSalesPage from './pages/admin/AdminSalesPage';
 import AdminTicketsPage from './pages/admin/AdminTicketsPage';
 import AdminLeadsPage from './pages/admin/AdminLeadsPage';
+import AdminLiveClassesPage from './pages/admin/AdminLiveClassesPage';
 import BlogPost from './pages/BlogPost';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -107,6 +108,7 @@ const AuthenticatedApp = () => {
         <Route path="payments" element={<AdminPaymentsPage />} />
         <Route path="sales" element={<AdminSalesPage />} />
         <Route path="tickets" element={<AdminTicketsPage />} />
+        <Route path="live-classes" element={<AdminLiveClassesPage />} />
         <Route path="leads" element={<AdminLeadsPage />} />
         <Route path="courses" element={<AdminCoursesPage />} />
         <Route path="users" element={<AdminUsersPage />} />

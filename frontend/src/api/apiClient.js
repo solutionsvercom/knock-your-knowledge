@@ -687,22 +687,30 @@ export const api = {
       const u = requireUser();
       return read(KEYS.enrollments, []).filter((e) => e.user_id === u.id || e.user_email === u.email);
     },
-    create: async ({ course_id }) => {
+    create: async ({ course_id, course_title, amount } = {}) => {
       await delay();
       const u = requireUser();
       const list = read(KEYS.enrollments, []);
       const existing = list.find(
         (e) => e.course_id === course_id && (e.user_id === u.id || e.user_email === u.email)
       );
-      if (existing) return existing;
+      if (existing) {
+        if (course_title && !existing.course_title) {
+          existing.course_title = course_title;
+          write(KEYS.enrollments, list);
+        }
+        return existing;
+      }
       const course = read(KEYS.courses, DEMO_COURSES).find((c) => c.id === course_id);
       const row = {
         id: uid("enroll"),
         course_id,
-        course_title: course?.title || "",
+        course_title: course_title || course?.title || "Internship program",
         user_id: u.id,
         user_email: u.email,
         progress: 0,
+        status: "active",
+        amount: Number(amount) || 0,
         created_date: new Date().toISOString(),
       };
       list.unshift(row);

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { PaymentOrder } from "../models/PaymentOrder.js";
 import { Enrollment } from "../models/Enrollment.js";
 import { Coupon } from "../models/Coupon.js";
+import { Notification } from "../models/Notification.js";
 import { cashfreeTwoFactorSignature } from "../utils/cashfreeAuth.js";
 import { LIVE_SITE_URL } from "../config/site.js";
 
@@ -147,6 +148,19 @@ async function markPaidAndEnroll(doc, paymentId) {
     }
   }
 
+  const studentEmail = String(customer.email || "").trim().toLowerCase();
+  if (studentEmail.includes("@")) {
+    const titles = items.map((it) => it.title).filter(Boolean);
+    const label = titles.length ? titles.join(", ") : "your internship program";
+    await Notification.create({
+      userEmail: studentEmail,
+      title: "Payment successful",
+      message: `You're enrolled in ${label}. Amount paid ₹${Number(updated.amountInr || 0).toLocaleString("en-IN")}.`,
+      type: "payment",
+      senderName: "KYK",
+    });
+  }
+
   if (updated.coupon) {
     await Coupon.findOneAndUpdate(
       {
@@ -199,7 +213,7 @@ router.post("/create-order", async (req, res) => {
 
     const customer = {
       name: String(req.body?.customer?.name || "").trim() || undefined,
-      email: String(req.body?.customer?.email || "").trim() || undefined,
+      email: String(req.body?.customer?.email || "").trim().toLowerCase() || undefined,
       contact: normalizePhone(req.body?.customer?.contact),
     };
 
@@ -354,6 +368,98 @@ router.post("/verify", async (req, res) => {
     return res.status(err.status || 500).json({
       message: err.message || "Could not verify payment.",
     });
+  }
+});
+
+/**
+ * POST /api/payments/webhook
+ * Cashfree server-to-server callback — enrolls the student even if the browser never returns.
+ */
+router.post("/webhook", async (req, res) => {
+  try {
+    const orderId = String(
+      req.body?.data?.order?.order_id || req.body?.order_id || req.body?.orderId || ""
+    ).trim();
+    if (!orderId) return res.json({ ok: true });
+
+    const doc = await PaymentOrder.findOne({ orderId });
+    if (!doc) return res.json({ ok: true, skipped: "unknown_order" });
+    if (doc.status === "paid") return res.json({ ok: true, skipped: "already_paid" });
+
+    const cfOrder = await cashfreeFetch(`/orders/${encodeURIComponent(orderId)}`);
+    const status = String(cfOrder.order_status || "").toUpperCase();
+    if (status !== "PAID") return res.json({ ok: true, skipped: status });
+
+    let paymentId = null;
+    try {
+      const payments = await cashfreeFetch(`/orders/${encodeURIComponent(orderId)}/payments`);
+      const list = Array.isArray(payments) ? payments : payments?.payments || [];
+      const success = list.find((p) => String(p.payment_status || "").toUpperCase() === "SUCCESS");
+      paymentId = success?.cf_payment_id ? String(success.cf_payment_id) : null;
+    } catch {
+      /* ignore */
+    }
+
+    await markPaidAndEnroll(doc, paymentId);
+    return res.json({ ok: true });
+  } catch (err) {
+    console.error("[API] POST /api/payments/webhook", err);
+    return res.json({ ok: true });
+  }
+});
+
+/**
+ * GET /api/payments/mine?email=
+ * Student dashboard: paid orders + enrollments for this email.
+ */
+router.get("/mine", async (req, res) => {
+  try {
+    const email = String(req.query.email || "").trim().toLowerCase();
+    if (!email || !email.includes("@")) {
+      return res.status(400).json({ message: "Student email is required." });
+    }
+
+    const emailSafe = email.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const [enrollments, orders] = await Promise.all([
+      Enrollment.find({ studentEmail: email }).sort({ createdAt: -1 }).lean(),
+      PaymentOrder.find({
+        "customer.email": { $regex: new RegExp(`^${emailSafe}$`, "i") },
+      })
+        .sort({ createdAt: -1 })
+        .lean(),
+    ]);
+
+    return res.json({
+      ok: true,
+      enrollments: enrollments.map((e) => ({
+        id: String(e._id),
+        course_id: e.itemId,
+        course_title: e.itemTitle,
+        item_type: e.itemType || "internship",
+        status: e.status === "paid" ? "active" : e.status || "active",
+        progress: 0,
+        amount: e.amountPaid || 0,
+        invoice_number: e.invoiceNumber,
+        user_email: e.studentEmail,
+        created_date: e.createdAt,
+      })),
+      payments: orders.map((p) => ({
+        id: String(p._id),
+        course_title: (p.items || []).map((i) => i.title).filter(Boolean).join(", ") || "KYK Program",
+        amount: p.amountInr || 0,
+        status: p.status === "paid" ? "completed" : p.status === "failed" ? "failed" : "pending",
+        payment_method: "Cashfree",
+        transaction_id: p.paymentId || p.orderId,
+        invoice_number: `INV-${String(p._id).slice(-8).toUpperCase()}`,
+        student_email: p.customer?.email,
+        student_name: p.customer?.name,
+        coupon: p.coupon || "",
+        created_date: p.createdAt,
+      })),
+    });
+  } catch (err) {
+    console.error("[API] GET /api/payments/mine", err);
+    return res.status(500).json({ message: "Could not load your purchases." });
   }
 });
 

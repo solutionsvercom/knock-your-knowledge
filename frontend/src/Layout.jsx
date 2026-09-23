@@ -26,7 +26,7 @@ export default function Layout({ children, currentPageName }) {
     { name: "Internship Courses", page: "Courses" },
     { name: "Live Classes", page: "LiveClasses" },
     { name: "About Us", page: "About" },
-    { name: "Blog", page: "Blog" },
+    { name: "Career Guide", page: "Blog" },
   ];
 
   return (

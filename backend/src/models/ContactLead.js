@@ -7,8 +7,28 @@ export const INTERNSHIP_OPTIONS = [
   "Advanced Digital Marketing",
 ];
 
+export function normalizeInternshipInterest(value) {
+  const t = String(value || "").trim();
+  if (INTERNSHIP_OPTIONS.includes(t)) return t;
+  const lower = t.toLowerCase();
+  const exact = INTERNSHIP_OPTIONS.find((opt) => opt.toLowerCase() === lower);
+  if (exact) return exact;
+  if (lower.includes("prompt") || (lower.includes("ai") && lower.includes("engineer"))) {
+    return "AI & Prompt Engineering";
+  }
+  if (lower.includes("develop")) return "Development";
+  if (lower.includes("analytic")) return "Business Analytics";
+  if (lower.includes("market")) return "Advanced Digital Marketing";
+  return "";
+}
+
 const contactLeadSchema = new mongoose.Schema(
   {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,

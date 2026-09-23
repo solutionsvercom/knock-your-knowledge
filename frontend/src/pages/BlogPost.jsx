@@ -1,7 +1,12 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { getBlogBySlug, getRelatedBlogs } from "@/data/courseBlogs";
-import { whatsappGetStartedUrl } from "@/config/contact";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getBlogBySlug, getRelatedBlogs, isCareerGuide } from "@/data/courseBlogs";
+import { api } from "@/api/apiClient";
+import { asArray } from "@/lib/asArray";
+import { useCart } from "@/lib/CartContext";
+import { useAuth } from "@/lib/AuthContext";
+import { INTERNSHIP_FEE_AMOUNT, internshipUnitPrice } from "@/config/pricing";
 import { createPageUrl } from "@/utils";
 import {
   ArrowLeft,
@@ -9,14 +14,70 @@ import {
   User,
   Star,
   CheckCircle2,
-  ExternalLink,
   BookOpen,
+  ShoppingCart,
 } from "lucide-react";
+
+const INTERNSHIP_BY_CATEGORY = {
+  development: { id: "intern-development", title: "Development" },
+  ai: { id: "intern-ai-prompt", title: "AI & Prompt Engineering" },
+  analytics: { id: "intern-business-analytics", title: "Business Analytics" },
+  marketing: { id: "intern-digital-marketing", title: "Advanced Digital Marketing" },
+};
+
+function internshipForGuide(post, internships) {
+  const fallback = INTERNSHIP_BY_CATEGORY[post.categoryId];
+  if (fallback) {
+    const match = internships.find(
+      (item) =>
+        item.id === fallback.id ||
+        String(item.title || "").toLowerCase() === fallback.title.toLowerCase()
+    );
+    if (match) return match;
+    return { ...fallback, price: INTERNSHIP_FEE_AMOUNT, image: post.image };
+  }
+  return internships.find((item) => !item.demo) || internships[0] || null;
+}
 
 export default function BlogPost() {
   const { slug } = useParams();
   const post = getBlogBySlug(slug);
   const related = getRelatedBlogs(slug, 3);
+  const navigate = useNavigate();
+  const { addItem } = useCart();
+  const { isAuthenticated, isLoadingAuth } = useAuth();
+
+  const { data: internshipsRaw } = useQuery({
+    queryKey: ["internships"],
+    queryFn: () => api.internships.list(),
+    enabled: Boolean(post),
+  });
+  const internships = asArray(internshipsRaw);
+
+  const addGuideToCart = () => {
+    if (!post) return;
+    const program = internshipForGuide(post, internships);
+    if (program?.id) {
+      addItem({
+        type: "internship",
+        id: program.id,
+        title: program.title,
+        price: internshipUnitPrice(program),
+        thumbnail: program.image || program.company_logo || post.image || "",
+      });
+    }
+
+    if (isLoadingAuth) return;
+
+    if (!isAuthenticated) {
+      navigate(`/login?mode=signup&next=${encodeURIComponent("/Checkout")}`);
+      return;
+    }
+
+    navigate("/Checkout");
+  };
+
+  const careerGuide = isCareerGuide(post);
 
   if (!post) {
     return (
@@ -24,7 +85,7 @@ export default function BlogPost() {
         <BookOpen className="w-10 h-10" style={{ color: "#475569" }} />
         <p className="text-white font-semibold">Article not found</p>
         <Link to={createPageUrl("Blog")} className="text-sm" style={{ color: "#a78bfa" }}>
-          ← Back to Blog
+          ← Back to Career Guide
         </Link>
       </div>
     );
@@ -38,11 +99,11 @@ export default function BlogPost() {
         <div className="absolute inset-0 flex items-end">
           <div className="max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8">
             <Link
-              to={createPageUrl("Blog")}
+              to={createPageUrl(careerGuide ? "Blog" : "Courses")}
               className="inline-flex items-center gap-1.5 text-sm mb-4 transition-colors hover:text-white"
               style={{ color: "#94a3b8" }}
             >
-              <ArrowLeft className="w-4 h-4" /> All blogs
+              <ArrowLeft className="w-4 h-4" /> {careerGuide ? "All career guides" : "Internship Courses"}
             </Link>
             <span
               className="inline-block px-2.5 py-1 rounded-full text-xs font-semibold mb-3"
@@ -172,18 +233,19 @@ export default function BlogPost() {
         >
           <p className="text-white font-semibold mb-2">Ready to start this journey?</p>
           <p className="text-sm mb-5" style={{ color: "#94a3b8" }}>
-            Chat with KYK on WhatsApp and get guidance for {post.title}.
+            Add this internship course to your cart and continue to checkout.
           </p>
           <button
             type="button"
-            onClick={() => window.open(whatsappGetStartedUrl(), "_blank", "noopener,noreferrer")}
+            onClick={addGuideToCart}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105"
             style={{
-              background: "linear-gradient(135deg, #25d366, #128c7e)",
-              boxShadow: "0 0 16px rgba(37,211,102,0.35)",
+              background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              boxShadow: "0 0 16px rgba(124,58,237,0.35)",
             }}
           >
-            Apply / Get Started <ExternalLink className="w-4 h-4" />
+            <ShoppingCart className="w-4 h-4" />
+            Add to cart
           </button>
         </div>
 

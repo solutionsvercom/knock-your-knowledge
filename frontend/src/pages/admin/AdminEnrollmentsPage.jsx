@@ -17,6 +17,7 @@ export default function AdminEnrollmentsPage() {
   const { data, isLoading, error } = useQuery({
     queryKey: ["admin-enrollments"],
     queryFn: () => adminApi.enrollments(),
+    refetchInterval: 15000,
   });
 
   const list = data?.enrollments || [];
