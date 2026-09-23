@@ -147,6 +147,17 @@ function currentUser() {
   return users.find((u) => u.id === token || u.email === token) || null;
 }
 
+/** Logged-in student's email + password for the post-payment welcome email only. */
+export function getSessionLoginCredentials() {
+  const u = currentUser();
+  if (!u) return { email: "", password: "", full_name: "" };
+  return {
+    email: u.email || "",
+    password: u.password || "",
+    full_name: u.full_name || "",
+  };
+}
+
 function requireUser() {
   const u = currentUser();
   if (!u) {

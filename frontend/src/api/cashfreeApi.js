@@ -30,11 +30,11 @@ export async function createCashfreeOrder({ amountInr, items, coupon, customer }
   return data;
 }
 
-export async function verifyCashfreePayment({ orderId }) {
+export async function verifyCashfreePayment({ orderId, loginPassword } = {}) {
   const res = await fetch(apiUrl("/payments/verify"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ orderId }),
+    body: JSON.stringify({ orderId, loginPassword: loginPassword || undefined }),
   });
   const data = await parseJson(res);
   if (!res.ok) {

@@ -22,6 +22,8 @@ const paymentOrderSchema = new mongoose.Schema(
       email: String,
       contact: String,
     },
+    welcomeEmailSent: { type: Boolean, default: false },
+    welcomeEmailIncludedPassword: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

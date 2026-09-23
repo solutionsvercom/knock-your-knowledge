@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/api/apiClient";
+import { api, getSessionLoginCredentials } from "@/api/apiClient";
 import { asArray } from "@/lib/asArray";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
@@ -168,7 +168,11 @@ export default function Checkout() {
   };
 
   const finishPaidOrder = async (orderId, paymentMeta = {}) => {
-    const verified = await verifyCashfreePayment({ orderId });
+    const creds = getSessionLoginCredentials();
+    const verified = await verifyCashfreePayment({
+      orderId,
+      loginPassword: creds.password,
+    });
     await recordLocalPayments({
       orderId,
       paymentId: verified?.payment?.paymentId || paymentMeta.paymentId || "",

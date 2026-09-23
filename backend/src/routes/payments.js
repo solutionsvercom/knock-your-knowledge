@@ -5,6 +5,7 @@ import { Coupon } from "../models/Coupon.js";
 import { Notification } from "../models/Notification.js";
 import { cashfreeTwoFactorSignature } from "../utils/cashfreeAuth.js";
 import { LIVE_SITE_URL } from "../config/site.js";
+import { sendEnrollmentWelcomeEmail } from "../utils/enrollmentEmail.js";
 
 const router = Router();
 const CF_API_VERSION = process.env.CASHFREE_API_VERSION || "2023-08-01";
@@ -104,7 +105,40 @@ function cashfreeReturnUrl() {
   return `${base}/Checkout?order_id={order_id}`;
 }
 
-async function markPaidAndEnroll(doc, paymentId) {
+function coursesFromOrder(order) {
+  const items = Array.isArray(order?.items) ? order.items : [];
+  const titles = items.map((it) => it.title).filter(Boolean);
+  return titles.length ? titles : ["KYK internship program"];
+}
+
+async function maybeSendWelcomeEmail(order, loginPassword) {
+  if (!order) return;
+  const password = String(loginPassword || "").trim().slice(0, 80);
+  if (order.welcomeEmailSent && (order.welcomeEmailIncludedPassword || !password)) {
+    return;
+  }
+
+  const customer = order.customer || {};
+  const email = String(customer.email || "").trim().toLowerCase();
+  try {
+    const result = await sendEnrollmentWelcomeEmail({
+      name: customer.name,
+      email,
+      password,
+      courses: coursesFromOrder(order),
+      amountInr: order.amountInr,
+    });
+    if (!result?.ok) return;
+    await PaymentOrder.findByIdAndUpdate(order._id, {
+      welcomeEmailSent: true,
+      welcomeEmailIncludedPassword: Boolean(password) || Boolean(order.welcomeEmailIncludedPassword),
+    });
+  } catch (err) {
+    console.error("[mail] enrollment welcome email failed", err?.message || err);
+  }
+}
+
+async function markPaidAndEnroll(doc, paymentId, { loginPassword } = {}) {
   if (!doc) return null;
   if (doc.status === "paid") return doc;
 
@@ -175,6 +209,7 @@ async function markPaidAndEnroll(doc, paymentId) {
     );
   }
 
+  await maybeSendWelcomeEmail(updated, loginPassword);
   return updated;
 }
 
@@ -303,6 +338,7 @@ router.post("/verify", async (req, res) => {
     }
 
     if (doc.status === "paid") {
+      await maybeSendWelcomeEmail(doc, req.body?.loginPassword);
       return res.json({
         ok: true,
         message: "Payment already verified.",
@@ -346,7 +382,9 @@ router.post("/verify", async (req, res) => {
       });
     }
 
-    const updated = await markPaidAndEnroll(doc, paymentId);
+    const updated = await markPaidAndEnroll(doc, paymentId, {
+      loginPassword: req.body?.loginPassword,
+    });
 
     return res.json({
       ok: true,

@@ -92,6 +92,8 @@ const AuthenticatedApp = () => {
       />
       <Route path="/CourseLearning" element={<RequireAuth><CourseLearning /></RequireAuth>} />
       <Route path="/Dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+      <Route path="/dashboard" element={<Navigate to="/Dashboard" replace />} />
+      <Route path="/dashbord" element={<Navigate to="/Dashboard" replace />} />
       <Route
         path="/admin"
         element={
