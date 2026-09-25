@@ -1,5 +1,5 @@
 /**
- * Frontend-only API — localStorage + static demo data (no backend).
+ * Frontend API — courses/demo data in localStorage; student login lives on MongoDB.
  */
 import {
   DEMO_ADMIN,
@@ -9,9 +9,11 @@ import {
   DEMO_LIVE_CLASSES,
   lessonsForCourse,
 } from "@/data/demoData";
+import { apiUrl } from "@/config/api";
 
 const KEYS = {
   token: "kyk_token_v2",
+  me: "kyk_me_v1",
   users: "kyk_users_v4",
   courses: "kyk_courses_v3",
   bundles: "kyk_bundles_v2",
@@ -31,6 +33,8 @@ const KEYS = {
   resources: "kyk_resources",
   certificates: "kyk_certificates_v2",
 };
+
+const SESSION_PW_KEY = "kyk_session_pw";
 
 /** Drop old local auth/user data so accounts start fresh. */
 function clearLegacyAuthStorage() {
@@ -88,7 +92,11 @@ function getToken() {
 function setToken(token) {
   try {
     if (token) localStorage.setItem(KEYS.token, token);
-    else localStorage.removeItem(KEYS.token);
+    else {
+      localStorage.removeItem(KEYS.token);
+      localStorage.removeItem(KEYS.me);
+      rememberSessionPassword("");
+    }
   } catch {
     // ignore
   }
@@ -134,15 +142,48 @@ function ensureSeed() {
 
 ensureSeed();
 
+function rememberSessionPassword(password) {
+  try {
+    if (password) sessionStorage.setItem(SESSION_PW_KEY, String(password));
+    else sessionStorage.removeItem(SESSION_PW_KEY);
+  } catch {
+    // ignore
+  }
+}
+
+function readSessionPassword() {
+  try {
+    return sessionStorage.getItem(SESSION_PW_KEY) || "";
+  } catch {
+    return "";
+  }
+}
+
+function cacheMe(user, password) {
+  if (user) write(KEYS.me, publicUser(user));
+  else {
+    try {
+      localStorage.removeItem(KEYS.me);
+    } catch {
+      // ignore
+    }
+  }
+  if (password !== undefined) rememberSessionPassword(password || "");
+}
+
 function publicUser(u) {
   if (!u) return null;
-  const { password: _p, ...rest } = u;
+  const { password: _p, passwordHash: _h, sessionToken: _t, ...rest } = u;
   return rest;
 }
 
 function currentUser() {
   const token = getToken();
   if (!token) return null;
+  const cached = read(KEYS.me, null);
+  if (cached) {
+    return { ...cached, password: readSessionPassword() };
+  }
   const users = read(KEYS.users, []);
   return users.find((u) => u.id === token || u.email === token) || null;
 }
@@ -150,10 +191,10 @@ function currentUser() {
 /** Logged-in student's email + password for the post-payment welcome email only. */
 export function getSessionLoginCredentials() {
   const u = currentUser();
-  if (!u) return { email: "", password: "", full_name: "" };
+  if (!u) return { email: "", password: readSessionPassword(), full_name: "" };
   return {
     email: u.email || "",
-    password: u.password || "",
+    password: u.password || readSessionPassword() || "",
     full_name: u.full_name || "",
   };
 }
@@ -194,61 +235,74 @@ function apiError(message, status = 400) {
   return err;
 }
 
+async function authFetch(path, { method = "GET", body } = {}) {
+  const headers = { "Content-Type": "application/json" };
+  const token = getToken();
+  if (token) headers.Authorization = `Bearer ${token}`;
+  let res;
+  try {
+    res = await fetch(apiUrl(path), {
+      method,
+      headers,
+      body: body === undefined ? undefined : JSON.stringify(body),
+    });
+  } catch {
+    throw apiError("Could not reach the server. Please try again.", 503);
+  }
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw apiError(data?.message || "Request failed", res.status);
+  }
+  return data;
+}
+
+function applyAuthResult(data, password) {
+  const user = data?.user || data;
+  if (!user?.email) throw apiError("Login did not return a user", 500);
+  if (data?.token) setToken(data.token);
+  cacheMe(user, password);
+  return publicUser(user);
+}
+
 export const api = {
   auth: {
     me: async () => {
-      await delay();
-      const u = currentUser();
-      if (!u) throw apiError("Not authenticated", 401);
-      return publicUser(u);
+      const data = await authFetch("/auth/me");
+      const user = publicUser(data);
+      cacheMe(user);
+      return user;
     },
     signup: async ({ email, full_name, password } = {}) => {
-      await delay();
-      const users = read(KEYS.users, []);
-      const e = String(email || "").trim().toLowerCase();
-      if (!e || !password) throw apiError("Email and password are required");
-      if (users.some((u) => u.email.toLowerCase() === e)) {
-        throw apiError("An account with this email already exists");
-      }
-      const user = {
-        id: uid("user"),
-        email: e,
-        full_name: full_name || e.split("@")[0],
-        password: String(password),
-        role: "user",
-        created_date: new Date().toISOString(),
-      };
-      users.push(user);
-      write(KEYS.users, users);
-      setToken(user.id);
-      return publicUser(user);
+      const data = await authFetch("/auth/signup", {
+        method: "POST",
+        body: { email, full_name, password },
+      });
+      return applyAuthResult(data, password);
     },
     register: async (body) => api.auth.signup(body),
     login: async ({ email, password } = {}) => {
-      await delay();
-      const users = read(KEYS.users, []);
-      const e = String(email || "").trim().toLowerCase();
-      const user = users.find((u) => u.email.toLowerCase() === e && u.password === String(password));
-      if (!user) throw apiError("Invalid email or password", 401);
-      setToken(user.id);
-      return publicUser(user);
+      const data = await authFetch("/auth/login", {
+        method: "POST",
+        body: { email, password },
+      });
+      return applyAuthResult(data, password);
     },
     adminLogin: async ({ email, password } = {}) => {
-      await delay();
-      const users = read(KEYS.users, []);
-      const e = String(email || "").trim().toLowerCase();
-      const user = users.find(
-        (u) =>
-          u.email.toLowerCase() === e &&
-          u.password === String(password) &&
-          (u.role === "admin" || u.role === "teacher")
-      );
-      if (!user) throw apiError("Invalid admin credentials", 401);
-      setToken(user.id);
-      return publicUser(user);
+      const data = await authFetch("/auth/admin-login", {
+        method: "POST",
+        body: { email, password },
+      });
+      return applyAuthResult(data, password);
     },
     clearSession: () => setToken(null),
     logout: (redirectTo) => {
+      const token = getToken();
+      if (token) {
+        fetch(apiUrl("/auth/logout"), {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        }).catch(() => {});
+      }
       setToken(null);
       if (redirectTo) window.location.href = redirectTo;
     },
@@ -346,46 +400,22 @@ export const api = {
 
   users: {
     list: async () => {
-      await delay();
-      requireUser();
-      return read(KEYS.users, []).map(publicUser);
+      return authFetch("/auth/users");
     },
     update: async (id, data) => {
-      await delay();
-      requireUser();
-      const users = read(KEYS.users, []);
-      const i = users.findIndex((u) => u.id === id);
-      if (i < 0) throw apiError("User not found", 404);
-      users[i] = { ...users[i], ...data, id: users[i].id, email: users[i].email };
-      write(KEYS.users, users);
-      return publicUser(users[i]);
+      return authFetch(`/auth/users/${encodeURIComponent(id)}`, {
+        method: "PATCH",
+        body: data,
+      });
     },
     delete: async (id) => {
-      await delay();
-      requireUser();
-      write(
-        KEYS.users,
-        read(KEYS.users, []).filter((u) => u.id !== id)
-      );
-      return { ok: true };
+      return authFetch(`/auth/users/${encodeURIComponent(id)}`, { method: "DELETE" });
     },
     inviteUser: async (email, role) => {
-      await delay();
-      requireUser();
-      const users = read(KEYS.users, []);
-      const e = String(email || "").trim().toLowerCase();
-      if (users.some((u) => u.email.toLowerCase() === e)) throw apiError("User already exists");
-      const user = {
-        id: uid("user"),
-        email: e,
-        full_name: e.split("@")[0],
-        password: "changeme",
-        role: role || "user",
-        created_date: new Date().toISOString(),
-      };
-      users.push(user);
-      write(KEYS.users, users);
-      return publicUser(user);
+      return authFetch("/auth/invite", {
+        method: "POST",
+        body: { email, role },
+      });
     },
   },
 

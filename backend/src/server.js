@@ -6,7 +6,9 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import { connectDb } from "./config/db.js";
 import { defaultAllowedOrigins } from "./config/site.js";
+import { smtpConfigured, smtpUser } from "./utils/mailer.js";
 import contactRouter from "./routes/contact.js";
+import authRouter from "./routes/auth.js";
 import paymentsRouter from "./routes/payments.js";
 import adminRouter from "./routes/admin.js";
 import couponsRouter from "./routes/coupons.js";
@@ -66,7 +68,13 @@ function healthPayload() {
   const dbState = mongoose.connection.readyState;
   const db =
     dbState === 1 ? "connected" : dbState === 2 ? "connecting" : "disconnected";
-  return { ok: true, db, service: "kyk-api", publicDir };
+  return {
+    ok: true,
+    db,
+    service: "kyk-api",
+    publicDir,
+    mail: smtpConfigured() ? `configured:${smtpUser()}` : "missing_smtp_pass",
+  };
 }
 
 app.get("/health", (_req, res) => {
@@ -78,6 +86,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/contact", contactRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/payments", paymentsRouter);
 app.use("/api/coupons", couponsRouter);
 app.use("/api/tickets", ticketsRouter);

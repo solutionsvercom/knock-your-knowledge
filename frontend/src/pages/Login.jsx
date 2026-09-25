@@ -86,7 +86,8 @@ export default function Login() {
         </div>
         <h1 className="text-xl font-semibold">{mode === "signup" ? "Create your learner account" : "Student sign in"}</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Access courses and your dashboard. New here? Use <strong className="text-slate-300">Sign up</strong>.
+          Access courses and your dashboard. New here or already paid? Use{" "}
+          <strong className="text-slate-300">Sign up</strong> with the same email — your internships stay linked.
         </p>
 
         <div className="mt-6 space-y-4">

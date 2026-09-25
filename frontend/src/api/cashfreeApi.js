@@ -17,11 +17,17 @@ export async function getCashfreeConfig() {
   return data;
 }
 
-export async function createCashfreeOrder({ amountInr, items, coupon, customer }) {
+export async function createCashfreeOrder({ amountInr, items, coupon, customer, loginPassword }) {
   const res = await fetch(apiUrl("/payments/create-order"), {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ amountInr, items, coupon, customer }),
+    body: JSON.stringify({
+      amountInr,
+      items,
+      coupon,
+      customer,
+      loginPassword: loginPassword || undefined,
+    }),
   });
   const data = await parseJson(res);
   if (!res.ok) {

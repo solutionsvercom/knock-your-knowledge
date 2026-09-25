@@ -6,6 +6,7 @@ import { Notification } from "../models/Notification.js";
 import { cashfreeTwoFactorSignature } from "../utils/cashfreeAuth.js";
 import { LIVE_SITE_URL } from "../config/site.js";
 import { sendEnrollmentWelcomeEmail } from "../utils/enrollmentEmail.js";
+import { ensureStudentAccount, isPlaceholderEmail } from "../utils/ensureStudent.js";
 
 const router = Router();
 const CF_API_VERSION = process.env.CASHFREE_API_VERSION || "2023-08-01";
@@ -111,15 +112,29 @@ function coursesFromOrder(order) {
   return titles.length ? titles : ["KYK internship program"];
 }
 
-async function maybeSendWelcomeEmail(order, loginPassword) {
+async function loadOrderWithPassword(query) {
+  return PaymentOrder.findOne(query).select("+pendingWelcomePassword");
+}
+
+export async function maybeSendWelcomeEmail(order, loginPassword) {
   if (!order) return;
-  const password = String(loginPassword || "").trim().slice(0, 80);
+  const customer = order.customer || {};
+  const email = String(customer.email || "").trim().toLowerCase();
+  if (isPlaceholderEmail(email)) return;
+
+  const incoming = String(loginPassword || order.pendingWelcomePassword || "").trim().slice(0, 80);
+  const { passwordForEmail } = await ensureStudentAccount({
+    email,
+    name: customer.name,
+    phone: customer.contact,
+    password: incoming,
+  });
+  const password = passwordForEmail || incoming;
+
   if (order.welcomeEmailSent && (order.welcomeEmailIncludedPassword || !password)) {
     return;
   }
 
-  const customer = order.customer || {};
-  const email = String(customer.email || "").trim().toLowerCase();
   try {
     const result = await sendEnrollmentWelcomeEmail({
       name: customer.name,
@@ -128,10 +143,16 @@ async function maybeSendWelcomeEmail(order, loginPassword) {
       courses: coursesFromOrder(order),
       amountInr: order.amountInr,
     });
-    if (!result?.ok) return;
+    if (!result?.ok) {
+      console.warn("[mail] welcome email not sent for", email, result?.reason || result?.error || "unknown");
+      return;
+    }
     await PaymentOrder.findByIdAndUpdate(order._id, {
-      welcomeEmailSent: true,
-      welcomeEmailIncludedPassword: Boolean(password) || Boolean(order.welcomeEmailIncludedPassword),
+      $set: {
+        welcomeEmailSent: true,
+        welcomeEmailIncludedPassword: Boolean(password) || Boolean(order.welcomeEmailIncludedPassword),
+      },
+      $unset: { pendingWelcomePassword: 1 },
     });
   } catch (err) {
     console.error("[mail] enrollment welcome email failed", err?.message || err);
@@ -209,7 +230,7 @@ async function markPaidAndEnroll(doc, paymentId, { loginPassword } = {}) {
     );
   }
 
-  await maybeSendWelcomeEmail(updated, loginPassword);
+  await maybeSendWelcomeEmail(updated, loginPassword || doc.pendingWelcomePassword);
   return updated;
 }
 
@@ -252,11 +273,25 @@ router.post("/create-order", async (req, res) => {
       contact: normalizePhone(req.body?.customer?.contact),
     };
 
+    if (!customer.email || isPlaceholderEmail(customer.email)) {
+      return res.status(400).json({
+        message: "Please sign in with your student email before paying.",
+      });
+    }
+
     if (!customer.contact || customer.contact.length !== 10) {
       return res.status(400).json({
         message: "A valid 10-digit mobile number is required for payment.",
       });
     }
+
+    const loginPassword = String(req.body?.loginPassword || "").trim().slice(0, 80);
+    await ensureStudentAccount({
+      email: customer.email,
+      name: customer.name,
+      phone: customer.contact,
+      password: loginPassword,
+    });
 
     const orderId = `kyk_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
     const returnUrl = cashfreeReturnUrl();
@@ -299,6 +334,7 @@ router.post("/create-order", async (req, res) => {
       coupon: req.body?.coupon || null,
       items: Array.isArray(req.body?.items) ? req.body.items : [],
       customer,
+      pendingWelcomePassword: loginPassword || null,
     });
 
     const env = String(process.env.CASHFREE_ENV || "sandbox").toLowerCase();
@@ -332,7 +368,7 @@ router.post("/verify", async (req, res) => {
       return res.status(400).json({ message: "Missing Cashfree order id." });
     }
 
-    const doc = await PaymentOrder.findOne({ orderId });
+    const doc = await loadOrderWithPassword({ orderId });
     if (!doc) {
       return res.status(404).json({ message: "Payment order not found." });
     }
@@ -420,9 +456,12 @@ router.post("/webhook", async (req, res) => {
     ).trim();
     if (!orderId) return res.json({ ok: true });
 
-    const doc = await PaymentOrder.findOne({ orderId });
+    const doc = await loadOrderWithPassword({ orderId });
     if (!doc) return res.json({ ok: true, skipped: "unknown_order" });
-    if (doc.status === "paid") return res.json({ ok: true, skipped: "already_paid" });
+    if (doc.status === "paid") {
+      await maybeSendWelcomeEmail(doc);
+      return res.json({ ok: true, skipped: "already_paid" });
+    }
 
     const cfOrder = await cashfreeFetch(`/orders/${encodeURIComponent(orderId)}`);
     const status = String(cfOrder.order_status || "").toUpperCase();

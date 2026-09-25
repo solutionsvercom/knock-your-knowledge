@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { seedDefaultAdmin } from "../utils/seedAdmin.js";
+import { logMailStatus } from "../utils/mailer.js";
 
 export async function connectDb(uri) {
   if (!uri) {
@@ -11,4 +13,6 @@ export async function connectDb(uri) {
     connectTimeoutMS: 8000,
   });
   console.log("[API] MongoDB connected");
+  await seedDefaultAdmin();
+  await logMailStatus();
 }

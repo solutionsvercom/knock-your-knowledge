@@ -220,6 +220,7 @@ export default function Checkout() {
 
       await loadCashfreeScript();
 
+      const creds = getSessionLoginCredentials();
       const order = await createCashfreeOrder({
         amountInr: payableTotal,
         coupon: appliedCoupon?.code || null,
@@ -233,10 +234,11 @@ export default function Checkout() {
           payable: line.payable,
         })),
         customer: {
-          name: user?.full_name || "",
-          email: user?.email || "",
+          name: user?.full_name || creds.full_name || "",
+          email: user?.email || creds.email || "",
           contact,
         },
+        loginPassword: creds.password,
       });
 
       if (!order?.orderId || !order?.paymentSessionId) {

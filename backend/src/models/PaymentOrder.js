@@ -24,6 +24,8 @@ const paymentOrderSchema = new mongoose.Schema(
     },
     welcomeEmailSent: { type: Boolean, default: false },
     welcomeEmailIncludedPassword: { type: Boolean, default: false },
+    /** Cleared after the welcome email is sent. Never returned to the client. */
+    pendingWelcomePassword: { type: String, default: null, select: false },
   },
   { timestamps: true }
 );
