@@ -11,7 +11,8 @@ function loadCart() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item) => item?.id !== "intern-payment-demo");
   } catch {
     return [];
   }

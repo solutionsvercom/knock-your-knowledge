@@ -13,7 +13,6 @@ import {
   withGst,
   internshipUnitPrice,
   internshipFeeLabel,
-  DEMO_INTERNSHIP_ID,
 } from "@/config/pricing";
 import { CONTACT_PHONE, whatsappGetStartedUrl } from "@/config/contact";
 import {
@@ -71,12 +70,7 @@ export default function Checkout() {
     () =>
       items.map((line) => {
         const original = Number(line.price) || 0;
-        const isDemo = line.id === DEMO_INTERNSHIP_ID;
-        const taxable = discountedPrice(original, isDemo ? 1 : payFraction);
-        if (isDemo) {
-          const payable = Math.max(1, taxable);
-          return { ...line, original, taxable: payable, gst: 0, payable };
-        }
+        const taxable = discountedPrice(original, payFraction);
         const { gst, total: withTax } = withGst(taxable);
         return { ...line, original, taxable, gst, payable: withTax };
       }),

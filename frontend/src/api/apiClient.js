@@ -17,7 +17,7 @@ const KEYS = {
   users: "kyk_users_v4",
   courses: "kyk_courses_v3",
   bundles: "kyk_bundles_v2",
-  internships: "kyk_internships_v5",
+  internships: "kyk_internships_v6",
   liveClasses: "kyk_live_classes",
   enrollments: "kyk_enrollments_v2",
   payments: "kyk_payments_v2",
@@ -548,7 +548,14 @@ export const api = {
   internships: {
     list: async () => {
       await delay();
-      return read(KEYS.internships, DEMO_INTERNSHIPS);
+      const list = read(KEYS.internships, DEMO_INTERNSHIPS);
+      const cleaned = (Array.isArray(list) ? list : []).filter(
+        (item) => item?.id !== "intern-payment-demo" && !item?.demo
+      );
+      if (cleaned.length !== (Array.isArray(list) ? list.length : 0)) {
+        write(KEYS.internships, cleaned);
+      }
+      return cleaned;
     },
     create: async (data) => {
       await delay();
