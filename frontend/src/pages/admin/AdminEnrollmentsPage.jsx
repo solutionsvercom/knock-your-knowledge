@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminApi } from "@/api/adminApi";
-import { Search } from "lucide-react";
+import { Search, Download } from "lucide-react";
+import { downloadInvoice, enrollmentToInvoice } from "@/lib/invoice";
 
 function formatInr(n) {
   return `₹${Number(n || 0).toLocaleString("en-IN")}`;
@@ -130,6 +131,7 @@ export default function AdminEnrollmentsPage() {
                 <th className="px-3 py-3 font-medium">Coupon</th>
                 <th className="px-3 py-3 font-medium">Paid</th>
                 <th className="px-5 py-3 font-medium">Date</th>
+                <th className="px-5 py-3 font-medium">Download</th>
               </tr>
             </thead>
             <tbody>
@@ -144,6 +146,17 @@ export default function AdminEnrollmentsPage() {
                   <td className="px-3 py-3 text-slate-400 text-xs">{e.coupon || "—"}</td>
                   <td className="px-3 py-3 text-emerald-400 font-semibold">{formatInr(e.amountPaid)}</td>
                   <td className="px-5 py-3 text-slate-500 text-xs">{formatDate(e.createdAt)}</td>
+                  <td className="px-5 py-3">
+                    <button
+                      type="button"
+                      onClick={() => downloadInvoice(enrollmentToInvoice(e))}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-transform hover:scale-105"
+                      style={{ background: "linear-gradient(135deg, #7c3aed, #4f46e5)" }}
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

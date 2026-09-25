@@ -1,7 +1,8 @@
 import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { adminApi } from "@/api/adminApi";
-import { Search, Receipt } from "lucide-react";
+import { Search, Receipt, Download } from "lucide-react";
+import { downloadInvoice, paymentToInvoice } from "@/lib/invoice";
 
 function formatInr(n) {
   return `₹${Number(n || 0).toLocaleString("en-IN")}`;
@@ -51,7 +52,7 @@ export default function AdminPaymentsPage() {
           Payments &amp; invoices
         </h1>
         <p className="text-sm mt-0.5 text-slate-500">
-          Cashfree orders (UPI, debit, credit) · bills generated after checkout
+          Cashfree orders (UPI, debit, credit) · download a GST invoice for any student payment
         </p>
       </div>
 
@@ -108,6 +109,7 @@ export default function AdminPaymentsPage() {
                 <th className="px-3 py-3 font-medium">Amount</th>
                 <th className="px-3 py-3 font-medium">Status</th>
                 <th className="px-5 py-3 font-medium">Date</th>
+                <th className="px-5 py-3 font-medium">Download</th>
               </tr>
             </thead>
             <tbody>
@@ -136,6 +138,17 @@ export default function AdminPaymentsPage() {
                     </span>
                   </td>
                   <td className="px-5 py-3 text-slate-500 text-xs">{formatDate(p.createdAt)}</td>
+                  <td className="px-5 py-3">
+                    <button
+                      type="button"
+                      onClick={() => downloadInvoice(paymentToInvoice(p))}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-transform hover:scale-105"
+                      style={{ background: "linear-gradient(135deg, #7c3aed, #4f46e5)" }}
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
