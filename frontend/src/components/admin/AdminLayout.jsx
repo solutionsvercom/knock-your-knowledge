@@ -16,6 +16,7 @@ import {
   Ticket,
   Mail,
   Video,
+  KeyRound,
 } from "lucide-react";
 
 const NAV = [
@@ -28,6 +29,7 @@ const NAV = [
   { to: "/admin/leads", label: "Leads", icon: Mail },
   { to: "/admin/courses", label: "Courses", icon: BookOpen },
   { to: "/admin/users", label: "Users", icon: Shield },
+  { to: "/admin/password", label: "Gmail & password", icon: KeyRound },
 ];
 
 const ACCENT = "#a78bfa";

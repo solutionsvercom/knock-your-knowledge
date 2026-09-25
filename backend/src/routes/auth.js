@@ -127,6 +127,51 @@ router.post("/logout", requireAuth, async (req, res) => {
   return res.json({ ok: true });
 });
 
+router.post("/change-password", requireAuth, async (req, res) => {
+  try {
+    const currentPassword = String(req.body?.currentPassword || "");
+    const newPassword = String(req.body?.newPassword || "").trim();
+    const email = String(req.body?.email || "").trim().toLowerCase();
+
+    if (!currentPassword) {
+      return res.status(400).json({ message: "Current password is required." });
+    }
+    if (!verifyPassword(currentPassword, req.user.passwordHash)) {
+      return res.status(401).json({ message: "Current password is incorrect." });
+    }
+    if (!email && !newPassword) {
+      return res.status(400).json({ message: "Enter a new Gmail or a new password." });
+    }
+
+    if (email) {
+      if (!email.includes("@")) {
+        return res.status(400).json({ message: "Enter a valid Gmail / email address." });
+      }
+      const taken = await User.findOne({ email, _id: { $ne: req.user._id } });
+      if (taken) {
+        return res.status(400).json({ message: "That email is already used by another account." });
+      }
+      req.user.email = email;
+    }
+
+    if (newPassword) {
+      if (newPassword.length < 6) {
+        return res.status(400).json({ message: "New password must be at least 6 characters." });
+      }
+      req.user.passwordHash = hashPassword(newPassword);
+    }
+
+    const token = await issueSession(req.user);
+    return res.json({ ok: true, token, user: serializeUser(req.user) });
+  } catch (err) {
+    if (err?.code === 11000) {
+      return res.status(400).json({ message: "That email is already used by another account." });
+    }
+    console.error("[API] POST /api/auth/change-password", err);
+    return res.status(500).json({ message: "Could not update login details." });
+  }
+});
+
 router.get("/users", requireAuth, async (_req, res) => {
   const users = await User.find().sort({ createdAt: -1 }).lean();
   return res.json(users.map((u) => serializeUser(u)));

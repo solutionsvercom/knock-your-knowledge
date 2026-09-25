@@ -294,6 +294,13 @@ export const api = {
       });
       return applyAuthResult(data, password);
     },
+    changePassword: async ({ currentPassword, newPassword, email } = {}) => {
+      const data = await authFetch("/auth/change-password", {
+        method: "POST",
+        body: { currentPassword, newPassword, email },
+      });
+      return applyAuthResult(data, newPassword || undefined);
+    },
     clearSession: () => setToken(null),
     logout: (redirectTo) => {
       const token = getToken();
