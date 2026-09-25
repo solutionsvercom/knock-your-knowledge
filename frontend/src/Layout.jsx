@@ -5,6 +5,7 @@ import { Menu, X, Sparkles } from "lucide-react";
 import Footer from "@/components/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 import GetStartedLink from "@/components/navigation/GetStartedLink";
+import SearchWhatsAppPrompt from "@/components/contact/SearchWhatsAppPrompt";
 import { KYK_LOGO_SRC } from "@/config/contact";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -258,6 +259,7 @@ export default function Layout({ children, currentPageName }) {
 
       <main className="relative z-0 overflow-x-hidden w-full max-w-[100vw]">{children}</main>
       <Footer />
+      <SearchWhatsAppPrompt />
     </div>
   );
 }

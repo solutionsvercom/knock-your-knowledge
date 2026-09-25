@@ -2,6 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import { adminApi } from "@/api/adminApi";
+import { whatsappProspectFollowUpUrl } from "@/config/contact";
 import {
   Users,
   DollarSign,
@@ -253,14 +254,33 @@ export default function AdminDashboardPage() {
             {leads.length === 0 ? (
               <p className="text-xs text-slate-500">No Get Started leads yet.</p>
             ) : (
-              leads.slice(0, 10).map((l) => (
-                <div key={l._id} className="py-2 border-b border-white/5 text-sm">
-                  <p className="text-white font-medium">{l.name || l.email}</p>
-                  <p className="text-xs text-slate-500">
-                    {l.email} · {l.phone || "—"} · {l.internshipInterest || l.program || "—"}
-                  </p>
+              leads.slice(0, 10).map((l) => {
+                const wa = whatsappProspectFollowUpUrl({
+                  name: l.name,
+                  phone: l.phone,
+                  internshipInterest: l.internshipInterest || l.program,
+                });
+                return (
+                <div key={l._id} className="py-2 border-b border-white/5 text-sm flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-white font-medium">{l.name || l.email}</p>
+                    <p className="text-xs text-slate-500">
+                      {l.email} · {l.phone || "—"} · {l.internshipInterest || l.program || "—"}
+                    </p>
+                  </div>
+                  {wa ? (
+                    <button
+                      type="button"
+                      onClick={() => window.open(wa, "_blank", "noopener,noreferrer")}
+                      className="flex-shrink-0 text-[11px] font-semibold px-2 py-1 rounded-lg text-white"
+                      style={{ background: "#25D366" }}
+                    >
+                      WhatsApp
+                    </button>
+                  ) : null}
                 </div>
-              ))
+                );
+              })
             )}
           </div>
         </section>

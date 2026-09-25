@@ -8,6 +8,7 @@ import CompaniesSection from "../components/home/CompaniesSection";
 import CTASection from "../components/home/CTASection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import LearningJourneySection from "../components/home/LearningJourneySection";
+import HomeApplyPopup from "../components/home/HomeApplyPopup";
 import { asArray } from "@/lib/asArray";
 
 export default function Home() {
@@ -42,6 +43,7 @@ export default function Home() {
       <TestimonialsSection />
       <CompaniesSection />
       <CTASection />
+      <HomeApplyPopup />
     </div>
   );
 }
