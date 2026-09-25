@@ -1,8 +1,11 @@
 import { Router } from "express";
 import { User } from "../models/User.js";
 import { Enrollment } from "../models/Enrollment.js";
-import { hashPassword, verifyPassword } from "../utils/password.js";
+import { hashPassword, hashResetToken, makeResetToken, verifyPassword } from "../utils/password.js";
 import { issueSession, serializeUser, findUserByToken } from "../utils/ensureStudent.js";
+import { smtpConfigured } from "../utils/mailer.js";
+import { sendPasswordResetEmail } from "../utils/resetEmail.js";
+import { LIVE_SITE_URL } from "../config/site.js";
 
 const router = Router();
 
@@ -20,6 +23,22 @@ async function requireAuth(req, res, next) {
   req.user = user;
   return next();
 }
+
+function resetPageBase(req) {
+  const origin = String(req.headers.origin || "").trim().replace(/\/$/, "");
+  if (origin && /knockyourknowledge\.com|localhost|127\.0\.0\.1/i.test(origin)) {
+    return origin;
+  }
+  const first = String(process.env.FRONTEND_URL || "")
+    .split(",")[0]
+    .trim()
+    .replace(/\/$/, "");
+  if (first) return first;
+  return LIVE_SITE_URL;
+}
+
+const GENERIC_RESET_MSG =
+  "If that email is registered, we sent a password reset link. Check your inbox and spam folder.";
 
 function normalizeEmail(email) {
   return String(email || "").trim().toLowerCase();
@@ -94,6 +113,79 @@ router.post("/login", async (req, res) => {
   } catch (err) {
     console.error("[API] POST /api/auth/login", err);
     return res.status(500).json({ message: "Could not sign in." });
+  }
+});
+
+router.post("/forgot-password", async (req, res) => {
+  try {
+    const email = normalizeEmail(req.body?.email);
+    if (!email.includes("@")) {
+      return res.status(400).json({ message: "Enter the email you use to sign in." });
+    }
+    if (!smtpConfigured()) {
+      return res.status(503).json({
+        message: "Password reset email is not configured yet. Please contact KYK support.",
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.json({ ok: true, message: GENERIC_RESET_MSG });
+    }
+
+    const { token, tokenHash } = makeResetToken();
+    user.resetTokenHash = tokenHash;
+    user.resetTokenExpires = new Date(Date.now() + 60 * 60 * 1000);
+    await user.save();
+
+    const resetUrl = `${resetPageBase(req)}/login?mode=reset&token=${encodeURIComponent(token)}`;
+    const sent = await sendPasswordResetEmail({
+      name: user.full_name,
+      email: user.email,
+      resetUrl,
+    });
+    if (!sent?.ok) {
+      console.error("[mail] password reset not sent", sent?.reason || sent?.error);
+      return res.status(500).json({ message: "Could not send the reset email. Try again in a minute." });
+    }
+
+    return res.json({ ok: true, message: GENERIC_RESET_MSG });
+  } catch (err) {
+    console.error("[API] POST /api/auth/forgot-password", err);
+    return res.status(500).json({ message: "Could not start password reset." });
+  }
+});
+
+router.post("/reset-password", async (req, res) => {
+  try {
+    const token = String(req.body?.token || "").trim();
+    const newPassword = String(req.body?.newPassword || "");
+    if (!token) {
+      return res.status(400).json({ message: "Reset link is missing or invalid." });
+    }
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters." });
+    }
+
+    const tokenHash = hashResetToken(token);
+    const user = await User.findOne({
+      resetTokenHash: tokenHash,
+      resetTokenExpires: { $gt: new Date() },
+    });
+    if (!user) {
+      return res.status(400).json({
+        message: "This reset link is invalid or has expired. Request a new one from the login page.",
+      });
+    }
+
+    user.passwordHash = hashPassword(newPassword);
+    user.resetTokenHash = null;
+    user.resetTokenExpires = null;
+    const sessionToken = await issueSession(user);
+    return res.json({ ok: true, token: sessionToken, user: serializeUser(user) });
+  } catch (err) {
+    console.error("[API] POST /api/auth/reset-password", err);
+    return res.status(500).json({ message: "Could not reset password." });
   }
 });
 

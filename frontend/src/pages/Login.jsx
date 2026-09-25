@@ -3,21 +3,36 @@ import { Link } from "react-router-dom";
 import { api } from "@/api/apiClient";
 import { GraduationCap } from "lucide-react";
 
+function initialMode() {
+  try {
+    const url = new URL(window.location.href);
+    const mode = url.searchParams.get("mode");
+    if (mode === "signup" || mode === "forgot" || mode === "reset") return mode;
+    return "login";
+  } catch {
+    return "login";
+  }
+}
+
+function resetTokenFromUrl() {
+  try {
+    return new URL(window.location.href).searchParams.get("token") || "";
+  } catch {
+    return "";
+  }
+}
+
 /** Learner / public account only. Admin panel is not linked here — use `/admin/login` directly (dev). */
 export default function Login() {
-  const [mode, setMode] = useState(() => {
-    try {
-      const url = new URL(window.location.href);
-      return url.searchParams.get("mode") === "signup" ? "signup" : "login";
-    } catch {
-      return "login";
-    }
-  });
+  const [mode, setMode] = useState(initialMode);
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [info, setInfo] = useState(null);
+  const resetToken = useMemo(() => resetTokenFromUrl(), []);
 
   const nextUrl = useMemo(() => {
     try {
@@ -32,6 +47,7 @@ export default function Login() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setInfo(null);
     try {
       if (mode === "signup") {
         await api.auth.signup({
@@ -39,12 +55,26 @@ export default function Login() {
           full_name: fullName.trim(),
           password,
         });
-      } else {
-        await api.auth.login({
-          email: email.trim(),
-          password,
-        });
+        window.location.href = nextUrl;
+        return;
       }
+      if (mode === "forgot") {
+        const data = await api.auth.forgotPassword({ email: email.trim() });
+        setInfo(data?.message || "If that email is registered, we sent a reset link.");
+        return;
+      }
+      if (mode === "reset") {
+        if (password !== confirmPassword) {
+          throw new Error("New password and confirm password do not match.");
+        }
+        await api.auth.resetPassword({ token: resetToken, newPassword: password });
+        window.location.href = nextUrl;
+        return;
+      }
+      await api.auth.login({
+        email: email.trim(),
+        password,
+      });
       window.location.href = nextUrl;
     } catch (err) {
       const msg =
@@ -58,6 +88,23 @@ export default function Login() {
     }
   };
 
+  const title =
+    mode === "signup"
+      ? "Create your learner account"
+      : mode === "forgot"
+        ? "Forgot password"
+        : mode === "reset"
+          ? "Set a new password"
+          : "Student sign in";
+
+  const submitDisabled =
+    loading ||
+    (mode === "forgot"
+      ? !email.trim()
+      : mode === "reset"
+        ? !password.trim() || !confirmPassword.trim()
+        : !email.trim() || !password.trim());
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-slate-50 p-6">
       <div className="w-full max-w-md mb-6 flex items-center gap-2 text-violet-400">
@@ -68,39 +115,63 @@ export default function Login() {
         onSubmit={onSubmit}
         className="w-full max-w-md rounded-xl border border-slate-800 bg-slate-900/50 p-6 shadow-xl"
       >
-        <div className="flex items-center gap-2 mb-4">
-          <button
-            type="button"
-            onClick={() => setMode("login")}
-            className={`px-3 py-1.5 rounded-md text-sm ${mode === "login" ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-300"}`}
-          >
-            Login
-          </button>
-          <button
-            type="button"
-            onClick={() => setMode("signup")}
-            className={`px-3 py-1.5 rounded-md text-sm ${mode === "signup" ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-300"}`}
-          >
-            Sign up
-          </button>
-        </div>
-        <h1 className="text-xl font-semibold">{mode === "signup" ? "Create your learner account" : "Student sign in"}</h1>
+        {mode === "login" || mode === "signup" ? (
+          <div className="flex items-center gap-2 mb-4">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("login");
+                setError(null);
+                setInfo(null);
+              }}
+              className={`px-3 py-1.5 rounded-md text-sm ${mode === "login" ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-300"}`}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setMode("signup");
+                setError(null);
+                setInfo(null);
+              }}
+              className={`px-3 py-1.5 rounded-md text-sm ${mode === "signup" ? "bg-violet-600 text-white" : "bg-slate-800 text-slate-300"}`}
+            >
+              Sign up
+            </button>
+          </div>
+        ) : null}
+
+        <h1 className="text-xl font-semibold">{title}</h1>
         <p className="text-sm text-slate-400 mt-1">
-          Access courses and your dashboard. New here or already paid? Use{" "}
-          <strong className="text-slate-300">Sign up</strong> with the same email — your internships stay linked.
+          {mode === "signup"
+            ? "Access courses and your dashboard. New here or already paid? Use the same email — your internships stay linked."
+            : mode === "forgot"
+              ? "Enter the email you used to sign up. We will send a reset link from kyourk2024@gmail.com."
+              : mode === "reset"
+                ? "Choose a new password for your student account."
+                : "Access courses and your dashboard. New here or already paid? Use Sign up with the same email."}
         </p>
 
+        {mode === "reset" && !resetToken ? (
+          <div className="mt-4 text-sm text-red-300 border border-red-900/40 bg-red-950/30 rounded-md p-3">
+            This reset link is missing. Request a new one from Forgot password.
+          </div>
+        ) : null}
+
         <div className="mt-6 space-y-4">
-          <label className="block">
-            <div className="text-sm text-slate-200">Email</div>
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-md bg-slate-950 border border-slate-800 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="you@example.com"
-              autoComplete="email"
-            />
-          </label>
+          {mode !== "reset" ? (
+            <label className="block">
+              <div className="text-sm text-slate-200">Email</div>
+              <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 w-full rounded-md bg-slate-950 border border-slate-800 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
+                placeholder="you@example.com"
+                autoComplete="email"
+              />
+            </label>
+          ) : null}
 
           {mode === "signup" && (
             <label className="block">
@@ -115,32 +186,91 @@ export default function Login() {
             </label>
           )}
 
-          <label className="block">
-            <div className="text-sm text-slate-200">Password</div>
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              className="mt-1 w-full rounded-md bg-slate-950 border border-slate-800 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
-              placeholder="••••••••"
-              autoComplete={mode === "signup" ? "new-password" : "current-password"}
-            />
-          </label>
+          {mode === "login" || mode === "signup" || mode === "reset" ? (
+            <label className="block">
+              <div className="text-sm text-slate-200">{mode === "reset" ? "New password" : "Password"}</div>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                className="mt-1 w-full rounded-md bg-slate-950 border border-slate-800 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
+                placeholder="••••••••"
+                autoComplete={mode === "login" ? "current-password" : "new-password"}
+              />
+            </label>
+          ) : null}
+
+          {mode === "reset" ? (
+            <label className="block">
+              <div className="text-sm text-slate-200">Confirm new password</div>
+              <input
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                type="password"
+                className="mt-1 w-full rounded-md bg-slate-950 border border-slate-800 px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500"
+                placeholder="••••••••"
+                autoComplete="new-password"
+              />
+            </label>
+          ) : null}
         </div>
+
+        {mode === "login" ? (
+          <button
+            type="button"
+            onClick={() => {
+              setMode("forgot");
+              setError(null);
+              setInfo(null);
+            }}
+            className="mt-3 text-sm text-violet-400 hover:text-violet-300 hover:underline"
+          >
+            Forgot password?
+          </button>
+        ) : null}
 
         {error ? (
           <div className="mt-4 text-sm text-red-300 border border-red-900/40 bg-red-950/30 rounded-md p-3">
             {error}
           </div>
         ) : null}
+        {info ? (
+          <div className="mt-4 text-sm text-emerald-300 border border-emerald-900/40 bg-emerald-950/30 rounded-md p-3">
+            {info}
+          </div>
+        ) : null}
 
         <button
           type="submit"
-          disabled={loading || !email.trim() || !password.trim()}
+          disabled={submitDisabled || (mode === "reset" && !resetToken)}
           className="mt-6 w-full rounded-md bg-violet-600 hover:bg-violet-500 disabled:opacity-60 px-4 py-2 font-medium"
         >
-          {loading ? "Please wait..." : mode === "signup" ? "Create account" : "Sign in"}
+          {loading
+            ? "Please wait..."
+            : mode === "signup"
+              ? "Create account"
+              : mode === "forgot"
+                ? "Send reset link"
+                : mode === "reset"
+                  ? "Save new password"
+                  : "Sign in"}
         </button>
+
+        {mode === "forgot" || mode === "reset" ? (
+          <p className="mt-4 text-center text-sm text-slate-500">
+            <button
+              type="button"
+              onClick={() => {
+                setMode("login");
+                setError(null);
+                setInfo(null);
+              }}
+              className="text-slate-400 hover:text-violet-400 hover:underline"
+            >
+              ← Back to login
+            </button>
+          </p>
+        ) : null}
 
         <p className="mt-6 text-center text-sm text-slate-500">
           <Link to="/" className="text-slate-400 hover:text-violet-400 hover:underline">
@@ -151,4 +281,3 @@ export default function Login() {
     </div>
   );
 }
-

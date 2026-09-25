@@ -1,4 +1,4 @@
-import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { randomBytes, scryptSync, timingSafeEqual, createHash } from "node:crypto";
 
 export function hashPassword(plain) {
   const password = String(plain || "");
@@ -33,4 +33,14 @@ export function generateStudentPassword() {
 
 export function newSessionToken() {
   return randomBytes(32).toString("hex");
+}
+
+export function makeResetToken() {
+  const token = randomBytes(32).toString("hex");
+  const tokenHash = createHash("sha256").update(token).digest("hex");
+  return { token, tokenHash };
+}
+
+export function hashResetToken(token) {
+  return createHash("sha256").update(String(token || "")).digest("hex");
 }

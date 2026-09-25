@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema(
       default: "student",
     },
     sessionToken: { type: String, default: null, index: true },
+    resetTokenHash: { type: String, default: null, index: true },
+    resetTokenExpires: { type: Date, default: null },
   },
   { timestamps: true }
 );

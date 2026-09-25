@@ -301,6 +301,19 @@ export const api = {
       });
       return applyAuthResult(data, newPassword || undefined);
     },
+    forgotPassword: async ({ email } = {}) => {
+      return authFetch("/auth/forgot-password", {
+        method: "POST",
+        body: { email },
+      });
+    },
+    resetPassword: async ({ token, newPassword } = {}) => {
+      const data = await authFetch("/auth/reset-password", {
+        method: "POST",
+        body: { token, newPassword },
+      });
+      return applyAuthResult(data, newPassword);
+    },
     clearSession: () => setToken(null),
     logout: (redirectTo) => {
       const token = getToken();
