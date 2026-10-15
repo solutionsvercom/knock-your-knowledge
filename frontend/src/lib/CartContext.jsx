@@ -35,10 +35,13 @@ export function CartProvider({ children }) {
     saveCart(items);
   }, [items]);
 
-  const addItem = useCallback((/** @type {CartItem} */ item) => {
+  const addItem = useCallback((/** @type {CartItem} */ item, opts = {}) => {
     const key = `${item.type}:${item.id}`;
+    const drop = new Set(
+      (Array.isArray(opts.remove) ? opts.remove : []).map((r) => `${r.type}:${r.id}`)
+    );
     setItems((prev) => {
-      const next = prev.filter((x) => `${x.type}:${x.id}` !== key);
+      const next = prev.filter((x) => `${x.type}:${x.id}` !== key && !drop.has(`${x.type}:${x.id}`));
       next.push({ ...item, price: Number(item.price) || 0 });
       return next;
     });

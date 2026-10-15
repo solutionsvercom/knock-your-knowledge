@@ -2,6 +2,8 @@
  * Static demo data for frontend-only mode (no backend / MongoDB).
  */
 import { CATEGORIES } from "./courseCatalog";
+import { COURSE_FEE_AMOUNT } from "@/config/pricing";
+import { flattenCurriculumLessons, getCourseCurriculum } from "./courseVideos";
 
 function slugify(title) {
   return String(title || "")
@@ -41,14 +43,16 @@ export function buildDemoCourses() {
         lessons: 4,
         duration_min: 45,
       }));
+      const curriculum = getCourseCurriculum(slugify(c.title));
+      const videoLessons = flattenCurriculumLessons(curriculum);
       courses.push({
         id,
         title: c.title,
         category: cat.label,
         level: String(c.level || "Beginner").toLowerCase(),
         instructor: c.instructor || "KYK Team",
-        price: 49,
-        original_price: 99,
+        price: c.price ?? COURSE_FEE_AMOUNT,
+        original_price: c.price ?? COURSE_FEE_AMOUNT,
         short_description: c.shortDesc,
         description: c.shortDesc,
         duration_hours: hours,
@@ -65,11 +69,12 @@ export function buildDemoCourses() {
         students_count: parseStudents(c.students),
         lessons_count: modules.length * 4,
         status: "published",
-        videos: (c.modules || []).slice(0, 3).map((name, i) => ({
-          title: typeof name === "string" ? name : name.title,
-          url: "https://www.w3schools.com/html/mov_bbb.mp4",
-          duration_min: 8 + i * 2,
-          order: i,
+        videos: videoLessons.map((v) => ({
+          title: v.title,
+          url: v.url || "",
+          duration_min: v.durationMins,
+          order: v.order,
+          public_id: v.publicId,
         })),
         createdAt: "2025-01-01T00:00:00.000Z",
         created_date: "2025-01-01T00:00:00.000Z",
@@ -86,8 +91,8 @@ export const DEMO_BUNDLES = [
     id: "bundle-dev-starter",
     name: "Developer Starter Pack",
     title: "Developer Starter Pack",
-    description: "Python, MERN Stack, and Data Science — everything to launch as a developer.",
-    price: 3999,
+    description: "Python, Data Science, and MERN Stack together — save vs buying each course at ₹299/-.",
+    price: 799,
     course_ids: DEMO_COURSES.filter((c) =>
       ["Python Programming", "MERN Stack Development", "Data Science"].includes(c.title)
     ).map((c) => c.id),
@@ -98,8 +103,8 @@ export const DEMO_BUNDLES = [
     id: "bundle-ai-mastery",
     name: "AI Mastery Bundle",
     title: "AI Mastery Bundle",
-    description: "AI Fundamentals, Prompt Engineering, and top AI productivity tools.",
-    price: 3999,
+    description: "AI Fundamentals, Prompt Engineering, and AI Tools together — save vs buying each course at ₹199/-.",
+    price: 499,
     course_ids: DEMO_COURSES.filter((c) =>
       [
         "Artificial Intelligence Fundamentals",
@@ -111,15 +116,36 @@ export const DEMO_BUNDLES = [
     created_date: "2025-02-15T00:00:00.000Z",
   },
   {
+    id: "bundle-analytics",
+    name: "Business Analytics Pack",
+    title: "Business Analytics Pack",
+    description: "SQL, Python, Power BI, Tableau, and Jira together — save vs buying each course at ₹199/-.",
+    price: 899,
+    course_ids: DEMO_COURSES.filter((c) =>
+      [
+        "SQL for Data Analysis",
+        "Python for Analytics",
+        "Power BI Dashboarding",
+        "Tableau Visualization",
+        "Jira for Project Management",
+      ].includes(c.title)
+    ).map((c) => c.id),
+    status: "published",
+    created_date: "2025-02-20T00:00:00.000Z",
+  },
+  {
     id: "bundle-marketing-pro",
     name: "Digital Marketing Pro",
     title: "Digital Marketing Pro",
-    description: "SEO, social growth, and AI marketing tools in one career track.",
-    price: 3999,
+    description: "SEO, SEM, SMM, SMO, Search Console, and AI Marketing together — save vs buying each course at ₹149/-.",
+    price: 799,
     course_ids: DEMO_COURSES.filter((c) =>
       [
         "SEO — Search Engine Optimization",
+        "SEM — Search Engine Marketing",
+        "SMM — Social Media Marketing",
         "SMO — Social Media Optimization",
+        "Google Webmaster & Search Console",
         "AI Tools in Digital Marketing",
       ].includes(c.title)
     ).map((c) => c.id),
@@ -273,11 +299,27 @@ export const DEMO_ADMIN = {
 
 export function lessonsForCourse(course) {
   if (!course) return [];
+  const slug = String(course.id || "").replace(/^course-/, "") || slugify(course.title);
+  const fromCatalog = flattenCurriculumLessons(getCourseCurriculum(slug));
+  if (fromCatalog.length) {
+    return fromCatalog.map((l) => ({
+      id: l.id,
+      course_id: course.id,
+      course_title: course.title,
+      title: l.title,
+      description: l.description,
+      duration_mins: l.durationMins,
+      order: l.order,
+      video_url: l.video_url || "",
+      module_title: l.module_title,
+      is_free_preview: l.isFreePreview,
+    }));
+  }
   const mods = Array.isArray(course.modules) ? course.modules : [];
   const lessons = [];
   mods.forEach((mod, mi) => {
     const title = typeof mod === "string" ? mod : mod.title;
-    const count = typeof mod === "object" && mod.lessons ? mod.lessons : 3;
+    const count = typeof mod === "object" && mod.lessons ? mod.lessons : 4;
     for (let i = 0; i < count; i++) {
       lessons.push({
         id: `lesson-${course.id}-${mi}-${i}`,
@@ -287,7 +329,7 @@ export function lessonsForCourse(course) {
         description: `Learn ${title} with guided examples.`,
         duration_mins: 12 + i * 3,
         order: mi * 10 + i,
-        video_url: "https://www.w3schools.com/html/mov_bbb.mp4",
+        video_url: "",
       });
     }
   });

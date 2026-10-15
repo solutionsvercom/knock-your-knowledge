@@ -34,6 +34,10 @@ export default function AdminCoursesPage() {
             home featured
           </Link>{" "}
           list pull from this same data. Edits here appear on the website after save (refresh if needed).
+          <br />
+          <strong className="text-slate-200">Course videos:</strong> upload to Cloudinary folder{" "}
+          <code className="text-violet-300 text-xs">kyk/courses/{"{slug}"}/t01…t05</code> (4 videos per topic, 20 per course).
+          Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET in backend .env, then use Add Lesson → Upload.
         </p>
         <Link
           to="/Courses"

@@ -7,6 +7,8 @@ import { asArray } from "@/lib/asArray";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 import { INTERNSHIP_FEE_AMOUNT, internshipUnitPrice } from "@/config/pricing";
+import { catalogCourseProduct } from "@/data/courseVideos";
+import BlogCourseHeroCard from "@/components/blog/BlogCourseHeroCard";
 import { createPageUrl } from "@/utils";
 import {
   ArrowLeft,
@@ -54,6 +56,15 @@ export default function BlogPost() {
   });
   const internships = asArray(internshipsRaw);
 
+  const goCheckout = () => {
+    if (isLoadingAuth) return;
+    if (!isAuthenticated) {
+      navigate(`/login?mode=signup&next=${encodeURIComponent("/Checkout")}`);
+      return;
+    }
+    navigate("/Checkout");
+  };
+
   const addGuideToCart = () => {
     if (!post) return;
     const program = internshipForGuide(post, internships);
@@ -66,18 +77,18 @@ export default function BlogPost() {
         thumbnail: program.image || program.company_logo || post.image || "",
       });
     }
+    goCheckout();
+  };
 
-    if (isLoadingAuth) return;
-
-    if (!isAuthenticated) {
-      navigate(`/login?mode=signup&next=${encodeURIComponent("/Checkout")}`);
-      return;
-    }
-
-    navigate("/Checkout");
+  const enrollThisCourse = () => {
+    const product = catalogCourseProduct(post);
+    if (!product) return;
+    addItem(product);
+    goCheckout();
   };
 
   const careerGuide = isCareerGuide(post);
+  const courseProduct = catalogCourseProduct(post);
 
   if (!post) {
     return (
@@ -93,11 +104,12 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
-      <div className="relative h-56 sm:h-72 lg:h-80 overflow-hidden border-b" style={{ borderColor: "rgba(167,139,250,0.15)" }}>
-        <img src={post.image} alt="" className="w-full h-full object-cover" />
+      <div className="relative min-h-[14rem] sm:min-h-[18rem] lg:min-h-[22rem] overflow-hidden border-b" style={{ borderColor: "rgba(167,139,250,0.15)" }}>
+        <img src={post.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(2,8,23,0.3) 0%, #020817 100%)" }} />
-        <div className="absolute inset-0 flex items-end">
-          <div className="max-w-3xl mx-auto w-full px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="relative flex items-end">
+          <div className={`${careerGuide ? "max-w-3xl" : "max-w-6xl"} mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row lg:items-end gap-6`}>
+            <div className="flex-1 min-w-0">
             <Link
               to={createPageUrl(careerGuide ? "Blog" : "Courses")}
               className="inline-flex items-center gap-1.5 text-sm mb-4 transition-colors hover:text-white"
@@ -136,6 +148,10 @@ export default function BlogPost() {
                 </span>
               ) : null}
             </div>
+            </div>
+            {!careerGuide && courseProduct ? (
+              <BlogCourseHeroCard post={post} onEnroll={enrollThisCourse} feeItem={courseProduct} />
+            ) : null}
           </div>
         </div>
       </div>

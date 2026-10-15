@@ -13,7 +13,12 @@ import {
   withGst,
   internshipUnitPrice,
   internshipFeeLabel,
+  courseFeeLabel,
+  courseUnitPrice,
+  isRetailBundleId,
+  isRetailCourse,
 } from "@/config/pricing";
+import { CATALOG_COURSE_PRODUCTS } from "@/data/courseVideos";
 import { CONTACT_PHONE, whatsappGetStartedUrl } from "@/config/contact";
 import {
   createCashfreeOrder,
@@ -70,7 +75,11 @@ export default function Checkout() {
     () =>
       items.map((line) => {
         const original = Number(line.price) || 0;
-        const taxable = discountedPrice(original, payFraction);
+        const listedOffer = isRetailBundleId(line.id) || isRetailCourse(line.title);
+        const taxable = discountedPrice(original, listedOffer ? 1 : payFraction);
+        if (listedOffer) {
+          return { ...line, original, taxable, gst: 0, payable: Math.max(1, taxable) };
+        }
         const { gst, total: withTax } = withGst(taxable);
         return { ...line, original, taxable, gst, payable: withTax };
       }),
@@ -101,6 +110,26 @@ export default function Checkout() {
       title: program.title,
       price: internshipUnitPrice(program),
       thumbnail: program.image || program.company_logo || "",
+    });
+  };
+
+  const cartCourseIds = useMemo(
+    () => new Set(items.filter((x) => x.type === "course").map((x) => x.id)),
+    [items]
+  );
+
+  const availableCoursesToAdd = useMemo(
+    () => CATALOG_COURSE_PRODUCTS.filter((c) => c?.id && !cartCourseIds.has(c.id)),
+    [cartCourseIds]
+  );
+
+  const addCatalogCourse = (course) => {
+    addItem({
+      type: "course",
+      id: course.id,
+      title: course.title,
+      price: courseUnitPrice(course),
+      thumbnail: course.thumbnail || "",
     });
   };
 
@@ -351,6 +380,48 @@ export default function Checkout() {
                 </li>
               ))}
             </ul>
+
+            {availableCoursesToAdd.length > 0 ? (
+              <div
+                className="rounded-xl border p-4 mb-6"
+                style={{ background: "rgba(255,255,255,0.02)", borderColor: "rgba(167,139,250,0.2)" }}
+              >
+                <p className="text-xs font-semibold uppercase tracking-widest mb-1" style={{ color: "#a78bfa" }}>
+                  Add internship courses
+                </p>
+                <p className="text-sm mb-4" style={{ color: "#64748b" }}>
+                  Enroll in Python, Power BI, SEO, and other courses separately.
+                </p>
+                <ul className="space-y-2 max-h-64 overflow-y-auto">
+                  {availableCoursesToAdd.map((course) => (
+                    <li
+                      key={course.id}
+                      className="flex items-center gap-3 p-3 rounded-xl border"
+                      style={{ background: "rgba(255,255,255,0.03)", borderColor: "rgba(255,255,255,0.08)" }}
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="text-white text-sm font-semibold truncate">{course.title}</p>
+                        <p className="text-xs mt-0.5" style={{ color: "#34d399" }}>
+                          Fee: {courseFeeLabel(course)}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => addCatalogCourse(course)}
+                        className="inline-flex items-center gap-1.5 px-3 h-9 rounded-lg text-xs font-semibold text-white flex-shrink-0 transition-transform hover:scale-105"
+                        style={{
+                          background: "linear-gradient(135deg, #7c3aed, #4f46e5)",
+                          boxShadow: "0 0 12px rgba(124,58,237,0.3)",
+                        }}
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        Add
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
             {hasInternshipInCart && availableToAdd.length > 0 ? (
               <div

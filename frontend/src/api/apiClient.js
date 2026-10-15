@@ -15,8 +15,8 @@ const KEYS = {
   token: "kyk_token_v2",
   me: "kyk_me_v1",
   users: "kyk_users_v4",
-  courses: "kyk_courses_v3",
-  bundles: "kyk_bundles_v2",
+  courses: "kyk_courses_v8",
+  bundles: "kyk_bundles_v6",
   internships: "kyk_internships_v6",
   liveClasses: "kyk_live_classes",
   enrollments: "kyk_enrollments_v2",
@@ -452,7 +452,10 @@ export const api = {
     },
     getById: async (id) => {
       await delay();
-      const c = read(KEYS.courses, DEMO_COURSES).find((x) => x.id === id);
+      const stored = read(KEYS.courses, DEMO_COURSES);
+      const c =
+        (Array.isArray(stored) ? stored : []).find((x) => x.id === id) ||
+        DEMO_COURSES.find((x) => x.id === id);
       if (!c) throw apiError("Course not found", 404);
       return c;
     },

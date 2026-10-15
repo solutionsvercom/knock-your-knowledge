@@ -1,11 +1,18 @@
 import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
-import { getWebsiteCourseCatalog } from "@/data/courseCatalog";
+import { catalogCartIdFromTitle, getWebsiteCourseCatalog } from "@/data/courseCatalog";
 import { slugifyTitle, getBlogBySlug } from "@/data/courseBlogs";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
+import { useCart } from "@/lib/CartContext";
+import { useAuth } from "@/lib/AuthContext";
+import {
+  formatInr,
+  retailOfferForCategory,
+  retailOfferForTitle,
+} from "@/config/pricing";
 import {
   Clock,
   Users,
@@ -17,6 +24,8 @@ import {
   Filter,
   Search,
   ArrowRight,
+  ShoppingCart,
+  Gift,
 } from "lucide-react";
 
 const LEVEL_STYLES = {
@@ -30,12 +39,15 @@ function courseBlogPath(course) {
   return slug && getBlogBySlug(slug) ? `/Blog/${slug}` : null;
 }
 
-function CourseCard({ course }) {
+function CourseCard({ course, onAddToCart, inCart = false }) {
   const [expanded, setExpanded] = useState(false);
   const Icon = course.icon;
   const lvl = LEVEL_STYLES[course.level] || LEVEL_STYLES.Beginner;
   const cover = course.thumbnail || course.image;
   const blogPath = courseBlogPath(course);
+  const offer = retailOfferForTitle(course.title);
+  const forSale = Boolean(offer);
+  const price = forSale ? offer.courseFee : Number(course.price) || 0;
 
   return (
     <div
@@ -119,6 +131,12 @@ function CourseCard({ course }) {
           </div>
         )}
 
+        {forSale ? (
+          <p className="text-lg font-black text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            {formatInr(price)}
+          </p>
+        ) : null}
+
         {blogPath ? (
           <Link
             to={blogPath}
@@ -131,6 +149,22 @@ function CourseCard({ course }) {
             Know more
             <ArrowRight className="w-4 h-4" />
           </Link>
+        ) : null}
+
+        {forSale && onAddToCart ? (
+          <button
+            type="button"
+            onClick={() => onAddToCart(course)}
+            className="mt-2 inline-flex items-center justify-center gap-2 w-full min-h-11 px-4 rounded-xl text-sm font-semibold text-white transition-all hover:scale-[1.02]"
+            style={{
+              background: inCart ? "rgba(52,211,153,0.2)" : "linear-gradient(135deg, #7c3aed, #4f46e5)",
+              border: inCart ? "1px solid rgba(52,211,153,0.35)" : "none",
+              boxShadow: inCart ? "none" : "0 0 14px rgba(124,58,237,0.28)",
+            }}
+          >
+            <ShoppingCart className="w-4 h-4" />
+            {inCart ? "In cart · Checkout" : "Add to cart"}
+          </button>
         ) : null}
       </div>
 
@@ -158,9 +192,64 @@ function CourseCard({ course }) {
   );
 }
 
+function TrackBundleCard({ offer, onAdd, inCart }) {
+  const soloTotal = offer.courseFee * offer.titles.length;
+  return (
+    <div
+      className="mb-6 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+      style={{
+        background: "linear-gradient(135deg, rgba(37,99,235,0.18), rgba(124,58,237,0.16))",
+        border: "1px solid rgba(96,165,250,0.35)",
+        boxShadow: "0 12px 40px rgba(37,99,235,0.12)",
+      }}
+    >
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+        style={{ background: "rgba(251,191,36,0.15)", border: "1px solid rgba(251,191,36,0.35)" }}
+      >
+        <Gift className="w-6 h-6" style={{ color: "#fbbf24" }} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[10px] font-semibold uppercase tracking-widest mb-1" style={{ color: "#fbbf24" }}>
+          Bundle discount
+        </p>
+        <h3 className="text-lg font-bold text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+          {offer.packTitle}
+        </h3>
+        <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>
+          {offer.names}. Buy together for {formatInr(offer.fee)} instead of {formatInr(soloTotal)}.
+        </p>
+      </div>
+      <div className="flex flex-col sm:items-end gap-2 flex-shrink-0">
+        <p className="text-2xl font-black text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
+          {formatInr(offer.fee)}
+        </p>
+        <p className="text-xs line-through" style={{ color: "#64748b" }}>
+          {formatInr(soloTotal)}
+        </p>
+        <button
+          type="button"
+          onClick={onAdd}
+          className="inline-flex items-center justify-center gap-2 min-h-11 px-5 rounded-xl text-sm font-semibold text-white"
+          style={{
+            background: inCart ? "rgba(52,211,153,0.2)" : "linear-gradient(135deg, #2563eb, #7c3aed)",
+            border: inCart ? "1px solid rgba(52,211,153,0.35)" : "none",
+          }}
+        >
+          <ShoppingCart className="w-4 h-4" />
+          {inCart ? "In cart · Checkout" : "Add bundle to cart"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function Courses() {
   const [activeCategory, setActiveCategory] = useState("all");
   const [search, setSearch] = useState("");
+  const navigate = useNavigate();
+  const { addItem, items } = useCart();
+  const { isAuthenticated, isLoadingAuth } = useAuth();
   const {
     data: apiCoursesRaw,
     isLoading,
@@ -171,6 +260,52 @@ export default function Courses() {
     queryKey: ["catalog-courses"],
     queryFn: () => api.courses.list("-createdAt"),
   });
+
+  const goCheckout = () => {
+    if (isLoadingAuth) return;
+    if (!isAuthenticated) {
+      navigate(`/login?mode=signup&next=${encodeURIComponent("/Checkout")}`);
+      return;
+    }
+    navigate("/Checkout");
+  };
+
+  const addCourseToCart = (course) => {
+    const id = course.id || catalogCartIdFromTitle(course.title);
+    const offer = retailOfferForTitle(course.title);
+    addItem({
+      type: "course",
+      id,
+      title: course.title,
+      price: offer?.courseFee ?? (Number(course.price) || 0),
+      thumbnail: course.image || course.thumbnail || "",
+    });
+    goCheckout();
+  };
+
+  const addTrackBundle = (offer, courses) => {
+    const cover = courses.find((c) => c.image || c.thumbnail);
+    addItem(
+      {
+        type: "bundle",
+        id: offer.id,
+        title: offer.cartTitle,
+        price: offer.fee,
+        thumbnail: cover?.image || cover?.thumbnail || "",
+      },
+      {
+        remove: offer.titles.map((title) => ({
+          type: "course",
+          id: catalogCartIdFromTitle(title),
+        })).concat(
+          courses
+            .filter((c) => offer.titles.includes(c.title) && c.id)
+            .map((c) => ({ type: "course", id: c.id }))
+        ),
+      }
+    );
+    goCheckout();
+  };
 
   const apiCourses = asArray(apiCoursesRaw);
   /** Static catalog + API overlay (by title); extra DB courses → "More courses" */
@@ -271,6 +406,7 @@ export default function Courses() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-16">
         {displayCategories.map(cat => {
           const CatIcon = cat.icon;
+          const bundleOffer = retailOfferForCategory(cat.id);
           return (
             <section key={cat.id}>
               {/* Section heading */}
@@ -290,10 +426,27 @@ export default function Courses() {
                 <div className="hidden sm:block flex-1 h-px ml-4" style={{ background: `linear-gradient(90deg, ${cat.border}, transparent)` }} />
               </div>
 
+              {bundleOffer ? (
+                <TrackBundleCard
+                  offer={bundleOffer}
+                  onAdd={() => addTrackBundle(bundleOffer, cat.courses)}
+                  inCart={items.some((x) => x.type === "bundle" && x.id === bundleOffer.id)}
+                />
+              ) : null}
+
               {/* Course grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                 {cat.courses.map(course => (
-                  <CourseCard key={course.id || course.title} course={course} />
+                  <CourseCard
+                    key={course.id || course.title}
+                    course={course}
+                    onAddToCart={addCourseToCart}
+                    inCart={items.some(
+                      (x) =>
+                        x.type === "course" &&
+                        (x.id === course.id || x.id === catalogCartIdFromTitle(course.title))
+                    )}
+                  />
                 ))}
               </div>
             </section>

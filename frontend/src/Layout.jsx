@@ -23,8 +23,8 @@ export default function Layout({ children, currentPageName }) {
   const initial = useMemo(() => userInitial(user), [user]);
 
   const navLinks = [
+    { name: "Courses", page: "Courses" },
     { name: "Internships", page: "Internships" },
-    { name: "Internship Courses", page: "Courses" },
     { name: "Live Classes", page: "LiveClasses" },
     { name: "About Us", page: "About" },
     { name: "Career Guide", page: "Blog" },

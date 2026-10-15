@@ -215,6 +215,7 @@ export const CATEGORIES = [
         rating: 4.8,
         tags: ["Python", "OOP", "Automation"],
         badge: true,
+        price: 299,
         modules: ["Python Basics", "Functions & Modules", "OOP Concepts", "File I/O & APIs", "Capstone Project"],
       },
       {
@@ -232,6 +233,7 @@ export const CATEGORIES = [
         rating: 4.9,
         tags: ["Pandas", "NumPy", "ML", "Matplotlib"],
         badge: true,
+        price: 299,
         modules: ["Data Wrangling", "EDA", "ML Models", "Feature Engineering", "Deployment"],
       },
       {
@@ -248,6 +250,7 @@ export const CATEGORIES = [
         rating: 4.7,
         tags: ["MongoDB", "Express", "React", "Node.js"],
         badge: true,
+        price: 299,
         modules: ["React Fundamentals", "Node & Express", "MongoDB CRUD", "Auth & JWT", "Full-Stack Project"],
       },
     ],
@@ -275,6 +278,7 @@ export const CATEGORIES = [
         rating: 4.9,
         tags: ["AI", "ML", "Neural Networks", "NLP"],
         badge: true,
+        price: 199,
         modules: ["Introduction to AI", "Machine Learning Basics", "Neural Networks", "NLP Essentials", "Real-world AI Use Cases"],
       },
       {
@@ -291,6 +295,7 @@ export const CATEGORIES = [
         rating: 4.8,
         tags: ["ChatGPT", "Claude", "Gemini", "Prompts"],
         badge: false,
+        price: 199,
         modules: ["Prompt Design Techniques", "Working with AI Tools", "Chain-of-Thought", "Few-Shot Prompting", "Advanced Use Cases"],
       },
       {
@@ -308,6 +313,7 @@ export const CATEGORIES = [
         rating: 4.7,
         tags: ["Midjourney", "Runway", "Notion AI", "Perplexity"],
         badge: false,
+        price: 199,
         modules: ["Introduction to AI Tools", "Image & Video AI", "Writing & Research AI", "Coding Assistants", "Workflow Automation"],
       },
     ],
@@ -336,6 +342,7 @@ export const CATEGORIES = [
         tools: ["MySQL", "PostgreSQL"],
         projects: ["Sales Dashboard", "Customer Segmentation"],
         badge: true,
+        price: 199,
         modules: ["SQL Basics", "Joins & Aggregations", "Window Functions", "Stored Procedures", "Analytics Project"],
       },
       {
@@ -353,6 +360,7 @@ export const CATEGORIES = [
         tools: ["Python", "Pandas", "Seaborn"],
         projects: ["Revenue Analysis", "KPI Dashboard"],
         badge: true,
+        price: 199,
         modules: ["Data Cleaning", "Exploratory Analysis", "Visualisation", "Reporting Automation", "Business Project"],
       },
       {
@@ -370,6 +378,7 @@ export const CATEGORIES = [
         tools: ["Power BI", "DAX", "Power Query"],
         projects: ["Sales Report", "HR Analytics"],
         badge: true,
+        price: 199,
         modules: ["Power BI Basics", "DAX Formulas", "Data Modelling", "Visuals & Filters", "Live Dashboard"],
       },
       {
@@ -387,6 +396,7 @@ export const CATEGORIES = [
         tools: ["Tableau", "Tableau Prep"],
         projects: ["Market Trend Map", "Financial Dashboard"],
         badge: true,
+        price: 199,
         modules: ["Tableau Basics", "Calculated Fields", "Dashboard Design", "Data Blending", "Storytelling"],
       },
       {
@@ -404,6 +414,7 @@ export const CATEGORIES = [
         tools: ["Jira", "Confluence"],
         projects: ["Sprint Board Setup", "Release Tracker"],
         badge: false,
+        price: 199,
         modules: ["Jira Basics", "Scrum & Kanban", "Backlogs & Sprints", "Reporting", "Team Workflow"],
       },
     ],
@@ -431,6 +442,7 @@ export const CATEGORIES = [
         rating: 4.8,
         tags: ["Google", "Keywords", "Backlinks", "Technical SEO"],
         badge: true,
+        price: 149,
         modules: ["SEO Fundamentals", "Keyword Research", "On-Page SEO", "Technical SEO", "Link Building"],
       },
       {
@@ -448,6 +460,7 @@ export const CATEGORIES = [
         rating: 4.7,
         tags: ["Google Ads", "PPC", "Retargeting"],
         badge: true,
+        price: 149,
         modules: ["Google Ads Setup", "Keyword Bidding", "Ad Copy", "Landing Pages", "ROI Optimisation"],
       },
       {
@@ -465,6 +478,7 @@ export const CATEGORIES = [
         rating: 4.9,
         tags: ["Instagram", "LinkedIn", "YouTube", "Paid Ads"],
         badge: true,
+        price: 149,
         modules: ["Platform Strategy", "Content Calendar", "Paid Social", "Analytics", "Influencer Marketing"],
       },
       {
@@ -481,6 +495,7 @@ export const CATEGORIES = [
         rating: 4.6,
         tags: ["Organic Reach", "Hashtags", "Engagement"],
         badge: false,
+        price: 149,
         modules: ["Profile Optimisation", "Hashtag Strategy", "Engagement Tactics", "Community Building", "Analytics"],
       },
       {
@@ -498,6 +513,7 @@ export const CATEGORIES = [
         rating: 4.7,
         tags: ["Search Console", "Core Web Vitals", "Indexing"],
         badge: false,
+        price: 149,
         modules: ["GSC Overview", "Performance Reports", "Index Coverage", "Core Web Vitals", "Sitemaps & Robots"],
       },
       {
@@ -515,6 +531,7 @@ export const CATEGORIES = [
         rating: 4.9,
         tags: ["Jasper", "Surfer SEO", "Canva AI", "ChatGPT"],
         badge: true,
+        price: 149,
         modules: ["AI for Content", "AI SEO Tools", "AI Ad Creatives", "Chatbot Marketing", "Automation Workflows"],
       },
     ],
@@ -526,6 +543,16 @@ export function normalizeTitle(t) {
     .trim()
     .toLowerCase()
     .replace(/\s+/g, " ");
+}
+
+export function catalogCartIdFromTitle(title) {
+  const slug = String(title || "")
+    .trim()
+    .toLowerCase()
+    .replace(/—/g, "-")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug ? `course-${slug}` : "";
 }
 
 function capitalizeLevel(level) {
@@ -599,9 +626,10 @@ export function mergeStaticCatalogWithApi(apiCourses = []) {
             : match.modules
           : staticCourse.modules;
 
+      const fallbackId = catalogCartIdFromTitle(staticCourse.title);
       return {
         ...staticCourse,
-        id: match ? rowId(match) || null : null,
+        id: match ? rowId(match) || fallbackId : fallbackId,
         shortDesc: match
           ? match.short_description || match.description || staticCourse.shortDesc
           : staticCourse.shortDesc,
@@ -615,7 +643,12 @@ export function mergeStaticCatalogWithApi(apiCourses = []) {
         tags: match?.tags?.length ? match.tags : staticCourse.tags || staticCourse.tools,
         badge: match ? !!match.has_certificate : staticCourse.badge,
         modules: mergedModules || staticCourse.modules,
-        price: match != null ? match.price ?? 0 : undefined,
+        price:
+          staticCourse.price != null
+            ? staticCourse.price
+            : match != null
+              ? match.price ?? 0
+              : undefined,
         thumbnail:
           match?.thumbnail || match?.image || staticCourse.thumbnail || staticCourse.image || "",
         image:

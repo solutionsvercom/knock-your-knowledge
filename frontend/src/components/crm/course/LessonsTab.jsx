@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
+import { adminApi } from "@/api/adminApi";
+import { slugifyTitle } from "@/data/courseBlogs";
+import { uploadCourseVideoToCloudinary } from "@/config/cloudinary";
 import { Plus, X, Play, Upload, Loader2, GripVertical, Eye, Lock } from "lucide-react";
 
 const EMPTY_LESSON = { title: "", description: "", module_title: "", module_order: 1, video_url: "", duration_mins: "", order: 1, is_free_preview: false };
@@ -34,8 +37,18 @@ export default function LessonsTab({ course }) {
     const file = e.target.files[0];
     if (!file) return;
     setUploading(true);
-    const { file_url } = await api.ai.uploadFile({ file });
-    setForm(p => ({ ...p, video_url: file_url }));
+    try {
+      const slug = slugifyTitle(course.title);
+      const topic = form.module_title ? slugifyTitle(form.module_title) : "topic";
+      const lesson = form.title ? slugifyTitle(form.title) : `v${Date.now().toString(36)}`;
+      const publicId = `kyk/courses/${slug}/${topic}/${lesson}`;
+      const sign = await adminApi.cloudinarySign({ publicId });
+      const uploaded = await uploadCourseVideoToCloudinary({ file, publicId, sign });
+      setForm((p) => ({ ...p, video_url: uploaded.url }));
+    } catch {
+      const { file_url } = await api.ai.uploadFile({ file });
+      setForm((p) => ({ ...p, video_url: file_url }));
+    }
     setUploading(false);
   };
 

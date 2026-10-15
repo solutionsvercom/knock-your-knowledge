@@ -9,6 +9,7 @@ import { ContactLead } from "../models/ContactLead.js";
 import { LiveClass, serializeLiveClass } from "../models/LiveClass.js";
 import { INTERNSHIP_TRACKS, LIVE_CLASS_TYPES, getTrack, dayBounds } from "../config/tracks.js";
 import { notifyStudentsForLiveClass } from "../utils/notifyLiveClass.js";
+import { cloudinaryConfigured, signCloudinaryUpload } from "../utils/cloudinary.js";
 
 const router = Router();
 
@@ -505,6 +506,23 @@ router.delete("/live-classes/:id", async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     return res.status(500).json({ message: "Could not delete live class." });
+  }
+});
+
+/** POST /api/admin/cloudinary/sign — signed upload params for course videos. */
+router.post("/cloudinary/sign", (req, res) => {
+  try {
+    if (!cloudinaryConfigured()) {
+      return res.status(503).json({
+        message:
+          "Cloudinary is not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET.",
+      });
+    }
+    const folder = String(req.body?.folder || "kyk/courses").trim();
+    const publicId = String(req.body?.publicId || "").trim();
+    return res.json({ ok: true, ...signCloudinaryUpload({ folder, publicId: publicId || undefined }) });
+  } catch (err) {
+    return res.status(500).json({ message: err.message || "Could not sign Cloudinary upload." });
   }
 });
 

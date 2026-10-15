@@ -37,6 +37,7 @@ export default function VideoPlayer({ lesson, videoTimeRef }) {
 
   return (
     <div className="relative w-full bg-black" style={{ aspectRatio: "16/9", maxHeight: "56vh" }}>
+      {lesson.videoUrl ? (
       <video
         ref={videoRef}
         key={lesson.videoUrl}
@@ -48,8 +49,16 @@ export default function VideoPlayer({ lesson, videoTimeRef }) {
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
       />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center gap-2 px-6 text-center">
+          <p className="text-white font-semibold">Video coming soon</p>
+          <p className="text-sm" style={{ color: "#94a3b8" }}>
+            This lesson will play here after the Cloudinary upload for this course.
+          </p>
+        </div>
+      )}
 
-      {/* Overlay controls */}
+      {lesson.videoUrl ? (
       <div className="absolute inset-0 flex flex-col justify-between opacity-0 hover:opacity-100 transition-opacity duration-300"
         style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 40%, transparent 70%, rgba(0,0,0,0.3) 100%)" }}>
 
@@ -92,9 +101,10 @@ export default function VideoPlayer({ lesson, videoTimeRef }) {
           </div>
         </div>
       </div>
+      ) : null}
 
       {/* Center play button (when paused) */}
-      {!playing && (
+      {lesson.videoUrl && !playing && (
         <button onClick={toggle}
           className="absolute inset-0 flex items-center justify-center"
           style={{ background: "rgba(0,0,0,0.2)" }}>

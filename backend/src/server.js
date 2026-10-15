@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { connectDb } from "./config/db.js";
 import { defaultAllowedOrigins } from "./config/site.js";
 import { smtpConfigured, smtpUser } from "./utils/mailer.js";
+import { cloudinaryCloudName } from "./utils/cloudinary.js";
 import contactRouter from "./routes/contact.js";
 import authRouter from "./routes/auth.js";
 import paymentsRouter from "./routes/payments.js";
@@ -15,6 +16,7 @@ import couponsRouter from "./routes/coupons.js";
 import ticketsRouter from "./routes/tickets.js";
 import liveClassesRouter from "./routes/liveClasses.js";
 import notificationsRouter from "./routes/notifications.js";
+import cloudinaryRouter from "./routes/cloudinary.js";
 import mongoose from "mongoose";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -74,6 +76,7 @@ function healthPayload() {
     service: "kyk-api",
     publicDir,
     mail: smtpConfigured() ? `configured:${smtpUser()}` : "missing_smtp_pass",
+    cloudinary: cloudinaryCloudName() ? `configured:${cloudinaryCloudName()}` : "missing_cloud_name",
   };
 }
 
@@ -93,6 +96,7 @@ app.use("/api/tickets", ticketsRouter);
 app.use("/api/live-classes", liveClassesRouter);
 app.use("/api/notifications", notificationsRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/cloudinary", cloudinaryRouter);
 
 if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));

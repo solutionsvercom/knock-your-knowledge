@@ -38,6 +38,8 @@ export const adminApi = {
       adminFetch(`/tickets/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
   },
   leads: () => adminFetch("/leads"),
+  cloudinarySign: (body) =>
+    adminFetch("/cloudinary/sign", { method: "POST", body: JSON.stringify(body || {}) }),
   liveClasses: {
     list: () => adminFetch("/live-classes"),
     upsertTrack: (trackId, body) =>

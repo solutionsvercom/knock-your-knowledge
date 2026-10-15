@@ -7,33 +7,51 @@ import AIChat from "../components/learning/AIChat";
 import LessonSidebar from "../components/learning/LessonSidebar";
 import VideoPlayer from "../components/learning/VideoPlayer";
 import LessonInfo from "../components/learning/LessonInfo";
+import { fetchCloudinaryStatus } from "@/config/cloudinary";
+import {
+  flattenCurriculumLessons,
+  getCourseCurriculum,
+  slugFromCourseId,
+} from "@/data/courseVideos";
+import { slugifyTitle } from "@/data/courseBlogs";
 
-const FALLBACK_VIDEO = "https://www.w3schools.com/html/mov_bbb.mp4";
+function catalogLessons(course, cloudName) {
+  const slug = slugFromCourseId(course?.id) || slugifyTitle(course?.title);
+  return flattenCurriculumLessons(getCourseCurriculum(slug, cloudName)).map((l) => ({
+    id: l.id,
+    title: l.title,
+    duration: l.duration,
+    completed: false,
+    videoUrl: l.videoUrl || "",
+    description: l.description || "",
+  }));
+}
 
-function buildLessonsFromApi(lessonRows, course) {
-  const rows = asArray(lessonRows);
-  if (rows.length > 0) {
-    return rows.map((l) => ({
+function buildLessonsFromApi(lessonRows, course, cloudName) {
+  const rows = asArray(lessonRows).filter((l) => l?.title);
+  const withVideo = rows.filter((l) => l.video_url && String(l.video_url).trim());
+  if (withVideo.length > 0) {
+    return withVideo.map((l) => ({
       id: l.id,
       title: l.title,
       duration: l.duration_mins ? `${l.duration_mins} min` : "—",
       completed: false,
-      videoUrl: (l.video_url && String(l.video_url).trim()) || FALLBACK_VIDEO,
+      videoUrl: String(l.video_url).trim(),
       description: l.description || "",
     }));
   }
-  const vids = Array.isArray(course?.videos) ? course.videos : [];
+  const vids = Array.isArray(course?.videos) ? course.videos.filter((v) => v?.url) : [];
   if (vids.length > 0) {
     return vids.map((v, i) => ({
       id: `video-${i}-${v.url || i}`,
       title: v.title || `Video ${i + 1}`,
       duration: v.duration_min != null ? `${v.duration_min} min` : "—",
       completed: false,
-      videoUrl: (v.url && String(v.url).trim()) || FALLBACK_VIDEO,
+      videoUrl: String(v.url).trim(),
       description: v.title || "",
     }));
   }
-  return [];
+  return catalogLessons(course, cloudName);
 }
 
 export default function CourseLearning() {
@@ -59,7 +77,15 @@ export default function CourseLearning() {
     enabled: Boolean(courseId),
   });
 
-  const lessons = useMemo(() => buildLessonsFromApi(lessonRows, course), [lessonRows, course]);
+  const { data: cloud } = useQuery({
+    queryKey: ["cloudinary-status"],
+    queryFn: fetchCloudinaryStatus,
+  });
+
+  const lessons = useMemo(
+    () => buildLessonsFromApi(lessonRows, course, cloud?.cloudName),
+    [lessonRows, course, cloud?.cloudName]
+  );
 
   const [activeLesson, setActiveLesson] = useState(null);
 

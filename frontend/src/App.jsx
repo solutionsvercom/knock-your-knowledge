@@ -27,6 +27,7 @@ import AdminLeadsPage from './pages/admin/AdminLeadsPage';
 import AdminLiveClassesPage from './pages/admin/AdminLiveClassesPage';
 import AdminPasswordPage from './pages/admin/AdminPasswordPage';
 import BlogPost from './pages/BlogPost';
+import CourseVideos from './pages/CourseVideos';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -83,6 +84,14 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route
+        path="/Blog/:slug/videos"
+        element={
+          <LayoutWrapper currentPageName="Blog">
+            <CourseVideos />
+          </LayoutWrapper>
+        }
+      />
       <Route
         path="/Blog/:slug"
         element={
