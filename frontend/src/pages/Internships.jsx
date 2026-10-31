@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
-import { internshipUnitPrice, internshipFeeLabel } from "@/config/pricing";
+import { internshipUnitPrice, internshipFeeLabel, internshipPageForId } from "@/config/pricing";
 import { useContactForm } from "@/lib/ContactFormContext";
 import {
   Search,
@@ -16,6 +16,7 @@ import {
   Calendar,
   Users,
   ShoppingCart,
+  ArrowRight,
 } from "lucide-react";
 import { format } from "date-fns";
 
@@ -69,11 +70,16 @@ export default function Internships() {
   useEffect(() => {
     const hash = String(location.hash || "").replace("#", "");
     if (!hash) return;
+    const page = internshipPageForId(hash);
+    if (page) {
+      navigate(`/Internships/${page.slug}`, { replace: true });
+      return;
+    }
     const timer = window.setTimeout(() => {
       document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 160);
     return () => window.clearTimeout(timer);
-  }, [location.hash, internships.length]);
+  }, [location.hash, internships.length, navigate]);
 
   const filtered = internships.filter((item) => {
     if (!search) return true;
@@ -206,7 +212,11 @@ export default function Internships() {
           loadingLabel="Loading internship programs…"
         >
           <div className="space-y-4">
-            {filtered.map((item) => (
+            {filtered.map((item) => {
+              const detailHref = internshipPageForId(item.id)
+                ? `/Internships/${internshipPageForId(item.id).slug}`
+                : null;
+              return (
               <div
                 key={item.id}
                 id={item.id}
@@ -240,7 +250,13 @@ export default function Internships() {
 
                   <div className="flex-1">
                     <h3 className="text-lg font-bold text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                      {item.title}
+                      {detailHref ? (
+                        <Link to={detailHref} className="hover:text-violet-300">
+                          {item.title}
+                        </Link>
+                      ) : (
+                        item.title
+                      )}
                     </h3>
                     <div className="flex items-center gap-2 mt-1 text-sm" style={{ color: "#475569" }}>
                       <Building2 className="w-3.5 h-3.5" />
@@ -288,6 +304,18 @@ export default function Internships() {
                   </div>
 
                   <div className="flex flex-col gap-2 self-start lg:self-center flex-shrink-0 w-full lg:w-auto">
+                    {detailHref ? (
+                      <Link
+                        to={detailHref}
+                        className="w-full lg:w-auto min-h-[48px] px-6 rounded-xl text-base font-semibold inline-flex items-center justify-center gap-2"
+                        style={{
+                          color: "#e9d5ff",
+                          border: "1px solid rgba(167,139,250,0.4)",
+                        }}
+                      >
+                        View program <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    ) : null}
                     <button
                       type="button"
                       onClick={() => openApplyForm(item.title)}
@@ -324,7 +352,8 @@ export default function Internships() {
                   </div>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </div>
           {!isLoading && !isError && filtered.length === 0 ? (
             <p className="text-center py-12 text-sm" style={{ color: "#475569" }}>

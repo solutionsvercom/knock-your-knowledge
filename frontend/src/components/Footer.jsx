@@ -23,6 +23,7 @@ function FacebookIcon({ className }) {
 const platformLinks = [
   { name: "Home", page: "Home" },
   { name: "Courses", page: "Courses" },
+  { name: "Bundles", page: "Bundles" },
   { name: "Internships", page: "Internships" },
   { name: "Live Classes", page: "LiveClasses" },
 ];

@@ -194,6 +194,7 @@ function CourseCard({ course, onAddToCart, inCart = false }) {
 
 function TrackBundleCard({ offer, onAdd, inCart }) {
   const soloTotal = offer.courseFee * offer.titles.length;
+  const bundleHref = offer.slug ? `/Bundles/${offer.slug}` : "/Bundles";
   return (
     <div
       id={`bundle-${offer.categoryId}`}
@@ -215,7 +216,9 @@ function TrackBundleCard({ offer, onAdd, inCart }) {
           Bundle discount
         </p>
         <h3 className="text-lg font-bold text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
-          {offer.packTitle}
+          <Link to={bundleHref} className="hover:text-violet-200">
+            {offer.packTitle}
+          </Link>
         </h3>
         <p className="text-sm mt-1" style={{ color: "#94a3b8" }}>
           {offer.names}. Buy together for {formatInr(offer.fee)} instead of {formatInr(soloTotal)}.
@@ -228,6 +231,13 @@ function TrackBundleCard({ offer, onAdd, inCart }) {
         <p className="text-xs line-through" style={{ color: "#64748b" }}>
           {formatInr(soloTotal)}
         </p>
+        <Link
+          to={bundleHref}
+          className="inline-flex items-center justify-center gap-2 min-h-11 px-5 rounded-xl text-sm font-semibold"
+          style={{ color: "#e9d5ff", border: "1px solid rgba(167,139,250,0.4)" }}
+        >
+          View bundle
+        </Link>
         <button
           type="button"
           onClick={onAdd}

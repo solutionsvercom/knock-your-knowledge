@@ -49,6 +49,7 @@
  */
 import About from './pages/About';
 import Blog from './pages/Blog';
+import Bundles from './pages/Bundles';
 import Courses from './pages/Courses';
 import Home from './pages/Home';
 import Internships from './pages/Internships';
@@ -59,6 +60,7 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "About": About,
     "Blog": Blog,
+    "Bundles": Bundles,
     "Courses": Courses,
     "Home": Home,
     "Internships": Internships,

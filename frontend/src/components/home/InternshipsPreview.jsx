@@ -5,7 +5,7 @@ import { MapPin, Clock, ArrowRight, Building2, Loader2, AlertCircle } from "luci
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { internshipFeeLabel } from "@/config/pricing";
+import { internshipFeeLabel, internshipPageForId } from "@/config/pricing";
 import { useContactForm } from "@/lib/ContactFormContext";
 
 const typeColors = {
@@ -90,7 +90,18 @@ export default function InternshipsPreview({
                 </div>
 
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                    {internshipPageForId(item.id) ? (
+                      <Link
+                        to={`/Internships/${internshipPageForId(item.id).slug}`}
+                        className="hover:text-violet-600 dark:hover:text-violet-300"
+                      >
+                        {item.title}
+                      </Link>
+                    ) : (
+                      item.title
+                    )}
+                  </h3>
                   <div className="flex items-center gap-2 mt-1">
                     <Building2 className="w-3.5 h-3.5 text-gray-400" />
                     <span className="text-sm text-gray-500">{item.company}</span>
@@ -110,13 +121,23 @@ export default function InternshipsPreview({
                   </div>
                 </div>
 
-                <Button
-                  type="button"
-                  className="bg-violet-600 hover:bg-violet-700 rounded-xl h-10 px-6 self-start sm:self-center w-full sm:w-auto"
-                  onClick={() => openApplyForm(item.title)}
-                >
-                  Apply Now
-                </Button>
+                <div className="flex flex-col gap-2 self-start sm:self-center w-full sm:w-auto">
+                  {internshipPageForId(item.id) ? (
+                    <Link
+                      to={`/Internships/${internshipPageForId(item.id).slug}`}
+                      className="inline-flex items-center justify-center rounded-xl h-10 px-6 text-sm font-semibold border border-violet-300 text-violet-700 dark:text-violet-300 dark:border-violet-500/40"
+                    >
+                      View program
+                    </Link>
+                  ) : null}
+                  <Button
+                    type="button"
+                    className="bg-violet-600 hover:bg-violet-700 rounded-xl h-10 px-6 w-full sm:w-auto"
+                    onClick={() => openApplyForm(item.title)}
+                  >
+                    Apply Now
+                  </Button>
+                </div>
               </div>
             </motion.div>
           ))

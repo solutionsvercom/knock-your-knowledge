@@ -49,43 +49,78 @@ export const MARKETING_COURSE_TITLES = [
 export const RETAIL_BUNDLES = [
   {
     id: DEVELOPMENT_BUNDLE_ID,
+    slug: "development",
     categoryId: "development",
     fee: DEVELOPMENT_BUNDLE_FEE,
     courseFee: DEVELOPMENT_COURSE_FEE,
     titles: DEVELOPMENT_COURSE_TITLES,
+    pageTitle: "Development Bundle",
     packTitle: "Development pack — all 3 courses",
     cartTitle: "Development pack (Python + Data Science + MERN)",
     names: "Python, Data Science, and MERN Stack",
   },
   {
     id: AI_BUNDLE_ID,
+    slug: "ai",
     categoryId: "ai",
     fee: AI_BUNDLE_FEE,
     courseFee: AI_COURSE_FEE,
     titles: AI_COURSE_TITLES,
+    pageTitle: "AI & Prompt Engineering Bundle",
     packTitle: "AI pack — all 3 courses",
     cartTitle: "AI pack (AI Fundamentals + Prompt Engineering + AI Tools)",
     names: "AI Fundamentals, Prompt Engineering, and AI Tools",
   },
   {
     id: ANALYTICS_BUNDLE_ID,
+    slug: "analytics",
     categoryId: "analytics",
     fee: ANALYTICS_BUNDLE_FEE,
     courseFee: ANALYTICS_COURSE_FEE,
     titles: ANALYTICS_COURSE_TITLES,
+    pageTitle: "Business Analytics Bundle",
     packTitle: "Analytics pack — all 5 courses",
     cartTitle: "Analytics pack (SQL + Python + Power BI + Tableau + Jira)",
     names: "SQL, Python for Analytics, Power BI, Tableau, and Jira",
   },
   {
     id: MARKETING_BUNDLE_ID,
+    slug: "marketing",
     categoryId: "marketing",
     fee: MARKETING_BUNDLE_FEE,
     courseFee: MARKETING_COURSE_FEE,
     titles: MARKETING_COURSE_TITLES,
+    pageTitle: "Advanced Digital Marketing Bundle",
     packTitle: "Marketing pack — all 6 courses",
     cartTitle: "Marketing pack (SEO + SEM + SMM + SMO + GSC + AI Marketing)",
     names: "SEO, SEM, SMM, SMO, Search Console, and AI Marketing",
+  },
+];
+
+export const INTERNSHIP_PAGES = [
+  {
+    slug: "development",
+    id: "intern-development",
+    categoryId: "development",
+    navTitle: "Development Internship",
+  },
+  {
+    slug: "ai",
+    id: "intern-ai-prompt",
+    categoryId: "ai",
+    navTitle: "AI & Prompt Engineering Internship",
+  },
+  {
+    slug: "analytics",
+    id: "intern-business-analytics",
+    categoryId: "analytics",
+    navTitle: "Business Analytics Internship",
+  },
+  {
+    slug: "marketing",
+    id: "intern-digital-marketing",
+    categoryId: "marketing",
+    navTitle: "Advanced Digital Marketing Internship",
   },
 ];
 export const GST_RATE = 0.18; // 18% GST as applicable
@@ -146,6 +181,18 @@ export function isRetailBundleId(id) {
 
 export function retailOfferForCategory(categoryId) {
   return RETAIL_BUNDLES.find((b) => b.categoryId === categoryId) || null;
+}
+
+export function retailOfferForSlug(slug) {
+  return RETAIL_BUNDLES.find((b) => b.slug === slug) || null;
+}
+
+export function internshipPageForSlug(slug) {
+  return INTERNSHIP_PAGES.find((p) => p.slug === slug) || null;
+}
+
+export function internshipPageForId(id) {
+  return INTERNSHIP_PAGES.find((p) => p.id === id) || null;
 }
 
 export function courseUnitPrice(item) {

@@ -28,6 +28,8 @@ import AdminLiveClassesPage from './pages/admin/AdminLiveClassesPage';
 import AdminPasswordPage from './pages/admin/AdminPasswordPage';
 import BlogPost from './pages/BlogPost';
 import CourseVideos from './pages/CourseVideos';
+import BundleDetail from './pages/BundleDetail';
+import InternshipDetail from './pages/InternshipDetail';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -84,6 +86,22 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route
+        path="/Bundles/:slug"
+        element={
+          <LayoutWrapper currentPageName="Bundles">
+            <BundleDetail />
+          </LayoutWrapper>
+        }
+      />
+      <Route
+        path="/Internships/:slug"
+        element={
+          <LayoutWrapper currentPageName="Internships">
+            <InternshipDetail />
+          </LayoutWrapper>
+        }
+      />
       <Route
         path="/Blog/:slug/videos"
         element={
