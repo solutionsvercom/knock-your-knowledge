@@ -5,6 +5,7 @@ import { Menu, X, Sparkles } from "lucide-react";
 import Footer from "@/components/Footer";
 import { AnimatePresence, motion } from "framer-motion";
 import GetStartedLink from "@/components/navigation/GetStartedLink";
+import { DesktopSiteNav, MobileSiteNav } from "@/components/navigation/SiteNav";
 import SearchWhatsAppPrompt from "@/components/contact/SearchWhatsAppPrompt";
 import { KYK_LOGO_SRC } from "@/config/contact";
 import { useAuth } from "@/lib/AuthContext";
@@ -21,14 +22,6 @@ export default function Layout({ children, currentPageName }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAuthenticated, logout } = useAuth();
   const initial = useMemo(() => userInitial(user), [user]);
-
-  const navLinks = [
-    { name: "Courses", page: "Courses" },
-    { name: "Internships", page: "Internships" },
-    { name: "Live Classes", page: "LiveClasses" },
-    { name: "About Us", page: "About" },
-    { name: "Career Guide", page: "Blog" },
-  ];
 
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
@@ -53,7 +46,7 @@ export default function Layout({ children, currentPageName }) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-2 h-14 md:h-16">
-            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 flex-1 overflow-hidden relative z-0">
+            <Link to={createPageUrl("Home")} className="flex items-center gap-2.5 min-w-0 flex-1 lg:flex-none overflow-hidden relative z-0">
               <img
                 src={KYK_LOGO_SRC}
                 alt="Knock Your Knowledge"
@@ -66,36 +59,9 @@ export default function Layout({ children, currentPageName }) {
               </span>
             </Link>
 
-            <div className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.page}
-                  to={createPageUrl(link.page)}
-                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
-                  style={{
-                    color: currentPageName === link.page ? "#a78bfa" : "#64748b",
-                    background: currentPageName === link.page ? "rgba(167,139,250,0.1)" : "transparent",
-                    fontFamily: "'Inter', sans-serif",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (currentPageName !== link.page) {
-                      e.currentTarget.style.color = "#e2e8f0";
-                      e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (currentPageName !== link.page) {
-                      e.currentTarget.style.color = "#64748b";
-                      e.currentTarget.style.background = "transparent";
-                    }
-                  }}
-                >
-                  {link.name}
-                </Link>
-              ))}
-            </div>
+            <DesktopSiteNav currentPageName={currentPageName} />
 
-            <div className="hidden md:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-3">
               <GetStartedLink
                 className="inline-flex items-center gap-2 px-5 h-9 rounded-xl text-sm font-semibold text-white transition-all duration-200 hover:scale-105"
                 style={{
@@ -153,7 +119,7 @@ export default function Layout({ children, currentPageName }) {
               ) : null}
             </div>
 
-            <div className="md:hidden relative z-20 flex items-center shrink-0 -mr-2">
+            <div className="lg:hidden relative z-20 flex items-center shrink-0 -mr-2">
               {isAuthenticated && user ? (
                 <Link
                   to="/Dashboard"
@@ -195,24 +161,14 @@ export default function Layout({ children, currentPageName }) {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="md:hidden overflow-hidden border-t"
+              className="lg:hidden overflow-hidden border-t"
               style={{ background: "rgba(2,8,23,0.97)", borderColor: "rgba(167,139,250,0.15)" }}
             >
               <div className="px-4 py-3 space-y-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.page}
-                    to={createPageUrl(link.page)}
-                    className="flex items-center px-4 min-h-12 rounded-xl text-sm font-medium transition-all"
-                    style={{
-                      color: currentPageName === link.page ? "#a78bfa" : "#94a3b8",
-                      background: currentPageName === link.page ? "rgba(167,139,250,0.1)" : "transparent",
-                    }}
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+                <MobileSiteNav
+                  currentPageName={currentPageName}
+                  onNavigate={() => setMobileMenuOpen(false)}
+                />
                 {isAuthenticated && user ? (
                   <div className="px-4 py-2 flex items-center justify-between gap-3">
                     <Link

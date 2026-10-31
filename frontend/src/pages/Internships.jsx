@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { asArray } from "@/lib/asArray";
@@ -38,6 +38,7 @@ const STATS = [
 export default function Internships() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
   const { addItem } = useCart();
   const { isAuthenticated, isLoadingAuth } = useAuth();
   const { openContactForm } = useContactForm();
@@ -64,6 +65,15 @@ export default function Internships() {
   });
 
   const internships = asArray(internshipsRaw);
+
+  useEffect(() => {
+    const hash = String(location.hash || "").replace("#", "");
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 160);
+    return () => window.clearTimeout(timer);
+  }, [location.hash, internships.length]);
 
   const filtered = internships.filter((item) => {
     if (!search) return true;
@@ -199,7 +209,8 @@ export default function Internships() {
             {filtered.map((item) => (
               <div
                 key={item.id}
-                className="rounded-2xl p-6 transition-all duration-300 hover:scale-[1.01]"
+                id={item.id}
+                className="rounded-2xl p-6 transition-all duration-300 hover:scale-[1.01] scroll-mt-24"
                 style={{
                   background: "rgba(255,255,255,0.03)",
                   border: "1px solid rgba(255,255,255,0.07)",

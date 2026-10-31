@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { catalogCartIdFromTitle, getWebsiteCourseCatalog } from "@/data/courseCatalog";
@@ -196,7 +196,8 @@ function TrackBundleCard({ offer, onAdd, inCart }) {
   const soloTotal = offer.courseFee * offer.titles.length;
   return (
     <div
-      className="mb-6 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4"
+      id={`bundle-${offer.categoryId}`}
+      className="mb-6 rounded-2xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-4 scroll-mt-24"
       style={{
         background: "linear-gradient(135deg, rgba(37,99,235,0.18), rgba(124,58,237,0.16))",
         border: "1px solid rgba(96,165,250,0.35)",
@@ -245,7 +246,10 @@ function TrackBundleCard({ offer, onAdd, inCart }) {
 }
 
 export default function Courses() {
-  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+  const catFromUrl = searchParams.get("cat") || "all";
+  const [activeCategory, setActiveCategory] = useState(catFromUrl);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const { addItem, items } = useCart();
@@ -260,6 +264,19 @@ export default function Courses() {
     queryKey: ["catalog-courses"],
     queryFn: () => api.courses.list("-createdAt"),
   });
+
+  useEffect(() => {
+    setActiveCategory(searchParams.get("cat") || "all");
+  }, [searchParams]);
+
+  useEffect(() => {
+    const hash = String(location.hash || "").replace("#", "");
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      document.getElementById(hash)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 160);
+    return () => window.clearTimeout(timer);
+  }, [location.hash, activeCategory]);
 
   const goCheckout = () => {
     if (isLoadingAuth) return;
@@ -374,7 +391,10 @@ export default function Courses() {
             style={{ scrollbarWidth: "none" }}>
             <button
               type="button"
-              onClick={() => setActiveCategory("all")}
+              onClick={() => {
+                setActiveCategory("all");
+                navigate("/Courses");
+              }}
               className="flex items-center gap-2 px-4 min-h-11 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
               style={{
                 background: activeCategory === "all" ? "rgba(167,139,250,0.15)" : "transparent",
@@ -387,7 +407,10 @@ export default function Courses() {
               const Icon = cat.icon;
               const isActive = activeCategory === cat.id;
               return (
-                <button key={cat.id} type="button" onClick={() => setActiveCategory(cat.id)}
+                <button key={cat.id} type="button" onClick={() => {
+                  setActiveCategory(cat.id);
+                  navigate(`/Courses?cat=${cat.id}`);
+                }}
                   className="flex items-center gap-2 px-4 min-h-11 rounded-xl text-sm font-medium whitespace-nowrap transition-all flex-shrink-0"
                   style={{
                     background: isActive ? `${cat.glow}` : "transparent",
@@ -408,7 +431,7 @@ export default function Courses() {
           const CatIcon = cat.icon;
           const bundleOffer = retailOfferForCategory(cat.id);
           return (
-            <section key={cat.id}>
+            <section key={cat.id} id={`cat-${cat.id}`} className="scroll-mt-24">
               {/* Section heading */}
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0"

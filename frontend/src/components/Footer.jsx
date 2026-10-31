@@ -21,14 +21,15 @@ function FacebookIcon({ className }) {
 }
 
 const platformLinks = [
-  { name: "Internship Courses", page: "Courses" },
+  { name: "Home", page: "Home" },
+  { name: "Courses", page: "Courses" },
   { name: "Internships", page: "Internships" },
   { name: "Live Classes", page: "LiveClasses" },
 ];
 
 const companyLinks = [
-  { name: "About Us", page: "About" },
   { name: "Career Guide", page: "Blog" },
+  { name: "About Us", page: "About" },
 ];
 
 const socials = [
