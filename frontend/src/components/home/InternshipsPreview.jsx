@@ -5,7 +5,8 @@ import { MapPin, Clock, ArrowRight, Building2, Loader2, AlertCircle } from "luci
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { internshipFeeLabel, internshipPageForId } from "@/config/pricing";
+import { internshipFeeLabel } from "@/config/pricing";
+import { internshipHref, internshipImgAlt, internshipLabel } from "@/lib/internalSeo";
 import { useContactForm } from "@/lib/ContactFormContext";
 
 const typeColors = {
@@ -86,20 +87,20 @@ export default function InternshipsPreview({
             >
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                 <div className="w-14 h-14 rounded-xl bg-gray-50 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  <img src={item.company_logo || LOGO_FALLBACK} alt={item.company || ""} className="w-full h-full object-cover max-w-full" loading="lazy" />
+                  <img src={item.company_logo || item.image || LOGO_FALLBACK} alt={internshipImgAlt(internshipLabel(item))} className="w-full h-full object-cover max-w-full" loading="lazy" />
                 </div>
 
                 <div className="flex-1">
                   <h3 className="text-lg font-bold text-gray-900 dark:text-white">
-                    {internshipPageForId(item.id) ? (
+                    {internshipHref(item) ? (
                       <Link
-                        to={`/Internships/${internshipPageForId(item.id).slug}`}
+                        to={internshipHref(item)}
                         className="hover:text-violet-600 dark:hover:text-violet-300"
                       >
-                        {item.title}
+                        {internshipLabel(item)}
                       </Link>
                     ) : (
-                      item.title
+                      internshipLabel(item)
                     )}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
@@ -122,9 +123,9 @@ export default function InternshipsPreview({
                 </div>
 
                 <div className="flex flex-col gap-2 self-start sm:self-center w-full sm:w-auto">
-                  {internshipPageForId(item.id) ? (
+                  {internshipHref(item) ? (
                     <Link
-                      to={`/Internships/${internshipPageForId(item.id).slug}`}
+                      to={internshipHref(item)}
                       className="inline-flex items-center justify-center rounded-xl h-10 px-6 text-sm font-semibold border border-violet-300 text-violet-700 dark:text-violet-300 dark:border-violet-500/40"
                     >
                       View program

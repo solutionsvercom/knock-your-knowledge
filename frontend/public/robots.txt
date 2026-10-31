@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+Disallow: /login
+Disallow: /admin
+Disallow: /Checkout
+Disallow: /Dashboard
+Disallow: /dashboard
+Disallow: /dashbord
+Disallow: /CourseLearning
+Disallow: /Home
+Disallow: /Blog/*/videos
+
+Sitemap: https://knockyourknowledge.com/sitemap.xml

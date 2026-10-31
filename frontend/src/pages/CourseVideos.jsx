@@ -66,7 +66,7 @@ export default function CourseVideos() {
         className="relative overflow-hidden border-b"
         style={{ borderColor: "rgba(167,139,250,0.15)" }}
       >
-        <img src={post.image} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30" />
+        <img src={post.image} alt={`${post.title} course`} className="absolute inset-0 w-full h-full object-cover opacity-30" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(2,8,23,0.55) 0%, #020817 100%)" }} />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <Link

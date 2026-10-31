@@ -95,7 +95,7 @@ export default function Blog() {
               <div className="relative h-40 overflow-hidden">
                 <img
                   src={post.image}
-                  alt={post.title}
+                  alt={`${post.title} guide`}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   loading="lazy"
                 />

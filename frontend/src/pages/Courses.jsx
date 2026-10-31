@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate, useSearchParams } from "react-router-do
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import { catalogCartIdFromTitle, getWebsiteCourseCatalog } from "@/data/courseCatalog";
-import { slugifyTitle, getBlogBySlug } from "@/data/courseBlogs";
 import { asArray } from "@/lib/asArray";
 import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
@@ -13,6 +12,7 @@ import {
   retailOfferForCategory,
   retailOfferForTitle,
 } from "@/config/pricing";
+import { courseHref, courseImgAlt } from "@/lib/internalSeo";
 import {
   Clock,
   Users,
@@ -35,8 +35,7 @@ const LEVEL_STYLES = {
 };
 
 function courseBlogPath(course) {
-  const slug = slugifyTitle(course?.title);
-  return slug && getBlogBySlug(slug) ? `/Blog/${slug}` : null;
+  return courseHref(course?.title);
 }
 
 function CourseCard({ course, onAddToCart, inCart = false }) {
@@ -56,7 +55,7 @@ function CourseCard({ course, onAddToCart, inCart = false }) {
     >
       {cover ? (
         <div className="relative h-36 w-full flex-shrink-0 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-          <img src={cover} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <img src={cover} alt={courseImgAlt(course.title)} className="w-full h-full object-cover" loading="lazy" />
         </div>
       ) : null}
       {/* Card header */}
@@ -67,8 +66,15 @@ function CourseCard({ course, onAddToCart, inCart = false }) {
             <Icon className="w-5 h-5" style={{ color: course.iconColor }} />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-bold text-white leading-snug"
-              style={{ fontFamily: "'Poppins', sans-serif" }}>{course.title}</h3>
+            <h3 className="text-sm font-bold text-white leading-snug" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              {blogPath ? (
+                <Link to={blogPath} className="hover:text-violet-200">
+                  {course.title}
+                </Link>
+              ) : (
+                course.title
+              )}
+            </h3>
             {course.instructor && (
               <p className="text-xs mt-0.5" style={{ color: "#475569" }}>{course.instructor}</p>
             )}
@@ -146,7 +152,7 @@ function CourseCard({ course, onAddToCart, inCart = false }) {
               boxShadow: "0 0 14px rgba(124,58,237,0.28)",
             }}
           >
-            Know more
+            View course
             <ArrowRight className="w-4 h-4" />
           </Link>
         ) : null}
@@ -236,7 +242,7 @@ function TrackBundleCard({ offer, onAdd, inCart }) {
           className="inline-flex items-center justify-center gap-2 min-h-11 px-5 rounded-xl text-sm font-semibold"
           style={{ color: "#e9d5ff", border: "1px solid rgba(167,139,250,0.4)" }}
         >
-          View bundle
+          {offer.pageTitle}
         </Link>
         <button
           type="button"

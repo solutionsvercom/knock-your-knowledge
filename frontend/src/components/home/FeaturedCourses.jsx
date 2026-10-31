@@ -5,6 +5,7 @@ import { Clock, Users, Star, ArrowRight, Loader2, AlertCircle } from "lucide-rea
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { courseHref, courseImgAlt } from "@/lib/internalSeo";
 
 const levelColors = {
   beginner: "bg-green-100 text-green-700",
@@ -64,7 +65,11 @@ export default function FeaturedCourses({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {!isLoading && !isError
-            ? featured.map((course, i) => (
+            ? featured.map((course, i) => {
+              const href = courseHref(course.title);
+              const CardTag = href ? Link : "div";
+              const cardProps = href ? { to: href } : {};
+              return (
             <motion.div
               key={course?.id ?? `course-${i}`}
               initial={{ opacity: 0, y: 30 }}
@@ -72,7 +77,10 @@ export default function FeaturedCourses({
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
             >
-              <div className="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1">
+              <CardTag
+                {...cardProps}
+                className="group block bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 hover:-translate-y-1"
+              >
                 <div className="relative overflow-hidden">
                   <img
                     src={
@@ -80,7 +88,7 @@ export default function FeaturedCourses({
                       course.image ||
                       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80"
                     }
-                    alt={course.title}
+                    alt={courseImgAlt(course.title)}
                     className="w-full h-40 sm:h-48 object-cover object-center group-hover:scale-105 transition-transform duration-500 max-w-full"
                     loading="lazy"
                   />
@@ -122,9 +130,10 @@ export default function FeaturedCourses({
                     <span className="text-sm font-medium text-gray-600">1–3 months internship</span>
                   </div>
                 </div>
-              </div>
+              </CardTag>
             </motion.div>
-          ))
+          );
+            })
             : null}
         </div>
       </div>

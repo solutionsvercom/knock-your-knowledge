@@ -1,7 +1,8 @@
 /**
- * Course blog posts derived from the internship course catalog (+ career guides).
+ * Course blog posts derived from the course catalog (+ career guides).
  */
 import { CATEGORIES } from "./courseCatalog";
+import { COURSE_PAGE_COPY } from "./coursePageCopy";
 
 export function slugifyTitle(title) {
   return String(title || "")
@@ -18,8 +19,11 @@ function buildFromCatalog() {
     for (const c of cat.courses) {
       const tags = c.tags || c.tools || [];
       const modules = c.modules || [];
+      const slug = slugifyTitle(c.title);
+      const copy = COURSE_PAGE_COPY[slug] || {};
+      const topicDetails = copy.topicDetails || {};
       posts.push({
-        slug: slugifyTitle(c.title),
+        slug,
         title: c.title,
         category: cat.label,
         categoryId: cat.id,
@@ -31,19 +35,21 @@ function buildFromCatalog() {
         students: c.students,
         rating: c.rating,
         tags,
+        tools: c.tools || tags,
+        projects: c.projects || [],
         modules,
         iconColor: c.iconColor || cat.color,
         excerpt: c.shortDesc,
-        intro: `${c.shortDesc} At Knock Your Knowledge (KYK), this internship course is built for learners who want hands-on practice, mentor guidance, and career-ready skills — not just theory.`,
-        whyLearn: `Whether you are preparing for an internship or upskilling for your first role, ${c.title} helps you build confidence with practical modules, real projects, and clear learning outcomes aligned to industry expectations.`,
-        whoFor: [
-          "Students and graduates preparing for internships",
-          "Career switchers building a job-ready portfolio",
-          `Anyone starting or growing in ${cat.label.toLowerCase()}`,
-        ],
-        outcomes: modules.map(
-          (m) => `Gain practical experience in ${typeof m === "string" ? m : m.title}`
-        ),
+        intro: copy.intro || c.shortDesc,
+        whyLearn: copy.whyLearn || c.shortDesc,
+        whoFor: copy.whoFor || [],
+        outcomes: copy.outcomes || modules.map((m) => `Practise ${typeof m === "string" ? m : m.title}`),
+        faqs: copy.faqs || [],
+        relatedSlugs: copy.relatedSlugs || [],
+        topicDetails: modules.map((m) => {
+          const title = typeof m === "string" ? m : m.title;
+          return { title, body: topicDetails[title] || "" };
+        }),
         readMins: Math.max(4, Math.min(12, Math.round((parseInt(String(c.duration), 10) || 20) / 5))),
       });
     }
@@ -73,6 +79,9 @@ const EXTRA_BLOGS = [
       "Landing your first internship can feel overwhelming — but with a clear plan, you can stand out. KYK helps learners build skills and connect with real programs across Development, AI, Analytics, and Marketing.",
     whyLearn:
       "This guide walks you through resume prep, portfolio projects, outreach messages, and interview confidence so you can apply to KYK internship programs with clarity.",
+    relatedSlugs: ["internship-interview-prep", "mern-stack-development", "8-best-ai-tools-for-productivity"],
+    relatedCourseTitles: ["Python Programming", "Prompt Engineering", "SQL for Data Analysis", "SEO — Search Engine Optimization"],
+    relatedInternshipSlugs: ["development", "ai", "analytics", "marketing"],
     whoFor: [
       "College students seeking their first internship",
       "Fresh graduates exploring career tracks",
@@ -107,6 +116,9 @@ const EXTRA_BLOGS = [
       "Internship interviews test curiosity, learning ability, and clarity more than years of experience. This KYK guide helps you prepare stories, project demos, and calm communication for every track.",
     whyLearn:
       "Use this checklist before interviews for Development, AI & Prompt Engineering, Business Analytics, or Advanced Digital Marketing roles.",
+    relatedSlugs: ["how-to-land-your-first-internship", "python-programming", "seo-search-engine-optimization"],
+    relatedCourseTitles: ["MERN Stack Development", "Power BI Dashboarding", "SMM — Social Media Marketing", "8 Best AI Tools for Productivity"],
+    relatedInternshipSlugs: ["development", "ai", "analytics", "marketing"],
     whoFor: [
       "Students shortlisted for internship interviews",
       "Learners finishing KYK internship courses",
@@ -139,6 +151,10 @@ export function getRelatedBlogs(slug, limit = 3) {
   const current = getBlogBySlug(slug);
   const pool = isCareerGuide(current) ? CAREER_BLOGS : COURSE_BLOGS.filter((p) => !isCareerGuide(p));
   if (!current) return CAREER_BLOGS.slice(0, limit);
+  if (current.relatedSlugs?.length) {
+    const picked = current.relatedSlugs.map((s) => getBlogBySlug(s)).filter(Boolean);
+    if (picked.length) return picked.slice(0, limit);
+  }
   const same = pool.filter((p) => p.slug !== slug && p.categoryId === current.categoryId);
   const rest = pool.filter((p) => p.slug !== slug && p.categoryId !== current.categoryId);
   return [...same, ...rest].slice(0, limit);

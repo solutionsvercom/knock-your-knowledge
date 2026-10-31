@@ -18,6 +18,10 @@ import liveClassesRouter from "./routes/liveClasses.js";
 import notificationsRouter from "./routes/notifications.js";
 import cloudinaryRouter from "./routes/cloudinary.js";
 import mongoose from "mongoose";
+import {
+  frontendRedirect,
+  statusForFrontendPath,
+} from "../../frontend/src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const backendRoot = path.resolve(__dirname, "..");
@@ -98,6 +102,20 @@ app.use("/api/notifications", notificationsRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/cloudinary", cloudinaryRouter);
 
+app.use((req, res, next) => {
+  if (req.method !== "GET" && req.method !== "HEAD") return next();
+  if (req.path.startsWith("/api")) return next();
+  const query = req.url.includes("?") ? req.url.slice(req.url.indexOf("?")) : "";
+  if (req.path.length > 1 && req.path.endsWith("/")) {
+    return res.redirect(301, `${req.path.replace(/\/+$/, "")}${query}`);
+  }
+  const dest = frontendRedirect(req.path);
+  if (dest != null) {
+    return res.redirect(301, `${dest}${query}`);
+  }
+  next();
+});
+
 if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));
 }
@@ -113,7 +131,8 @@ app.get("*", (req, res, next) => {
         "<!doctype html><html><body><p>Knock Your Knowledge API is running. Frontend is not in public/ yet.</p></body></html>"
       );
   }
-  res.sendFile(indexFile);
+  const status = statusForFrontendPath(req.path);
+  res.status(status).sendFile(indexFile);
 });
 
 app.use((err, _req, res, _next) => {

@@ -7,6 +7,7 @@ import { ApiQueryStatus } from "@/components/common/ApiQueryStatus";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 import { internshipUnitPrice, internshipFeeLabel, internshipPageForId } from "@/config/pricing";
+import { internshipHref, internshipImgAlt, internshipLabel } from "@/lib/internalSeo";
 import { useContactForm } from "@/lib/ContactFormContext";
 import {
   Search,
@@ -213,9 +214,8 @@ export default function Internships() {
         >
           <div className="space-y-4">
             {filtered.map((item) => {
-              const detailHref = internshipPageForId(item.id)
-                ? `/Internships/${internshipPageForId(item.id).slug}`
-                : null;
+              const detailHref = internshipHref(item);
+              const programName = internshipLabel(item);
               return (
               <div
                 key={item.id}
@@ -242,7 +242,7 @@ export default function Internships() {
                   >
                     <img
                       src={item.image || item.company_logo || LOGO_FALLBACK}
-                      alt={item.title || ""}
+                      alt={internshipImgAlt(programName)}
                       className="w-full h-full object-cover max-w-full"
                       loading="lazy"
                     />
@@ -252,7 +252,7 @@ export default function Internships() {
                     <h3 className="text-lg font-bold text-white" style={{ fontFamily: "'Poppins', sans-serif" }}>
                       {detailHref ? (
                         <Link to={detailHref} className="hover:text-violet-300">
-                          {item.title}
+                          {programName}
                         </Link>
                       ) : (
                         item.title
