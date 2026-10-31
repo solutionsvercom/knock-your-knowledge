@@ -94,6 +94,8 @@ const AuthenticatedApp = () => {
       ))}
       <Route path="/Home" element={<Navigate to="/" replace />} />
       <Route path="/home" element={<Navigate to="/" replace />} />
+      <Route path="/index.html" element={<Navigate to="/" replace />} />
+      <Route path="/index.htm" element={<Navigate to="/" replace />} />
       <Route
         path="/Bundles/:slug"
         element={

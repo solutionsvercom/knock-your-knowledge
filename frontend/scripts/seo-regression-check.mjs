@@ -86,6 +86,10 @@ if (statusForFrontendPath("/Blog/not-real") === 404) pass("Unknown course slug i
 else fail("Unknown slug not 404");
 if (statusForFrontendPath("/Blog/python-programming") === 200) pass("Python course matcher is 200");
 if (frontendRedirect("/Home") === "/") pass("/Home redirects to /");
+if (frontendRedirect("/index.html") === "/") pass("/index.html redirects to /");
+else fail("/index.html is not mapped to /");
+if (locs.includes("https://knockyourknowledge.com/index.html")) fail("Sitemap includes /index.html");
+else pass("Sitemap excludes /index.html");
 
 const nav = fs.readFileSync(path.join(root, "src/config/siteNav.js"), "utf8");
 const navHrefs = [...nav.matchAll(/to:\s*"([^"]+)"/g)].map((m) => m[1]);

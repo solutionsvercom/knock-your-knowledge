@@ -86,6 +86,7 @@ export function isIndexablePath(pathname) {
 export function frontendRedirect(pathname) {
   const path = normalizePath(pathname);
   if (path === "/Home" || path === "/home") return "/";
+  if (path === "/index.html" || path === "/index.htm") return "/";
   return null;
 }
 

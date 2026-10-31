@@ -319,7 +319,7 @@ export function seoForPath(pathname) {
     };
   }
 
-  if (path === "/Home") {
+  if (path === "/Home" || path === "/index.html" || path === "/index.htm") {
     return { ...STATIC_SEO["/"], canonical: canonicalUrl("/"), ogType: "website" };
   }
 
