@@ -9,6 +9,5 @@ Disallow: /dashboard
 Disallow: /dashbord
 Disallow: /CourseLearning
 Disallow: /Home
-Disallow: /Blog/*/videos
 
 Sitemap: https://knockyourknowledge.com/sitemap.xml

@@ -11,6 +11,10 @@ import {
   sitemapXml,
   statusForFrontendPath,
   frontendRedirect,
+  videoParentPath,
+  applyInitialHtmlSeo,
+  documentLinkHeader,
+  INTERNSHIPS_LISTING_SEO,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -30,6 +34,8 @@ function warn(msg) {
 const seoSrc = fs.readFileSync(path.join(root, "src/config/seo.js"), "utf8");
 const titles = [...seoSrc.matchAll(/title:\s*"([^"]+)"/g)].map((m) => m[1]);
 const descriptions = [...seoSrc.matchAll(/description:\s*\n?\s*"([^"]+)"/g)].map((m) => m[1]);
+if (!titles.includes(INTERNSHIPS_LISTING_SEO.title)) titles.push(INTERNSHIPS_LISTING_SEO.title);
+if (!descriptions.includes(INTERNSHIPS_LISTING_SEO.description)) descriptions.push(INTERNSHIPS_LISTING_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -72,9 +78,14 @@ if (robots.includes("Allow: /")) pass("robots.txt Allow: /");
 else fail("robots.txt missing Allow: /");
 if (robots.includes("Sitemap: https://knockyourknowledge.com/sitemap.xml")) pass("robots.txt lists sitemap");
 else fail("robots.txt missing sitemap");
-for (const d of ["/login", "/admin", "/Checkout", "/Dashboard", "/CourseLearning", "/Home", "/Blog/*/videos"]) {
+for (const d of ["/login", "/admin", "/Checkout", "/Dashboard", "/CourseLearning", "/Home"]) {
   if (robots.includes(`Disallow: ${d}`)) pass(`robots.txt Disallow ${d}`);
   else fail(`robots.txt missing Disallow ${d}`);
+}
+if (robots.includes("Disallow: /Blog/*/videos")) {
+  fail("robots.txt still blocks /Blog/*/videos; Google cannot read noindex");
+} else {
+  pass("robots.txt allows crawl of /Blog/*/videos so Google can read noindex");
 }
 if (!/Disallow:\s*\/(assets|src|static)/.test(robots)) pass("robots.txt does not block CSS/JS/image folders");
 else fail("robots.txt may block rendering assets");
@@ -88,8 +99,56 @@ if (statusForFrontendPath("/Blog/python-programming") === 200) pass("Python cour
 if (frontendRedirect("/Home") === "/") pass("/Home redirects to /");
 if (frontendRedirect("/index.html") === "/") pass("/index.html redirects to /");
 else fail("/index.html is not mapped to /");
+if (frontendRedirect("/Blog/sem-search-engine-marketing/videos") == null) {
+  pass("SEM /videos is not 301-redirected (curriculum route kept)");
+} else fail("SEM /videos should not 301 while CourseVideos is live");
+if (videoParentPath("/Blog/sem-search-engine-marketing/videos") === "/Blog/sem-search-engine-marketing") {
+  pass("SEM /videos canonical parent is the course page");
+} else fail("SEM /videos missing parent course path");
+if (statusForFrontendPath("/Blog/sem-search-engine-marketing/videos") === 200) {
+  pass("SEM /videos matcher is HTTP 200");
+} else fail("SEM /videos matcher is not 200");
+if (locs.some((u) => u.includes("/videos"))) fail("Sitemap includes a /videos URL");
+else pass("Sitemap excludes all /videos URLs");
+if (seoSrc.includes("canonical: canonicalUrl(`/Blog/${slug}`)") && seoSrc.includes("noindex: true")) {
+  pass("Video SEO sets parent canonical and noindex");
+} else fail("Video SEO missing parent canonical or noindex");
 if (locs.includes("https://knockyourknowledge.com/index.html")) fail("Sitemap includes /index.html");
 else pass("Sitemap excludes /index.html");
+if (locs.includes("https://knockyourknowledge.com/Internships")) pass("Sitemap includes /Internships");
+else fail("Sitemap missing /Internships");
+if (INTERNSHIP_SLUGS.every((s) => locs.includes(canonicalUrl(`/Internships/${s}`)))) {
+  pass("Sitemap still includes four internship detail URLs");
+} else fail("Sitemap missing an internship detail URL");
+
+const internShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  "/Internships"
+);
+if (internShell.includes(INTERNSHIPS_LISTING_SEO.title)) pass("Initial HTML title for /Internships");
+else fail("Initial HTML missing internships title");
+if (internShell.includes(INTERNSHIPS_LISTING_SEO.description)) pass("Initial HTML description for /Internships");
+else fail("Initial HTML missing internships description");
+if ((internShell.match(/rel="canonical"/g) || []).length === 1) pass("Initial HTML has exactly one canonical");
+else fail("Initial HTML canonical count is not 1");
+if (internShell.includes('href="https://knockyourknowledge.com/Internships"')) pass("Initial HTML canonical is the listing URL");
+else fail("Initial HTML canonical is not /Internships");
+if (internShell.includes('content="index, follow"')) pass("Initial HTML robots is index, follow");
+else fail("Initial HTML missing index, follow");
+if (
+  documentLinkHeader("/Internships") ===
+  "<https://knockyourknowledge.com/Internships>; rel=\"canonical\""
+) {
+  pass("Internships Link header is self-canonical");
+} else fail("Internships Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Courses").includes("Internship Programs at KYK") === false) {
+  pass("HTML SEO injection is limited to /Internships");
+} else fail("HTML SEO injection leaked onto another path");
+
+const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
+if (internPage.includes("Apply Now") && internPage.includes("addInternshipToCart") && internPage.includes("View program")) {
+  pass("Internships listing still has Apply Now, Add to cart, and View program");
+} else fail("Internships listing lost apply/cart/detail actions");
 
 const nav = fs.readFileSync(path.join(root, "src/config/siteNav.js"), "utf8");
 const navHrefs = [...nav.matchAll(/to:\s*"([^"]+)"/g)].map((m) => m[1]);
@@ -125,13 +184,23 @@ const checkout = fs.readFileSync(path.join(root, "src/pages/Checkout.jsx"), "utf
 if (checkout.includes("payWithCashfree") && checkout.includes("createCashfreeOrder")) pass("Checkout Cashfree handlers still present");
 else fail("Checkout Cashfree handlers missing");
 
+const courseVideos = fs.readFileSync(path.join(root, "src/pages/CourseVideos.jsx"), "utf8");
+if (courseVideos.includes("addItem") && courseVideos.includes("/Checkout") && courseVideos.includes("20 videos")) {
+  pass("CourseVideos still enrolls via cart/checkout and lists 20 videos");
+} else fail("CourseVideos enrollment or 20-video copy missing");
+
+const serverSrc = fs.readFileSync(path.join(root, "../backend/src/server.js"), "utf8");
+if (serverSrc.includes('X-Robots-Tag", "noindex, nofollow') && serverSrc.includes("videoParentPath")) {
+  pass("Express sets X-Robots-Tag noindex, nofollow on video routes");
+} else fail("Express missing X-Robots-Tag on video routes");
+
 const internDetail = fs.readFileSync(path.join(root, "src/pages/InternshipDetail.jsx"), "utf8");
 if (internDetail.includes("openContactForm") && internDetail.includes("addInternshipToCart")) {
   pass("Internship Apply Now and Add to cart still present");
 } else fail("Internship apply/cart handlers missing");
 
 const app = fs.readFileSync(path.join(root, "src/App.jsx"), "utf8");
-for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug", "/Bundles/:slug", "/Internships/:slug", "/CourseLearning"]) {
+for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug/videos", "/Blog/:slug", "/Bundles/:slug", "/Internships/:slug", "/CourseLearning"]) {
   if (app.includes(`path="${route}"`) || app.includes(`path={\`${route}\``) || app.includes(route)) pass(`App still routes ${route}`);
   else fail(`App missing route ${route}`);
 }

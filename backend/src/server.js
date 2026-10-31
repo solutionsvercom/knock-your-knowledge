@@ -19,8 +19,11 @@ import notificationsRouter from "./routes/notifications.js";
 import cloudinaryRouter from "./routes/cloudinary.js";
 import mongoose from "mongoose";
 import {
+  applyInitialHtmlSeo,
+  documentLinkHeader,
   frontendRedirect,
   statusForFrontendPath,
+  videoParentPath,
 } from "../../frontend/src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -123,6 +126,14 @@ if (fs.existsSync(publicDir)) {
 app.get("*", (req, res, next) => {
   if (req.path.startsWith("/api")) return next();
   const indexFile = path.join(publicDir, "index.html");
+  const videoParent = videoParentPath(req.path);
+  if (videoParent) {
+    res.set("X-Robots-Tag", "noindex, nofollow");
+  }
+  const linkHeader = documentLinkHeader(req.path);
+  if (linkHeader) {
+    res.set("Link", linkHeader);
+  }
   if (!fs.existsSync(indexFile)) {
     return res
       .status(200)
@@ -132,7 +143,8 @@ app.get("*", (req, res, next) => {
       );
   }
   const status = statusForFrontendPath(req.path);
-  res.status(status).sendFile(indexFile);
+  const html = applyInitialHtmlSeo(fs.readFileSync(indexFile, "utf8"), req.path);
+  res.status(status).type("html").send(html);
 });
 
 app.use((err, _req, res, _next) => {

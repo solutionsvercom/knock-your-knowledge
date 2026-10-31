@@ -1,6 +1,7 @@
 import {
   canonicalUrl,
   INDEXABLE_PATHS,
+  INTERNSHIPS_LISTING_SEO,
   isIndexablePath,
   SITE_ORIGIN,
 } from "@/config/publicPaths";
@@ -30,9 +31,8 @@ const STATIC_SEO = {
     h1: "Course Bundles",
   },
   "/Internships": {
-    title: "Internship Programs | Development, AI, Analytics & Marketing | KYK",
-    description:
-      "Apply to KYK internship programs in Development, AI & Prompt Engineering, Business Analytics, and Advanced Digital Marketing. Remote and hybrid tracks, 1–3 months.",
+    title: INTERNSHIPS_LISTING_SEO.title,
+    description: INTERNSHIPS_LISTING_SEO.description,
     h1: "Internship Programs",
   },
   "/Blog": {
@@ -265,7 +265,7 @@ export function seoForPath(pathname) {
       return {
         title: `${course.h1} Course Videos | KYK`,
         description: `Watch the ${course.h1} video lessons at Knock Your Knowledge — five topics and twenty lessons. Enroll in this internship course to unlock playback.`,
-        canonical,
+        canonical: canonicalUrl(`/Blog/${slug}`),
         h1: `${course.h1} videos`,
         ogType: "website",
         noindex: true,

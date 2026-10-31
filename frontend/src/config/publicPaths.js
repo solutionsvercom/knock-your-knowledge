@@ -27,6 +27,13 @@ export const BUNDLE_SLUGS = ["development", "ai", "analytics", "marketing"];
 
 export const INTERNSHIP_SLUGS = ["development", "ai", "analytics", "marketing"];
 
+/** First-byte SEO for the internships listing HTML shell (Helmet replaces these after JS). */
+export const INTERNSHIPS_LISTING_SEO = {
+  title: "Internship Programs at KYK | Explore Career Opportunities",
+  description:
+    "Explore development, AI, business analytics and digital marketing internship programmes at KnockYourKnowledge. Discover programme details and apply online.",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -88,6 +95,55 @@ export function frontendRedirect(pathname) {
   if (path === "/Home" || path === "/home") return "/";
   if (path === "/index.html" || path === "/index.htm") return "/";
   return null;
+}
+
+export function documentLinkHeader(pathname) {
+  const parent = videoParentPath(pathname);
+  if (parent) return `<${canonicalUrl(parent)}>; rel="canonical"`;
+  if (normalizePath(pathname) === "/Internships") {
+    return `<${canonicalUrl("/Internships")}>; rel="canonical"`;
+  }
+  return null;
+}
+
+function escapeAttr(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;");
+}
+
+/** Inject listing title, description, and one data-rh canonical into the SPA shell for /Internships. */
+export function applyInitialHtmlSeo(html, pathname) {
+  if (normalizePath(pathname) !== "/Internships" || typeof html !== "string") return html;
+  const canonical = canonicalUrl("/Internships");
+  const title = INTERNSHIPS_LISTING_SEO.title;
+  const description = INTERNSHIPS_LISTING_SEO.description;
+  let next = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title data-rh="true">${escapeAttr(title)}</title>`);
+  if (/<meta\b[^>]*name=["']description["'][^>]*>/i.test(next)) {
+    next = next.replace(
+      /<meta\b[^>]*name=["']description["'][^>]*>/i,
+      `<meta data-rh="true" name="description" content="${escapeAttr(description)}" />`
+    );
+  } else {
+    next = next.replace(/<\/head>/i, `    <meta data-rh="true" name="description" content="${escapeAttr(description)}" />\n  </head>`);
+  }
+  next = next.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>\s*/gi, "");
+  next = next.replace(
+    /<\/head>/i,
+    `    <link data-rh="true" rel="canonical" href="${canonical}" />\n    <meta data-rh="true" name="robots" content="index, follow" />\n  </head>`
+  );
+  return next;
+}
+
+/** Parent course URL for /Blog/{slug}/videos, or null if not a known video route. */
+export function videoParentPath(pathname) {
+  const path = normalizePath(pathname);
+  const match = path.match(/^\/Blog\/([^/]+)\/videos$/);
+  if (!match) return null;
+  const slug = match[1];
+  if (!COURSE_SLUGS.includes(slug)) return null;
+  return `/Blog/${slug}`;
 }
 
 /** HTTP status for SPA HTML: 200 for known app routes, 404 otherwise. */
