@@ -799,33 +799,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["smo-social-media-optimization", "sem-search-engine-marketing", "ai-tools-in-digital-marketing"],
   },
   "smo-social-media-optimization": {
+    introHeading: "SMO Training for Profile Optimisation, Hashtags and Engagement",
     intro:
-      "SMO — Social Media Optimization is a beginner KYK course on organic social performance. You cover profile optimisation, hashtag strategy, engagement tactics, community building, and analytics, with tags for organic reach, hashtags, and engagement.",
+      "This SMO Course is beginner Social Media Optimization Training at Knock Your Knowledge. It is a Social Media Optimization Course for organic social performance: 15 hours, five topics, and 20 videos covering Profile Optimisation, Hashtag Strategy, Engagement Tactics, Community Building, and Analytics. Catalog tags are Organic Reach, Hashtags, and Engagement. The published course fee is ₹149/- plus 18% GST at checkout. Paid social advertising is a separate SMM course — this catalog does not name specific networks as SMO platforms.",
     whyLearn:
-      "Paid social cannot fix a weak profile or a dead comment thread. SMO is the organic layer: how the profile, hashtags, engagement, and community work before you buy reach.",
+      "Paid social cannot fix a weak profile or a dead comment thread. This SMO Training is the organic layer: Profile Optimisation, Hashtags, Engagement Tactics, and Community Building before you buy reach. Paid social advertising sits in SMM, not on this beginner course.",
     whoFor: [
-      "Beginners who own a brand or personal profile and need organic reach",
-      "Social managers who already post but lack hashtag, engagement, and community structure",
-      "Learners who took SMM and want a tighter optimisation course",
+      "Beginners who own a brand or personal profile and need Organic Reach",
+      "Social managers who already post but lack Hashtag Strategy, Engagement Tactics, and Community Building",
+      "Learners who took SMM and want a tighter organic SMO Course",
     ],
     topicDetails: {
       "Profile Optimisation":
-        "Tighten bios, links, and profile elements so a first visit explains who you are.",
+        "Profile Optimisation is the first topic: tighten bios, links, and profile elements so a first visit explains who you are. This is organic SMO work, not a paid-ads setup.",
       "Hashtag Strategy":
-        "Use hashtags with intent, matching the course tag, instead of a long unrelated list.",
+        "Hashtag Strategy is the second topic. Use hashtags with intent, matching the Hashtags tag, instead of a long unrelated list.",
       "Engagement Tactics":
-        "Practise replies and prompts that create engagement, not only broadcasts.",
+        "Engagement Tactics is the third topic: practise replies and prompts that create Engagement, not only broadcasts. Engagement is also a listed course tag.",
       "Community Building":
-        "Turn repeat visitors into a community you can actually talk to.",
+        "Community Building is the fourth topic. Turn repeat visitors into a community you can actually talk to.",
       Analytics:
-        "Measure organic reach and engagement with analytics so optimisation is not guesswork.",
+        "Analytics is the fifth topic. Measure Organic Reach and Engagement with analytics so optimisation is not guesswork. Search Console is a separate KYK course.",
     },
     outcomes: [
       "Optimise a social profile for a clear first impression",
-      "Apply a hashtag strategy tied to the content",
-      "Use engagement tactics beyond posting and leaving",
+      "Apply a Hashtag Strategy tied to the content",
+      "Use Engagement Tactics beyond posting and leaving",
       "Build a small community loop",
-      "Read analytics for organic reach and engagement",
+      "Read Analytics for Organic Reach and Engagement",
     ],
     faqs: [
       {
@@ -848,6 +849,19 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEO, SEM, SMM, Search Console, and AI Tools in Digital Marketing.",
       },
+    ],
+    trackLinks: [
+      { text: "Paid social advertising is a separate KYK course (" },
+      { to: "/Blog/smm-social-media-marketing", text: "SMM — Social Media Marketing" },
+      { text: "). Related search work includes " },
+      { to: "/Blog/sem-search-engine-marketing", text: "SEM — Search Engine Marketing" },
+      { text: " and measurement in " },
+      { to: "/Blog/google-webmaster-search-console", text: "Google Webmaster & Search Console" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["smm-social-media-marketing", "seo-search-engine-optimization", "ai-tools-in-digital-marketing"],
   },

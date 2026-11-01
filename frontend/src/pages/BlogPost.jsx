@@ -175,7 +175,8 @@ export default function BlogPost() {
                 titleAs={
                   slug === "smm-social-media-marketing" ||
                   slug === "seo-search-engine-optimization" ||
-                  slug === "sem-search-engine-marketing"
+                  slug === "sem-search-engine-marketing" ||
+                  slug === "smo-social-media-optimization"
                     ? "p"
                     : "h2"
                 }
@@ -427,7 +428,8 @@ export default function BlogPost() {
                   <summary className="text-sm font-semibold text-white cursor-pointer">
                     {slug === "smm-social-media-marketing" ||
                     slug === "seo-search-engine-optimization" ||
-                    slug === "sem-search-engine-marketing" ? (
+                    slug === "sem-search-engine-marketing" ||
+                    slug === "smo-social-media-optimization" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

@@ -73,6 +73,19 @@ export const SEM_COURSE_SEO = {
   productName: "SEM — Search Engine Marketing",
 };
 
+export const SMO_COURSE_PATH = "/Blog/smo-social-media-optimization";
+
+/** First-byte + Helmet SEO for the SMO course page only. */
+export const SMO_COURSE_SEO = {
+  title: "SMO Course & Social Media Optimization Training | KYK",
+  description:
+    "Learn SMO with KYK's beginner course: profile optimisation, hashtag strategy, engagement and analytics. 15 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+  h1: "Social Media Optimization Course – Beginner SMO Training",
+  ogImage: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "SMO — Social Media Optimization",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -166,6 +179,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: SEM_COURSE_SEO.title,
       description: SEM_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === SMO_COURSE_PATH) {
+    return {
+      title: SMO_COURSE_SEO.title,
+      description: SMO_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

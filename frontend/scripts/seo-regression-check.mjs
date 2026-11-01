@@ -22,6 +22,8 @@ import {
   SEO_COURSE_PATH,
   SEM_COURSE_SEO,
   SEM_COURSE_PATH,
+  SMO_COURSE_SEO,
+  SMO_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +51,8 @@ if (!titles.includes(SEO_COURSE_SEO.title)) titles.push(SEO_COURSE_SEO.title);
 if (!descriptions.includes(SEO_COURSE_SEO.description)) descriptions.push(SEO_COURSE_SEO.description);
 if (!titles.includes(SEM_COURSE_SEO.title)) titles.push(SEM_COURSE_SEO.title);
 if (!descriptions.includes(SEM_COURSE_SEO.description)) descriptions.push(SEM_COURSE_SEO.description);
+if (!titles.includes(SMO_COURSE_SEO.title)) titles.push(SMO_COURSE_SEO.title);
+if (!descriptions.includes(SMO_COURSE_SEO.description)) descriptions.push(SMO_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -278,6 +282,49 @@ if (SEM_COURSE_SEO.productName === "SEM — Search Engine Marketing") {
   pass("SEM productName is unchanged for the videos page title");
 } else fail("SEM productName changed");
 
+const smoCourseTitleHtml = SMO_COURSE_SEO.title.replace(/&/g, "&amp;");
+const smoCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  SMO_COURSE_PATH
+);
+if (smoCourseShell.includes(smoCourseTitleHtml)) pass("Initial HTML title for SMO course");
+else fail("Initial HTML missing SMO course title");
+if (smoCourseShell.includes(SMO_COURSE_SEO.description)) pass("Initial HTML description for SMO course");
+else fail("Initial HTML missing SMO course description");
+if ((smoCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("SMO course initial HTML has exactly one canonical");
+else fail("SMO course initial HTML canonical count is not 1");
+if (smoCourseShell.includes(`href="${canonicalUrl(SMO_COURSE_PATH)}"`)) pass("SMO course initial HTML canonical is the course URL");
+else fail("SMO course initial HTML canonical is not the course URL");
+if (smoCourseShell.includes('content="index, follow"')) pass("SMO course initial HTML robots is index, follow");
+else fail("SMO course initial HTML missing index, follow");
+if (
+  documentLinkHeader(SMO_COURSE_PATH) ===
+  `<${canonicalUrl(SMO_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("SMO course Link header is self-canonical");
+} else fail("SMO course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(SMO_COURSE_SEO.title) === false) {
+  pass("SMO course HTML SEO injection does not change SMM");
+} else fail("SMO course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(SMO_COURSE_SEO.title) === false) {
+  pass("SMO course HTML SEO injection does not change SEO course");
+} else fail("SMO course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(SMO_COURSE_SEO.title) === false) {
+  pass("SMO course HTML SEO injection does not change SEM course");
+} else fail("SMO course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(SMO_COURSE_SEO.title) === false) {
+  pass("SMO course HTML SEO injection does not change /Internships");
+} else fail("SMO course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/smo-social-media-optimization/videos") ===
+  `<${canonicalUrl(SMO_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("SMO course /videos Link header still points at the parent course");
+} else fail("SMO course /videos Link header is not the parent course");
+if (SMO_COURSE_SEO.productName === "SMO — Social Media Optimization") {
+  pass("SMO productName is unchanged for the videos page title");
+} else fail("SMO productName changed");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -292,10 +339,11 @@ if (
   blogPostSrc.includes("smm-social-media-marketing") &&
   blogPostSrc.includes("seo-search-engine-optimization") &&
   blogPostSrc.includes("sem-search-engine-marketing") &&
+  blogPostSrc.includes("smo-social-media-optimization") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, and SEM course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, and SMO course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -320,6 +368,17 @@ if (
 ) {
   pass("SEM course FAQs retain original answers and add contextual course links");
 } else fail("SEM course FAQ set or track links missing");
+if (
+  smmCopy.includes('q: "How long is SMO?"') &&
+  smmCopy.includes('q: "Does this include Instagram ads?"') &&
+  smmCopy.includes('q: "Which platforms are named?"') &&
+  smmCopy.includes('a: "15 hrs, Beginner."') &&
+  smmCopy.includes('a: "Paid social sits in SMM. SMO is organic: profiles, hashtags, engagement, community, and analytics."') &&
+  smmCopy.includes('a: "This course page does not name specific networks in the catalog the way SMM names Instagram, LinkedIn, X, and YouTube. Tactics apply to the profiles you already run."') &&
+  smmCopy.includes('to: "/Blog/smm-social-media-marketing"')
+) {
+  pass("SMO course FAQs retain original answers and add contextual course links");
+} else fail("SMO course FAQ set or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -336,9 +395,10 @@ if (jsonLdSrc.includes("FAQPage") && jsonLdSrc.includes("valueAddedTaxIncluded: 
 if (
   jsonLdSrc.includes('instructor === "Emily Ross"') &&
   jsonLdSrc.includes('instructor === "Jasmine Patel"') &&
-  jsonLdSrc.includes('instructor === "Paul Martinez"')
+  jsonLdSrc.includes('instructor === "Paul Martinez"') &&
+  jsonLdSrc.includes('instructor === "Kevin Wu"')
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, and SEM courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, and SMO courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -446,7 +506,8 @@ try {
     internHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
     !internHtml.includes(SMM_COURSE_SEO.title) &&
     !internHtml.includes(seoCourseTitleHtml) &&
-    !internHtml.includes(semCourseTitleHtml)
+    !internHtml.includes(semCourseTitleHtml) &&
+    !internHtml.includes(smoCourseTitleHtml)
   ) {
     pass("/Internships first-byte SEO unchanged");
   } else fail("/Internships first-byte SEO changed");
@@ -472,7 +533,12 @@ try {
 
   const smmAfter = await fetch(`${injOrigin}${SMM_COURSE_PATH}`);
   const smmAfterHtml = await smmAfter.text();
-  if (smmAfterHtml.includes(smmTitleHtml) && !smmAfterHtml.includes(seoCourseTitleHtml) && !smmAfterHtml.includes(semCourseTitleHtml)) {
+  if (
+    smmAfterHtml.includes(smmTitleHtml) &&
+    !smmAfterHtml.includes(seoCourseTitleHtml) &&
+    !smmAfterHtml.includes(semCourseTitleHtml) &&
+    !smmAfterHtml.includes(smoCourseTitleHtml)
+  ) {
     pass("SMM first-byte SEO remains unchanged");
   } else fail("SMM first-byte SEO changed by later course work");
 
@@ -501,9 +567,39 @@ try {
 
   const seoAfter = await fetch(`${injOrigin}${SEO_COURSE_PATH}`);
   const seoAfterHtml = await seoAfter.text();
-  if (seoAfterHtml.includes(seoCourseTitleHtml) && !seoAfterHtml.includes(semCourseTitleHtml)) {
+  if (seoAfterHtml.includes(seoCourseTitleHtml) && !seoAfterHtml.includes(semCourseTitleHtml) && !seoAfterHtml.includes(smoCourseTitleHtml)) {
     pass("SEO course first-byte SEO remains unchanged");
-  } else fail("SEO course first-byte SEO changed by SEM work");
+  } else fail("SEO course first-byte SEO changed by later course work");
+
+  const smoCourseRes = await fetch(`${injOrigin}${SMO_COURSE_PATH}`);
+  const smoCourseHtml = await smoCourseRes.text();
+  if (smoCourseRes.status === 200) pass("Express-like /Blog/smo-social-media-optimization returns HTTP 200");
+  else fail(`SMO course HTTP ${smoCourseRes.status}`);
+  if (smoCourseHtml.includes(smoCourseTitleHtml) && smoCourseHtml.includes(SMO_COURSE_SEO.description)) {
+    pass("SMO course initial HTML has the new title and description");
+  } else fail("SMO course initial HTML missing title or description");
+  if ((smoCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("SMO course initial HTML has one canonical");
+  else fail("SMO course initial HTML canonical count is not 1");
+  if (smoCourseRes.headers.get("link") === `<${canonicalUrl(SMO_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SMO course response Link header is self-canonical");
+  } else fail("SMO course Link header was incorrect");
+  if (smoCourseHtml.includes('content="index, follow"') && !smoCourseHtml.includes("noindex")) {
+    pass("SMO course initial HTML is index, follow");
+  } else fail("SMO course initial HTML not indexable");
+  if (
+    !smoCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !smoCourseHtml.includes(seoCourseTitleHtml) &&
+    !smoCourseHtml.includes(semCourseTitleHtml) &&
+    !smoCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("SMO course first-byte HTML does not reuse SMM, SEO, SEM, or Internships metadata");
+  } else fail("SMO course first-byte HTML mixed another route's metadata");
+
+  const semAfter = await fetch(`${injOrigin}${SEM_COURSE_PATH}`);
+  const semAfterHtml = await semAfter.text();
+  if (semAfterHtml.includes(semCourseTitleHtml) && !semAfterHtml.includes(smoCourseTitleHtml)) {
+    pass("SEM course first-byte SEO remains unchanged");
+  } else fail("SEM course first-byte SEO changed by SMO work");
 
   const coursesRes = await fetch(`${injOrigin}/Courses`);
   const coursesHtml = await coursesRes.text();
@@ -511,7 +607,8 @@ try {
     !coursesHtml.includes(SMM_COURSE_SEO.title) &&
     !coursesHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
     !coursesHtml.includes(seoCourseTitleHtml) &&
-    !coursesHtml.includes(semCourseTitleHtml)
+    !coursesHtml.includes(semCourseTitleHtml) &&
+    !coursesHtml.includes(smoCourseTitleHtml)
   ) {
     pass("/Courses first-byte HTML is still the shared shell");
   } else fail("/Courses first-byte HTML was injected");
@@ -527,10 +624,12 @@ try {
     !bundlesHtml.includes(seoCourseTitleHtml) &&
     !semHtml.includes(seoCourseTitleHtml) &&
     !homeHtml.includes(semCourseTitleHtml) &&
-    !bundlesHtml.includes(semCourseTitleHtml)
+    !bundlesHtml.includes(semCourseTitleHtml) &&
+    !homeHtml.includes(smoCourseTitleHtml) &&
+    !bundlesHtml.includes(smoCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO or SEM course metadata");
-  } else fail("SEO or SEM course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, or SMO course metadata");
+  } else fail("SEO, SEM, or SMO course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -560,6 +659,18 @@ try {
   if (!semVidHtml.includes(SMM_COURSE_SEO.title) && !semVidHtml.includes(semCourseTitleHtml)) {
     pass("SEM /videos HTML was not given SMM or SEM listing metadata");
   } else fail("SEM /videos HTML contains listing metadata");
+
+  const smoVid = await fetch(`${injOrigin}/Blog/smo-social-media-optimization/videos`);
+  const smoVidHtml = await smoVid.text();
+  if (smoVid.status === 200 && smoVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SMO /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("SMO /videos headers changed");
+  if (smoVid.headers.get("link") === `<${canonicalUrl(SMO_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SMO /videos Link header still parent-canonical");
+  } else fail("SMO /videos Link header changed");
+  if (!smoVidHtml.includes(smoCourseTitleHtml) && !smoVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("SMO /videos HTML was not given SMO listing or SMM metadata");
+  } else fail("SMO /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

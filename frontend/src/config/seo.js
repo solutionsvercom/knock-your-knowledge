@@ -7,6 +7,7 @@ import {
   SMM_COURSE_SEO,
   SEO_COURSE_SEO,
   SEM_COURSE_SEO,
+  SMO_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -135,10 +136,7 @@ export const COURSE_SEO = {
     ...SMM_COURSE_SEO,
   },
   "smo-social-media-optimization": {
-    title: "Social Media Optimization Course | KYK",
-    description:
-      "Optimise profiles, hashtags, engagement, and communities for organic reach. KYK Social Media Optimization course on the Digital Marketing track.",
-    h1: "SMO — Social Media Optimization",
+    ...SMO_COURSE_SEO,
   },
   "google-webmaster-search-console": {
     title: "Google Search Console Course | KYK",
