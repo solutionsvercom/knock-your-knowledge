@@ -203,6 +203,19 @@ export const JIRA_COURSE_SEO = {
   productName: "Jira for Project Management",
 };
 
+export const SQL_COURSE_PATH = "/Blog/sql-for-data-analysis";
+
+/** First-byte + Helmet SEO for the SQL for Data Analysis course page only. */
+export const SQL_COURSE_SEO = {
+  title: "SQL for Data Analysis Course & SQL Training | KYK",
+  description:
+    "Learn SQL for Data Analysis with KYK's beginner course: SQL Basics, Joins & Aggregations, Window Functions, Stored Procedures. 25 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "SQL for Data Analysis Course – Beginner SQL Training",
+  ogImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "SQL for Data Analysis",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -382,6 +395,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: JIRA_COURSE_SEO.ogImage,
       twitterCard: JIRA_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === SQL_COURSE_PATH) {
+    return {
+      title: SQL_COURSE_SEO.title,
+      description: SQL_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: SQL_COURSE_SEO.ogImage,
+      twitterCard: SQL_COURSE_SEO.twitterCard,
     };
   }
   return null;

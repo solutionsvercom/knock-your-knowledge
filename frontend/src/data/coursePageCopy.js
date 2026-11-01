@@ -403,10 +403,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["prompt-engineering", "artificial-intelligence-fundamentals", "ai-tools-in-digital-marketing"],
   },
   "sql-for-data-analysis": {
+    introHeading: "SQL Training covering Queries, Joins, Aggregations and Window Functions",
     intro:
-      "SQL for Data Analysis is a beginner KYK course on querying business data in relational databases. You learn SQL basics, joins and aggregations, window functions, stored procedures, and an analytics project, using MySQL and PostgreSQL. Catalog projects include a sales dashboard and customer segmentation.",
+      "This SQL for Data Analysis Course is beginner SQL Training at Knock Your Knowledge. It is a SQL Course for writing queries against relational business data: 25 hours, five topics, and 20 videos covering SQL Basics, Joins & Aggregations, Window Functions, Stored Procedures, and an Analytics Project. You use MySQL and PostgreSQL. Catalog projects are Sales Dashboard and Customer Segmentation. The published course fee is ₹199/- plus 18% GST at checkout. This is Beginner. It is a Business Analytics-track retail course, not an internship. SQL is the query layer: you write SQL queries to extract, transform, and analyse tables. Python for Analytics is cleaning, visualisation, and reporting with Python and Pandas. Power BI Dashboarding and Tableau Visualization are dashboard courses. Jira for Project Management is boards, sprints, and team workflow. Python Programming is the Python language. Data Science is wrangling, EDA, and ML. This course does not teach Python, machine learning, dashboard development, or Jira.",
     whyLearn:
-      "Dashboards and Python notebooks still sit on tables. If you cannot join, aggregate, and window those tables, you wait on someone else for every extract. This course is the query layer those later tools depend on.",
+      "Dashboards and Python notebooks still sit on tables. If you cannot join, aggregate, and window those tables, you wait on someone else for every extract. This SQL for Data Analysis Course is SQL Training for that query layer — SELECT queries, filters, sorting, joins, aggregations, window functions, and stored procedures in MySQL and PostgreSQL — so you can extract and analyse business data yourself. It is a Business Analytics-track retail course, not an internship programme and not a Python, ML, dashboard, or Jira course.",
     whoFor: [
       "Beginners who need SQL for analysis, not only database administration",
       "Analysts who live in spreadsheets and want joins, aggregations, and window functions",
@@ -414,18 +415,18 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "SQL Basics":
-        "Select, filter, and sort rows so you can inspect tables in MySQL or PostgreSQL without exporting everything to Excel first.",
+        "SQL Basics is the first topic in this SQL for Data Analysis Course. Select, filter, and sort rows so you can inspect tables in MySQL or PostgreSQL without exporting everything to Excel first.",
       "Joins & Aggregations":
-        "Combine tables with joins and summarise with GROUP BY so questions like totals by customer or region have a query, not a manual pivot.",
+        "Joins & Aggregations is the second topic. Combine tables with joins and summarise with GROUP BY so questions like totals by customer or region have a query, not a manual pivot.",
       "Window Functions":
-        "Use window functions for running totals, ranks, and comparisons that aggregations alone cannot express.",
+        "Window Functions is the third topic. Use window functions for running totals, ranks, and comparisons that aggregations alone cannot express.",
       "Stored Procedures":
-        "Package repeatable SQL into stored procedures so the same logic is not rewritten in every ad-hoc script.",
+        "Stored Procedures is the fourth topic. Package repeatable SQL into stored procedures so the same logic is not rewritten in every ad-hoc script.",
       "Analytics Project":
-        "Apply the topics in an analytics project. The catalog lists Sales Dashboard and Customer Segmentation as projects for this course.",
+        "Analytics Project is the fifth topic. Apply the topics in an analytics project. The catalog lists Sales Dashboard and Customer Segmentation as projects for this course.",
     },
     outcomes: [
-      "Write SELECT queries with filters and sorting in MySQL or PostgreSQL",
+      "Write SELECT queries with filters and sorting in MySQL or PostgreSQL after this SQL for Data Analysis Course",
       "Join tables and aggregate business metrics",
       "Use window functions for ranks and running comparisons",
       "Wrap repeatable logic in stored procedures",
@@ -452,6 +453,17 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in a bundle?",
         a: "Yes. The Business Analytics bundle includes SQL, Python for Analytics, Power BI, Tableau, and Jira.",
       },
+    ],
+    trackLinks: [
+      { text: "Cleaning, visualisation, and reporting sit on " },
+      { to: "/Blog/python-for-analytics", text: "Python for Analytics" },
+      { text: ". Dashboards in Tableau sit on " },
+      { to: "/Blog/tableau-visualization", text: "Tableau Visualization" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["python-for-analytics", "power-bi-dashboarding", "tableau-visualization"],
   },

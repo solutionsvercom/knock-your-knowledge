@@ -42,6 +42,8 @@ import {
   MERN_STACK_COURSE_PATH,
   JIRA_COURSE_SEO,
   JIRA_COURSE_PATH,
+  SQL_COURSE_SEO,
+  SQL_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -89,6 +91,8 @@ if (!titles.includes(MERN_STACK_COURSE_SEO.title)) titles.push(MERN_STACK_COURSE
 if (!descriptions.includes(MERN_STACK_COURSE_SEO.description)) descriptions.push(MERN_STACK_COURSE_SEO.description);
 if (!titles.includes(JIRA_COURSE_SEO.title)) titles.push(JIRA_COURSE_SEO.title);
 if (!descriptions.includes(JIRA_COURSE_SEO.description)) descriptions.push(JIRA_COURSE_SEO.description);
+if (!titles.includes(SQL_COURSE_SEO.title)) titles.push(SQL_COURSE_SEO.title);
+if (!descriptions.includes(SQL_COURSE_SEO.description)) descriptions.push(SQL_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -893,6 +897,9 @@ if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).include
 if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
   pass("Jira for Project Management course HTML SEO injection does not change MERN Stack Development");
 } else fail("Jira for Project Management course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change SQL for Data Analysis");
+} else fail("Jira for Project Management course metadata leaked onto SQL for Data Analysis");
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(JIRA_COURSE_SEO.title) === false) {
   pass("Jira for Project Management course HTML SEO injection does not change /Internships");
 } else fail("Jira for Project Management course metadata leaked onto /Internships");
@@ -911,6 +918,89 @@ if (
 ) {
   pass("Jira for Project Management metadata does not call this retail course a mentor-led internship");
 } else fail("Jira for Project Management metadata still uses internship or mentor-led wording");
+
+const sqlCourseTitleHtml = SQL_COURSE_SEO.title.replace(/&/g, "&amp;");
+const sqlCourseDescHtml = SQL_COURSE_SEO.description.replace(/&/g, "&amp;");
+const sqlCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  SQL_COURSE_PATH
+);
+if (sqlCourseShell.includes(sqlCourseTitleHtml)) pass("Initial HTML title for SQL for Data Analysis course");
+else fail("Initial HTML missing SQL for Data Analysis course title");
+if (sqlCourseShell.includes(sqlCourseDescHtml)) pass("Initial HTML description for SQL for Data Analysis course");
+else fail("Initial HTML missing SQL for Data Analysis course description");
+if ((sqlCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("SQL for Data Analysis course initial HTML has exactly one canonical");
+else fail("SQL for Data Analysis course initial HTML canonical count is not 1");
+if (sqlCourseShell.includes(`href="${canonicalUrl(SQL_COURSE_PATH)}"`)) pass("SQL for Data Analysis course initial HTML canonical is the course URL");
+else fail("SQL for Data Analysis course initial HTML canonical is not the course URL");
+if (sqlCourseShell.includes('content="index, follow"')) pass("SQL for Data Analysis course initial HTML robots is index, follow");
+else fail("SQL for Data Analysis course initial HTML missing index, follow");
+if (sqlCourseShell.includes('property="og:title"') && sqlCourseShell.includes('name="twitter:card"')) {
+  pass("SQL for Data Analysis course initial HTML includes OG and Twitter tags");
+} else fail("SQL for Data Analysis course initial HTML missing OG or Twitter tags");
+if (
+  documentLinkHeader(SQL_COURSE_PATH) ===
+  `<${canonicalUrl(SQL_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("SQL for Data Analysis course Link header is self-canonical");
+} else fail("SQL for Data Analysis course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change SMM");
+} else fail("SQL for Data Analysis course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change SEO course");
+} else fail("SQL for Data Analysis course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change SEM course");
+} else fail("SQL for Data Analysis course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change SMO course");
+} else fail("SQL for Data Analysis course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change GSC course");
+} else fail("SQL for Data Analysis course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change AI marketing course");
+} else fail("SQL for Data Analysis course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change AI productivity course");
+} else fail("SQL for Data Analysis course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change Prompt Engineering");
+} else fail("SQL for Data Analysis course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change AI Fundamentals");
+} else fail("SQL for Data Analysis course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change Python Programming");
+} else fail("SQL for Data Analysis course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change Data Science");
+} else fail("SQL for Data Analysis course metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change MERN Stack Development");
+} else fail("SQL for Data Analysis course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change Jira for Project Management");
+} else fail("SQL for Data Analysis course metadata leaked onto Jira for Project Management");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(SQL_COURSE_SEO.title) === false) {
+  pass("SQL for Data Analysis course HTML SEO injection does not change /Internships");
+} else fail("SQL for Data Analysis course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/sql-for-data-analysis/videos") ===
+  `<${canonicalUrl(SQL_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("SQL for Data Analysis course /videos Link header still points at the parent course");
+} else fail("SQL for Data Analysis course /videos Link header is not the parent course");
+if (SQL_COURSE_SEO.productName === "SQL for Data Analysis") {
+  pass("SQL for Data Analysis productName is unchanged for the videos page title");
+} else fail("SQL for Data Analysis productName changed");
+if (
+  SQL_COURSE_SEO.description.includes("mentor-led") === false &&
+  SQL_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("SQL for Data Analysis metadata does not call this retail course a mentor-led internship");
+} else fail("SQL for Data Analysis metadata still uses internship or mentor-led wording");
 
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
@@ -936,10 +1026,11 @@ if (
   blogPostSrc.includes("data-science") &&
   blogPostSrc.includes("mern-stack-development") &&
   blogPostSrc.includes("jira-for-project-management") &&
+  blogPostSrc.includes("sql-for-data-analysis") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, and Jira for Project Management course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, and SQL for Data Analysis course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira/SQL H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -1116,6 +1207,23 @@ if (
 ) {
   pass("Jira for Project Management course FAQs retain original answers, related cards, and contextual course links");
 } else fail("Jira for Project Management course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "Which databases does the course list?"') &&
+  smmCopy.includes('q: "What projects are listed?"') &&
+  smmCopy.includes('q: "How long is SQL for Data Analysis?"') &&
+  smmCopy.includes('q: "Is this Power BI?"') &&
+  smmCopy.includes('q: "Is it in a bundle?"') &&
+  smmCopy.includes('a: "MySQL and PostgreSQL, in the course tools list."') &&
+  smmCopy.includes('a: "Sales Dashboard and Customer Segmentation."') &&
+  smmCopy.includes('a: "25 hrs, Beginner level."') &&
+  smmCopy.includes('a: "No. Power BI Dashboarding is a separate Business Analytics course. SQL is the query foundation many dashboards use."') &&
+  smmCopy.includes('relatedSlugs: ["python-for-analytics", "power-bi-dashboarding", "tableau-visualization"]') &&
+  smmCopy.includes('to: "/Blog/python-for-analytics"') &&
+  smmCopy.includes('to: "/Blog/tableau-visualization"') &&
+  smmCopy.includes('to: "/Bundles/analytics"')
+) {
+  pass("SQL for Data Analysis course FAQs retain original answers, related cards, and contextual course links");
+} else fail("SQL for Data Analysis course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -1147,9 +1255,11 @@ if (
   jsonLdSrc.includes('instructor === "James Rivera"') &&
   jsonLdSrc.includes("mern-stack-development") &&
   jsonLdSrc.includes('instructor === "Chris Taylor"') &&
-  jsonLdSrc.includes("jira-for-project-management")
+  jsonLdSrc.includes("jira-for-project-management") &&
+  jsonLdSrc.includes('instructor === "Nina Brooks"') &&
+  jsonLdSrc.includes("sql-for-data-analysis")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, and Jira for Project Management courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, and SQL for Data Analysis courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -1502,10 +1612,12 @@ try {
     !homeHtml.includes(mernCourseTitleHtml) &&
     !bundlesHtml.includes(mernCourseTitleHtml) &&
     !homeHtml.includes(jiraCourseTitleHtml) &&
-    !bundlesHtml.includes(jiraCourseTitleHtml)
+    !bundlesHtml.includes(jiraCourseTitleHtml) &&
+    !homeHtml.includes(sqlCourseTitleHtml) &&
+    !bundlesHtml.includes(sqlCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Jira course metadata");
-  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Jira course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, or SQL course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, or SQL course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -1865,16 +1977,17 @@ try {
     !jiraCourseHtml.includes(pyCourseTitleHtml) &&
     !jiraCourseHtml.includes(dsCourseTitleHtml) &&
     !jiraCourseHtml.includes(mernCourseTitleHtml) &&
+    !jiraCourseHtml.includes(sqlCourseTitleHtml) &&
     !jiraCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
   ) {
-    pass("Jira for Project Management course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Internships metadata");
+    pass("Jira for Project Management course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, SQL, or Internships metadata");
   } else fail("Jira for Project Management course first-byte HTML mixed another route's metadata");
 
   const mernAfter = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
   const mernAfterHtml = await mernAfter.text();
-  if (mernAfterHtml.includes(mernCourseTitleHtml) && !mernAfterHtml.includes(jiraCourseTitleHtml)) {
+  if (mernAfterHtml.includes(mernCourseTitleHtml) && !mernAfterHtml.includes(jiraCourseTitleHtml) && !mernAfterHtml.includes(sqlCourseTitleHtml)) {
     pass("MERN Stack Development course first-byte SEO remains unchanged");
-  } else fail("MERN Stack Development course first-byte SEO changed by Jira for Project Management work");
+  } else fail("MERN Stack Development course first-byte SEO changed by Jira or SQL work");
 
   const jiraVid = await fetch(`${injOrigin}/Blog/jira-for-project-management/videos`);
   const jiraVidHtml = await jiraVid.text();
@@ -1887,6 +2000,72 @@ try {
   if (!jiraVidHtml.includes(jiraCourseTitleHtml) && !jiraVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("Jira for Project Management /videos HTML was not given Jira listing or SMM metadata");
   } else fail("Jira for Project Management /videos HTML contains listing metadata");
+
+  const sqlCourseRes = await fetch(`${injOrigin}${SQL_COURSE_PATH}`);
+  const sqlCourseHtml = await sqlCourseRes.text();
+  if (sqlCourseRes.status === 200) pass("Express-like /Blog/sql-for-data-analysis returns HTTP 200");
+  else fail(`SQL for Data Analysis course HTTP ${sqlCourseRes.status}`);
+  if (sqlCourseHtml.includes(sqlCourseTitleHtml) && sqlCourseHtml.includes(sqlCourseDescHtml)) {
+    pass("SQL for Data Analysis course initial HTML has the new title and description");
+  } else fail("SQL for Data Analysis course initial HTML missing title or description");
+  if ((sqlCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("SQL for Data Analysis course initial HTML has one canonical");
+  else fail("SQL for Data Analysis course initial HTML canonical count is not 1");
+  if (sqlCourseRes.headers.get("link") === `<${canonicalUrl(SQL_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SQL for Data Analysis course response Link header is self-canonical");
+  } else fail("SQL for Data Analysis course Link header was incorrect");
+  if (sqlCourseHtml.includes('content="index, follow"') && !sqlCourseHtml.includes("noindex")) {
+    pass("SQL for Data Analysis course initial HTML is index, follow");
+  } else fail("SQL for Data Analysis course initial HTML not indexable");
+  if (
+    sqlCourseHtml.includes('property="og:title"') &&
+    sqlCourseHtml.includes('property="og:image"') &&
+    sqlCourseHtml.includes('name="twitter:card"') &&
+    sqlCourseHtml.includes("summary_large_image")
+  ) {
+    pass("SQL for Data Analysis course initial HTML has OG and Twitter metadata");
+  } else fail("SQL for Data Analysis course initial HTML missing OG or Twitter metadata");
+  if (
+    !sqlCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !sqlCourseHtml.includes(seoCourseTitleHtml) &&
+    !sqlCourseHtml.includes(semCourseTitleHtml) &&
+    !sqlCourseHtml.includes(smoCourseTitleHtml) &&
+    !sqlCourseHtml.includes(gscCourseTitleHtml) &&
+    !sqlCourseHtml.includes(aimCourseTitleHtml) &&
+    !sqlCourseHtml.includes(aipCourseTitleHtml) &&
+    !sqlCourseHtml.includes(peCourseTitleHtml) &&
+    !sqlCourseHtml.includes(aifCourseTitleHtml) &&
+    !sqlCourseHtml.includes(pyCourseTitleHtml) &&
+    !sqlCourseHtml.includes(dsCourseTitleHtml) &&
+    !sqlCourseHtml.includes(mernCourseTitleHtml) &&
+    !sqlCourseHtml.includes(jiraCourseTitleHtml) &&
+    !sqlCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("SQL for Data Analysis course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, or Internships metadata");
+  } else fail("SQL for Data Analysis course first-byte HTML mixed another route's metadata");
+
+  const mernAfterSql = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
+  const mernAfterSqlHtml = await mernAfterSql.text();
+  if (mernAfterSqlHtml.includes(mernCourseTitleHtml) && !mernAfterSqlHtml.includes(sqlCourseTitleHtml)) {
+    pass("MERN Stack Development course first-byte SEO remains unchanged after SQL work");
+  } else fail("MERN Stack Development course first-byte SEO changed by SQL for Data Analysis work");
+
+  const jiraAfterSql = await fetch(`${injOrigin}${JIRA_COURSE_PATH}`);
+  const jiraAfterSqlHtml = await jiraAfterSql.text();
+  if (jiraAfterSqlHtml.includes(jiraCourseTitleHtml) && !jiraAfterSqlHtml.includes(sqlCourseTitleHtml)) {
+    pass("Jira for Project Management course first-byte SEO remains unchanged after SQL work");
+  } else fail("Jira for Project Management course first-byte SEO changed by SQL for Data Analysis work");
+
+  const sqlVid = await fetch(`${injOrigin}/Blog/sql-for-data-analysis/videos`);
+  const sqlVidHtml = await sqlVid.text();
+  if (sqlVid.status === 200 && sqlVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SQL for Data Analysis /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("SQL for Data Analysis /videos headers changed");
+  if (sqlVid.headers.get("link") === `<${canonicalUrl(SQL_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SQL for Data Analysis /videos Link header still parent-canonical");
+  } else fail("SQL for Data Analysis /videos Link header changed");
+  if (!sqlVidHtml.includes(sqlCourseTitleHtml) && !sqlVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("SQL for Data Analysis /videos HTML was not given SQL listing or SMM metadata");
+  } else fail("SQL for Data Analysis /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

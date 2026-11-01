@@ -17,6 +17,7 @@ import {
   DATA_SCIENCE_COURSE_SEO,
   MERN_STACK_COURSE_SEO,
   JIRA_COURSE_SEO,
+  SQL_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -88,10 +89,7 @@ export const COURSE_SEO = {
     ...AI_PRODUCTIVITY_COURSE_SEO,
   },
   "sql-for-data-analysis": {
-    title: "SQL Course for Data Analysis | KYK",
-    description:
-      "Write SQL queries to extract, transform, and analyse business data. KYK course on joins, aggregations, window functions, stored procedures, and an analytics project.",
-    h1: "SQL for Data Analysis",
+    ...SQL_COURSE_SEO,
   },
   "python-for-analytics": {
     title: "Python for Data Analysis Course | KYK",

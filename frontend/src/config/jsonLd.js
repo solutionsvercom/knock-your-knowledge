@@ -302,6 +302,15 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "sql-for-data-analysis") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Nina Brooks") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
       if (
         slug === "smm-social-media-marketing" ||
@@ -316,7 +325,8 @@ export function jsonLdForPath(pathname) {
         slug === "python-programming" ||
         slug === "data-science" ||
         slug === "mern-stack-development" ||
-        slug === "jira-for-project-management"
+        slug === "jira-for-project-management" ||
+        slug === "sql-for-data-analysis"
       ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));
