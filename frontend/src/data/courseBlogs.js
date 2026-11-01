@@ -41,6 +41,8 @@ function buildFromCatalog() {
         iconColor: c.iconColor || cat.color,
         excerpt: c.shortDesc,
         intro: copy.intro || c.shortDesc,
+        introHeading: copy.introHeading || "",
+        trackLinks: copy.trackLinks || [],
         whyLearn: copy.whyLearn || c.shortDesc,
         whoFor: copy.whoFor || [],
         outcomes: copy.outcomes || modules.map((m) => `Practise ${typeof m === "string" ? m : m.title}`),

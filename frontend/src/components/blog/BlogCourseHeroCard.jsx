@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { PlayCircle, ShoppingCart, Clapperboard, Layers } from "lucide-react";
 import { courseFeeLabel } from "@/config/pricing";
 
-export default function BlogCourseHeroCard({ post, onEnroll, feeItem }) {
+export default function BlogCourseHeroCard({ post, onEnroll, feeItem, titleAs = "h2" }) {
   const modules = (post?.modules || []).slice(0, 5);
   const topicCount = Math.min(5, Math.max(modules.length, 5));
+  const TitleTag = titleAs === "p" ? "p" : "h2";
 
   return (
     <div
@@ -19,9 +20,9 @@ export default function BlogCourseHeroCard({ post, onEnroll, feeItem }) {
       <p className="text-[10px] font-semibold uppercase tracking-[0.18em] mb-2" style={{ color: "#c4b5fd" }}>
         Enroll this course
       </p>
-      <h2 className="text-lg font-bold text-white leading-snug mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
+      <TitleTag className="text-lg font-bold text-white leading-snug mb-1" style={{ fontFamily: "'Poppins', sans-serif" }}>
         {post.title}
-      </h2>
+      </TitleTag>
       <p className="text-xs mb-4" style={{ color: "#94a3b8" }}>
         {topicCount} topics · 20 videos · {courseFeeLabel(feeItem)}
       </p>

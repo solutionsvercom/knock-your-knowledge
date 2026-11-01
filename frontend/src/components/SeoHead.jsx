@@ -9,6 +9,8 @@ export default function SeoHead() {
   const seo = seoForPath(pathname);
   const robots = seo.noindex ? "noindex, nofollow" : "index, follow";
   const jsonLd = jsonLdForPath(pathname);
+  const ogImage = seo.ogImage || DEFAULT_OG_IMAGE;
+  const twitterCard = seo.twitterCard || "summary";
 
   return (
     <Helmet prioritizeSeoTags>
@@ -23,10 +25,11 @@ export default function SeoHead() {
       <meta property="og:title" content={seo.title} />
       <meta property="og:description" content={seo.description} />
       <meta property="og:url" content={seo.canonical} />
-      <meta property="og:image" content={DEFAULT_OG_IMAGE} />
-      <meta name="twitter:card" content="summary" />
+      <meta property="og:image" content={ogImage} />
+      <meta name="twitter:card" content={twitterCard} />
       <meta name="twitter:title" content={seo.title} />
       <meta name="twitter:description" content={seo.description} />
+      {seo.ogImage ? <meta name="twitter:image" content={seo.ogImage} /> : null}
       {jsonLd ? <script type="application/ld+json">{JSON.stringify(jsonLd)}</script> : null}
     </Helmet>
   );

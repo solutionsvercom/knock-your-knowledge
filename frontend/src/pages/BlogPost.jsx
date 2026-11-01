@@ -14,6 +14,7 @@ import {
   formatInr,
 } from "@/config/pricing";
 import { courseHref, courseImgAlt } from "@/lib/internalSeo";
+import { seoForPath } from "@/config/seo";
 import { catalogCourseProduct } from "@/data/courseVideos";
 import BlogCourseHeroCard from "@/components/blog/BlogCourseHeroCard";
 import { createPageUrl } from "@/utils";
@@ -112,6 +113,9 @@ export default function BlogPost() {
     );
   }
 
+  const pageSeo = seoForPath(`/Blog/${slug}`);
+  const pageHeading = pageSeo.h1 || post.title;
+
   return (
     <div className="min-h-screen" style={{ background: "#020817" }}>
       <div className="relative min-h-[14rem] sm:min-h-[18rem] lg:min-h-[22rem] overflow-hidden border-b" style={{ borderColor: "rgba(167,139,250,0.15)" }}>
@@ -145,7 +149,7 @@ export default function BlogPost() {
               className="text-3xl sm:text-4xl font-black text-white leading-tight"
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
-              {post.title}
+              {pageHeading}
             </h1>
             <div className="flex flex-wrap items-center gap-4 mt-4 text-xs" style={{ color: "#94a3b8" }}>
               <span className="flex items-center gap-1">
@@ -164,16 +168,44 @@ export default function BlogPost() {
             </div>
             </div>
             {!careerGuide && courseProduct ? (
-              <BlogCourseHeroCard post={post} onEnroll={enrollThisCourse} feeItem={courseProduct} />
+              <BlogCourseHeroCard
+                post={post}
+                onEnroll={enrollThisCourse}
+                feeItem={courseProduct}
+                titleAs={slug === "smm-social-media-marketing" ? "p" : "h2"}
+              />
             ) : null}
           </div>
         </div>
       </div>
 
       <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {post.introHeading ? (
+          <h2 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            {post.introHeading}
+          </h2>
+        ) : null}
         <p className="text-base leading-relaxed mb-8" style={{ color: "#94a3b8" }}>
           {post.intro}
         </p>
+        {post.trackLinks?.length ? (
+          <p className="text-sm leading-relaxed mb-8" style={{ color: "#94a3b8" }}>
+            {post.trackLinks.map((part, i) =>
+              part.to ? (
+                <Link
+                  key={`${part.to}-${i}`}
+                  to={part.to}
+                  className="font-semibold hover:text-white"
+                  style={{ color: "#c4b5fd" }}
+                >
+                  {part.text}
+                </Link>
+              ) : (
+                <span key={`t-${i}`}>{part.text}</span>
+              )
+            )}
+          </p>
+        ) : null}
 
         {careerGuide && (post.relatedCourseTitles?.length || post.relatedInternshipSlugs?.length) ? (
           <p className="text-sm leading-relaxed mb-8" style={{ color: "#94a3b8" }}>
@@ -386,7 +418,18 @@ export default function BlogPost() {
                     border: "1px solid rgba(255,255,255,0.08)",
                   }}
                 >
-                  <summary className="text-sm font-semibold text-white cursor-pointer">{faq.q}</summary>
+                  <summary className="text-sm font-semibold text-white cursor-pointer">
+                    {slug === "smm-social-media-marketing" ? (
+                      <h3
+                        className="text-sm font-semibold text-white inline"
+                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                      >
+                        {faq.q}
+                      </h3>
+                    ) : (
+                      faq.q
+                    )}
+                  </summary>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: "#64748b" }}>
                     {faq.a}
                   </p>

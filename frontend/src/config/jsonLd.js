@@ -1,5 +1,5 @@
 import { CATEGORIES } from "@/data/courseCatalog";
-import { slugifyTitle } from "@/data/courseBlogs";
+import { getBlogBySlug, slugifyTitle } from "@/data/courseBlogs";
 import { INTERNSHIP_PAGES, RETAIL_BUNDLES, retailOfferForTitle } from "@/config/pricing";
 import { CONTACT_EMAIL, CONTACT_PHONE_TEL, SOCIAL_FACEBOOK_URL, SOCIAL_INSTAGRAM_URL } from "@/config/contact";
 import {
@@ -70,7 +70,7 @@ function breadcrumb(items) {
   };
 }
 
-function courseNode(course, seo) {
+function courseNode(course, seo, extras = {}) {
   const url = canonicalUrl(`/Blog/${course.slug}`);
   const offer = retailOfferForTitle(course.title);
   const price = offer?.courseFee ?? (Number(course.price) || undefined);
@@ -78,8 +78,8 @@ function courseNode(course, seo) {
   const node = {
     "@type": "Course",
     "@id": `${url}#course`,
-    name: seo?.h1 || course.title,
-    description: seo?.description || course.shortDesc || course.title,
+    name: extras.name || seo?.h1 || course.title,
+    description: extras.description || seo?.description || course.shortDesc || course.title,
     url,
     provider: {
       "@type": "Organization",
@@ -87,16 +87,32 @@ function courseNode(course, seo) {
       sameAs: `${SITE_ORIGIN}/`,
     },
   };
+  if (extras.image) {
+    node.image = extras.image;
+  }
+  if (extras.instructor) {
+    node.instructor = {
+      "@type": "Person",
+      name: extras.instructor,
+    };
+  }
   if (price != null) {
-    node.offers = [
-      {
-        "@type": "Offer",
-        category: "Paid",
-        priceCurrency: "INR",
+    const offerNode = {
+      "@type": "Offer",
+      category: "Paid",
+      priceCurrency: "INR",
+      price: String(price),
+      url,
+    };
+    if (extras.vatExcluded) {
+      offerNode.priceSpecification = {
+        "@type": "UnitPriceSpecification",
         price: String(price),
-        url,
-      },
-    ];
+        priceCurrency: "INR",
+        valueAddedTaxIncluded: false,
+      };
+    }
+    node.offers = [offerNode];
   }
   node.hasCourseInstance = [
     {
@@ -106,6 +122,21 @@ function courseNode(course, seo) {
     },
   ];
   return node;
+}
+
+function faqPageNode(faqs, path) {
+  return {
+    "@type": "FAQPage",
+    "@id": `${canonicalUrl(path)}#faq`,
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.a,
+      },
+    })),
+  };
 }
 
 export function jsonLdForPath(pathname) {
@@ -134,7 +165,7 @@ export function jsonLdForPath(pathname) {
         itemListElement: courses.map((course, i) => ({
           "@type": "ListItem",
           position: i + 1,
-          item: courseNode(course, COURSE_SEO[course.slug]),
+          item: courseNode(course, COURSE_SEO[course.slug], { name: course.title }),
         })),
       }
     );
@@ -151,7 +182,24 @@ export function jsonLdForPath(pathname) {
         { name: COURSE_SEO[courseMatch[1]].h1, path },
       ])
     );
-    if (course) graph.push(courseNode(course, COURSE_SEO[courseMatch[1]]));
+    if (course) {
+      const slug = courseMatch[1];
+      const extras = {};
+      if (slug === "smm-social-media-marketing") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Jasmine Patel") {
+          extras.instructor = course.instructor;
+        }
+      }
+      graph.push(courseNode(course, COURSE_SEO[slug], extras));
+      if (slug === "smm-social-media-marketing") {
+        const faqs = getBlogBySlug(slug)?.faqs || [];
+        if (faqs.length) graph.push(faqPageNode(faqs, path));
+      }
+    }
     return { "@context": "https://schema.org", "@graph": graph };
   }
 

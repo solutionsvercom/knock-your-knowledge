@@ -34,6 +34,19 @@ export const INTERNSHIPS_LISTING_SEO = {
     "Explore development, AI, business analytics and digital marketing internship programmes at KnockYourKnowledge. Discover programme details and apply online.",
 };
 
+export const SMM_COURSE_PATH = "/Blog/smm-social-media-marketing";
+
+/** First-byte + Helmet SEO for the SMM course page only. */
+export const SMM_COURSE_SEO = {
+  title: "Social Media Marketing Course & SMM Training | KYK",
+  description:
+    "Learn social media marketing with beginner-friendly SMM training covering Instagram, LinkedIn, X and YouTube, paid social, analytics and content calendars.",
+  h1: "Social Media Marketing Course – Beginner SMM Training",
+  ogImage: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "SMM — Social Media Marketing",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -97,12 +110,32 @@ export function frontendRedirect(pathname) {
   return null;
 }
 
+export function initialHtmlSeoForPath(pathname) {
+  const path = normalizePath(pathname);
+  if (path === "/Internships") {
+    return {
+      title: INTERNSHIPS_LISTING_SEO.title,
+      description: INTERNSHIPS_LISTING_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === SMM_COURSE_PATH) {
+    return {
+      title: SMM_COURSE_SEO.title,
+      description: SMM_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  return null;
+}
+
 export function documentLinkHeader(pathname) {
   const parent = videoParentPath(pathname);
   if (parent) return `<${canonicalUrl(parent)}>; rel="canonical"`;
-  if (normalizePath(pathname) === "/Internships") {
-    return `<${canonicalUrl("/Internships")}>; rel="canonical"`;
-  }
+  const seo = initialHtmlSeoForPath(pathname);
+  if (seo) return `<${seo.canonical}>; rel="canonical"`;
   return null;
 }
 
@@ -113,25 +146,23 @@ function escapeAttr(value) {
     .replace(/</g, "&lt;");
 }
 
-/** Inject listing title, description, and one data-rh canonical into the SPA shell for /Internships. */
+/** Inject title, description, and one data-rh canonical into the SPA shell for mapped routes only. */
 export function applyInitialHtmlSeo(html, pathname) {
-  if (normalizePath(pathname) !== "/Internships" || typeof html !== "string") return html;
-  const canonical = canonicalUrl("/Internships");
-  const title = INTERNSHIPS_LISTING_SEO.title;
-  const description = INTERNSHIPS_LISTING_SEO.description;
-  let next = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title data-rh="true">${escapeAttr(title)}</title>`);
+  const seo = initialHtmlSeoForPath(pathname);
+  if (!seo || typeof html !== "string") return html;
+  let next = html.replace(/<title\b[^>]*>[\s\S]*?<\/title>/i, `<title data-rh="true">${escapeAttr(seo.title)}</title>`);
   if (/<meta\b[^>]*name=["']description["'][^>]*>/i.test(next)) {
     next = next.replace(
       /<meta\b[^>]*name=["']description["'][^>]*>/i,
-      `<meta data-rh="true" name="description" content="${escapeAttr(description)}" />`
+      `<meta data-rh="true" name="description" content="${escapeAttr(seo.description)}" />`
     );
   } else {
-    next = next.replace(/<\/head>/i, `    <meta data-rh="true" name="description" content="${escapeAttr(description)}" />\n  </head>`);
+    next = next.replace(/<\/head>/i, `    <meta data-rh="true" name="description" content="${escapeAttr(seo.description)}" />\n  </head>`);
   }
   next = next.replace(/<link\b[^>]*rel=["']canonical["'][^>]*>\s*/gi, "");
   next = next.replace(
     /<\/head>/i,
-    `    <link data-rh="true" rel="canonical" href="${canonical}" />\n    <meta data-rh="true" name="robots" content="index, follow" />\n  </head>`
+    `    <link data-rh="true" rel="canonical" href="${seo.canonical}" />\n    <meta data-rh="true" name="robots" content="${escapeAttr(seo.robots)}" />\n  </head>`
   );
   return next;
 }

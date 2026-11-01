@@ -692,33 +692,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["seo-search-engine-optimization", "smm-social-media-marketing", "ai-tools-in-digital-marketing"],
   },
   "smm-social-media-marketing": {
+    introHeading: "SMM Training for Instagram, LinkedIn, X, and YouTube",
     intro:
-      "SMM — Social Media Marketing is a beginner KYK course on growing a brand on social platforms. You cover platform strategy, content calendars, paid social, analytics, and influencer marketing across Instagram, LinkedIn, X, and YouTube, including paid ads as named in the description.",
+      "This Social Media Marketing Course is beginner-friendly SMM training at Knock Your Knowledge. It is Social Media Marketing Training Online: 28 hrs, five topics, and 20 videos covering platform strategy, content calendars, Paid Social, analytics, and Influencer Marketing. You work with the named networks — Instagram, LinkedIn, X, and YouTube — including paid ads as listed in the course tags. The published course fee is ₹149/- plus 18% GST at checkout.",
     whyLearn:
-      "Posting without a platform plan, calendar, or measurement is noise. This course puts strategy, content, paid social, analytics, and influencers in one beginner path for the networks KYK actually lists.",
+      "Posting without a platform plan, a Content Calendar, or measurement is noise. This Social Media Marketing path puts strategy, content, Paid Social, Social Media Analytics, and Influencer Marketing in one beginner course for the networks KYK actually lists. Instagram Marketing, LinkedIn Marketing, and YouTube Marketing here mean using those named platforms (plus X) with a job each — not copying one caption everywhere.",
     whoFor: [
-      "Beginners responsible for Instagram, LinkedIn, X, or YouTube",
-      "Students who need a content calendar and paid social, not only organic posting",
+      "Beginners responsible for Instagram, LinkedIn, X, or YouTube who want structured SMM training",
+      "Students who need a Content Calendar and Paid Social, not only organic posting",
       "Marketers who will also look at SMO for profile and community tactics",
     ],
     topicDetails: {
       "Platform Strategy":
-        "Choose what each network is for — Instagram, LinkedIn, X, and YouTube are named — instead of copying one caption everywhere.",
+        "Choose what each named network is for. Instagram Marketing, LinkedIn Marketing, and YouTube Marketing (with X) should not share one caption — the catalog names Instagram, LinkedIn, X, and YouTube as the platforms this course uses.",
       "Content Calendar":
-        "Plan posts in a calendar so campaigns have dates, not last-minute uploads.",
+        "A Content Calendar is the second topic: plan posts on dates so campaigns are scheduled, not last-minute uploads.",
       "Paid Social":
-        "Use paid ads on social, as listed in the course tags, to extend the organic plan.",
+        "Paid Social is the third topic. Use paid ads on social, as listed in the Paid Ads tag, to extend the organic plan rather than replace it.",
       Analytics:
-        "Read platform analytics so you keep what works and drop what does not.",
+        "Analytics here is Social Media Analytics: read platform analytics so you keep what works and drop what does not. The catalog does not name a separate analytics tool.",
       "Influencer Marketing":
-        "Work with creators as a named fifth topic, not as an afterthought to ads.",
+        "Influencer Marketing is the named fifth topic. Work with creators as part of the same system, not as an afterthought to ads.",
     },
     outcomes: [
-      "Set a simple strategy per platform for Instagram, LinkedIn, X, and YouTube",
-      "Build a content calendar you can actually follow",
-      "Run paid social alongside organic posts",
-      "Use analytics to judge what to repeat",
-      "Plan an influencer marketing step inside that system",
+      "Set a simple platform strategy for Instagram, LinkedIn, X, and YouTube",
+      "Build a Content Calendar you can actually follow",
+      "Run Paid Social alongside organic posts",
+      "Use Social Media Analytics to judge what to repeat",
+      "Plan an Influencer Marketing step inside that system",
     ],
     faqs: [
       {
@@ -741,6 +742,27 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEO, SEM, SMO, Search Console, and AI Tools in Digital Marketing.",
       },
+      {
+        q: "What do students learn in the Social Media Marketing Course?",
+        a: "The five topics are Platform Strategy, Content Calendar, Paid Social, Analytics, and Influencer Marketing. The course is beginner level, 28 hrs, with 20 videos across those five topics, on Instagram, LinkedIn, X, and YouTube.",
+      },
+    ],
+    trackLinks: [
+      { text: "SMO is a separate KYK course (" },
+      { to: "/Blog/smo-social-media-optimization", text: "SMO — Social Media Optimization" },
+      { text: ") on profiles, hashtags, engagement, and community. Related Digital Marketing courses include " },
+      { to: "/Blog/seo-search-engine-optimization", text: "SEO — Search Engine Optimization" },
+      { text: ", " },
+      { to: "/Blog/sem-search-engine-marketing", text: "SEM — Search Engine Marketing" },
+      { text: ", " },
+      { to: "/Blog/google-webmaster-search-console", text: "Google Webmaster & Search Console" },
+      { text: ", and " },
+      { to: "/Blog/ai-tools-in-digital-marketing", text: "AI Tools in Digital Marketing" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["smo-social-media-optimization", "sem-search-engine-marketing", "ai-tools-in-digital-marketing"],
   },

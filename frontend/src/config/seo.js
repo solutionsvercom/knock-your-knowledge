@@ -4,6 +4,7 @@ import {
   INTERNSHIPS_LISTING_SEO,
   isIndexablePath,
   SITE_ORIGIN,
+  SMM_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -135,10 +136,7 @@ export const COURSE_SEO = {
     h1: "SEM — Search Engine Marketing",
   },
   "smm-social-media-marketing": {
-    title: "Social Media Marketing Course | KYK",
-    description:
-      "Grow brand presence on Instagram, LinkedIn, X, and YouTube with content, paid social, analytics, and influencer marketing. KYK SMM internship course.",
-    h1: "SMM — Social Media Marketing",
+    ...SMM_COURSE_SEO,
   },
   "smo-social-media-optimization": {
     title: "Social Media Optimization Course | KYK",
@@ -262,11 +260,12 @@ export function seoForPath(pathname) {
     const slug = videoMatch[1];
     const course = COURSE_SEO[slug];
     if (course) {
+      const courseLabel = course.productName || course.h1;
       return {
-        title: `${course.h1} Course Videos | KYK`,
-        description: `Watch the ${course.h1} video lessons at Knock Your Knowledge — five topics and twenty lessons. Enroll in this internship course to unlock playback.`,
+        title: `${courseLabel} Course Videos | KYK`,
+        description: `Watch the ${courseLabel} video lessons at Knock Your Knowledge — five topics and twenty lessons. Enroll in this internship course to unlock playback.`,
         canonical: canonicalUrl(`/Blog/${slug}`),
-        h1: `${course.h1} videos`,
+        h1: `${courseLabel} videos`,
         ogType: "website",
         noindex: true,
       };
