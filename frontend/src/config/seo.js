@@ -16,6 +16,7 @@ import {
   PYTHON_PROGRAMMING_COURSE_SEO,
   DATA_SCIENCE_COURSE_SEO,
   MERN_STACK_COURSE_SEO,
+  JIRA_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -111,10 +112,7 @@ export const COURSE_SEO = {
     h1: "Tableau Visualization",
   },
   "jira-for-project-management": {
-    title: "Jira Project Management Course | KYK",
-    description:
-      "Learn Jira for Agile work — Scrum, Kanban, backlogs, sprints, reporting, and team workflows. Beginner project-management course at Knock Your Knowledge.",
-    h1: "Jira for Project Management",
+    ...JIRA_COURSE_SEO,
   },
   "seo-search-engine-optimization": {
     ...SEO_COURSE_SEO,

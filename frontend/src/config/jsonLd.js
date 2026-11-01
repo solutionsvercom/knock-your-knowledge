@@ -293,6 +293,15 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "jira-for-project-management") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Chris Taylor") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
       if (
         slug === "smm-social-media-marketing" ||
@@ -306,7 +315,8 @@ export function jsonLdForPath(pathname) {
         slug === "artificial-intelligence-fundamentals" ||
         slug === "python-programming" ||
         slug === "data-science" ||
-        slug === "mern-stack-development"
+        slug === "mern-stack-development" ||
+        slug === "jira-for-project-management"
       ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));

@@ -40,6 +40,8 @@ import {
   DATA_SCIENCE_COURSE_PATH,
   MERN_STACK_COURSE_SEO,
   MERN_STACK_COURSE_PATH,
+  JIRA_COURSE_SEO,
+  JIRA_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -85,6 +87,8 @@ if (!titles.includes(DATA_SCIENCE_COURSE_SEO.title)) titles.push(DATA_SCIENCE_CO
 if (!descriptions.includes(DATA_SCIENCE_COURSE_SEO.description)) descriptions.push(DATA_SCIENCE_COURSE_SEO.description);
 if (!titles.includes(MERN_STACK_COURSE_SEO.title)) titles.push(MERN_STACK_COURSE_SEO.title);
 if (!descriptions.includes(MERN_STACK_COURSE_SEO.description)) descriptions.push(MERN_STACK_COURSE_SEO.description);
+if (!titles.includes(JIRA_COURSE_SEO.title)) titles.push(JIRA_COURSE_SEO.title);
+if (!descriptions.includes(JIRA_COURSE_SEO.description)) descriptions.push(JIRA_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -828,6 +832,86 @@ if (
   pass("MERN Stack Development metadata does not call this retail course a mentor-led internship");
 } else fail("MERN Stack Development metadata still uses internship or mentor-led wording");
 
+const jiraCourseTitleHtml = JIRA_COURSE_SEO.title.replace(/&/g, "&amp;");
+const jiraCourseDescHtml = JIRA_COURSE_SEO.description.replace(/&/g, "&amp;");
+const jiraCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  JIRA_COURSE_PATH
+);
+if (jiraCourseShell.includes(jiraCourseTitleHtml)) pass("Initial HTML title for Jira for Project Management course");
+else fail("Initial HTML missing Jira for Project Management course title");
+if (jiraCourseShell.includes(jiraCourseDescHtml)) pass("Initial HTML description for Jira for Project Management course");
+else fail("Initial HTML missing Jira for Project Management course description");
+if ((jiraCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("Jira for Project Management course initial HTML has exactly one canonical");
+else fail("Jira for Project Management course initial HTML canonical count is not 1");
+if (jiraCourseShell.includes(`href="${canonicalUrl(JIRA_COURSE_PATH)}"`)) pass("Jira for Project Management course initial HTML canonical is the course URL");
+else fail("Jira for Project Management course initial HTML canonical is not the course URL");
+if (jiraCourseShell.includes('content="index, follow"')) pass("Jira for Project Management course initial HTML robots is index, follow");
+else fail("Jira for Project Management course initial HTML missing index, follow");
+if (jiraCourseShell.includes('property="og:title"') && jiraCourseShell.includes('name="twitter:card"')) {
+  pass("Jira for Project Management course initial HTML includes OG and Twitter tags");
+} else fail("Jira for Project Management course initial HTML missing OG or Twitter tags");
+if (
+  documentLinkHeader(JIRA_COURSE_PATH) ===
+  `<${canonicalUrl(JIRA_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Jira for Project Management course Link header is self-canonical");
+} else fail("Jira for Project Management course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change SMM");
+} else fail("Jira for Project Management course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change SEO course");
+} else fail("Jira for Project Management course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change SEM course");
+} else fail("Jira for Project Management course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change SMO course");
+} else fail("Jira for Project Management course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change GSC course");
+} else fail("Jira for Project Management course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change AI marketing course");
+} else fail("Jira for Project Management course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change AI productivity course");
+} else fail("Jira for Project Management course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change Prompt Engineering");
+} else fail("Jira for Project Management course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change AI Fundamentals");
+} else fail("Jira for Project Management course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change Python Programming");
+} else fail("Jira for Project Management course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change Data Science");
+} else fail("Jira for Project Management course metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change MERN Stack Development");
+} else fail("Jira for Project Management course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(JIRA_COURSE_SEO.title) === false) {
+  pass("Jira for Project Management course HTML SEO injection does not change /Internships");
+} else fail("Jira for Project Management course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/jira-for-project-management/videos") ===
+  `<${canonicalUrl(JIRA_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Jira for Project Management course /videos Link header still points at the parent course");
+} else fail("Jira for Project Management course /videos Link header is not the parent course");
+if (JIRA_COURSE_SEO.productName === "Jira for Project Management") {
+  pass("Jira for Project Management productName is unchanged for the videos page title");
+} else fail("Jira for Project Management productName changed");
+if (
+  JIRA_COURSE_SEO.description.includes("mentor-led") === false &&
+  JIRA_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("Jira for Project Management metadata does not call this retail course a mentor-led internship");
+} else fail("Jira for Project Management metadata still uses internship or mentor-led wording");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -851,10 +935,11 @@ if (
   blogPostSrc.includes("python-programming") &&
   blogPostSrc.includes("data-science") &&
   blogPostSrc.includes("mern-stack-development") &&
+  blogPostSrc.includes("jira-for-project-management") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, and MERN Stack Development course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, and Jira for Project Management course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -1014,6 +1099,23 @@ if (
 ) {
   pass("MERN Stack Development course FAQs retain original answers, related cards, and contextual course links");
 } else fail("MERN Stack Development course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "Which tools are listed?"') &&
+  smmCopy.includes('q: "What projects are listed?"') &&
+  smmCopy.includes('q: "How long is the course?"') &&
+  smmCopy.includes('q: "Is this a coding course?"') &&
+  smmCopy.includes('q: "Why is it in the Analytics bundle?"') &&
+  smmCopy.includes('a: "Jira and Confluence."') &&
+  smmCopy.includes('a: "Sprint Board Setup and Release Tracker."') &&
+  smmCopy.includes('a: "10 hrs, Beginner."') &&
+  smmCopy.includes('a: "No. The five topics are Jira basics, Scrum & Kanban, backlogs & sprints, reporting, and team workflow."') &&
+  smmCopy.includes('relatedSlugs: ["sql-for-data-analysis", "power-bi-dashboarding", "mern-stack-development"]') &&
+  smmCopy.includes('to: "/Blog/python-for-analytics"') &&
+  smmCopy.includes('to: "/Blog/tableau-visualization"') &&
+  smmCopy.includes('to: "/Bundles/analytics"')
+) {
+  pass("Jira for Project Management course FAQs retain original answers, related cards, and contextual course links");
+} else fail("Jira for Project Management course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -1043,9 +1145,11 @@ if (
   jsonLdSrc.includes('instructor === "Sarah Patel"') &&
   jsonLdSrc.includes("data-science") &&
   jsonLdSrc.includes('instructor === "James Rivera"') &&
-  jsonLdSrc.includes("mern-stack-development")
+  jsonLdSrc.includes("mern-stack-development") &&
+  jsonLdSrc.includes('instructor === "Chris Taylor"') &&
+  jsonLdSrc.includes("jira-for-project-management")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, and MERN Stack Development courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, and Jira for Project Management courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -1396,10 +1500,12 @@ try {
     !homeHtml.includes(dsCourseTitleHtml) &&
     !bundlesHtml.includes(dsCourseTitleHtml) &&
     !homeHtml.includes(mernCourseTitleHtml) &&
-    !bundlesHtml.includes(mernCourseTitleHtml)
+    !bundlesHtml.includes(mernCourseTitleHtml) &&
+    !homeHtml.includes(jiraCourseTitleHtml) &&
+    !bundlesHtml.includes(jiraCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, or MERN course metadata");
-  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, or MERN course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Jira course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Jira course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -1722,6 +1828,65 @@ try {
   if (!mernVidHtml.includes(mernCourseTitleHtml) && !mernVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("MERN Stack Development /videos HTML was not given MERN listing or SMM metadata");
   } else fail("MERN Stack Development /videos HTML contains listing metadata");
+
+  const jiraCourseRes = await fetch(`${injOrigin}${JIRA_COURSE_PATH}`);
+  const jiraCourseHtml = await jiraCourseRes.text();
+  if (jiraCourseRes.status === 200) pass("Express-like /Blog/jira-for-project-management returns HTTP 200");
+  else fail(`Jira for Project Management course HTTP ${jiraCourseRes.status}`);
+  if (jiraCourseHtml.includes(jiraCourseTitleHtml) && jiraCourseHtml.includes(jiraCourseDescHtml)) {
+    pass("Jira for Project Management course initial HTML has the new title and description");
+  } else fail("Jira for Project Management course initial HTML missing title or description");
+  if ((jiraCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("Jira for Project Management course initial HTML has one canonical");
+  else fail("Jira for Project Management course initial HTML canonical count is not 1");
+  if (jiraCourseRes.headers.get("link") === `<${canonicalUrl(JIRA_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Jira for Project Management course response Link header is self-canonical");
+  } else fail("Jira for Project Management course Link header was incorrect");
+  if (jiraCourseHtml.includes('content="index, follow"') && !jiraCourseHtml.includes("noindex")) {
+    pass("Jira for Project Management course initial HTML is index, follow");
+  } else fail("Jira for Project Management course initial HTML not indexable");
+  if (
+    jiraCourseHtml.includes('property="og:title"') &&
+    jiraCourseHtml.includes('property="og:image"') &&
+    jiraCourseHtml.includes('name="twitter:card"') &&
+    jiraCourseHtml.includes("summary_large_image")
+  ) {
+    pass("Jira for Project Management course initial HTML has OG and Twitter metadata");
+  } else fail("Jira for Project Management course initial HTML missing OG or Twitter metadata");
+  if (
+    !jiraCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !jiraCourseHtml.includes(seoCourseTitleHtml) &&
+    !jiraCourseHtml.includes(semCourseTitleHtml) &&
+    !jiraCourseHtml.includes(smoCourseTitleHtml) &&
+    !jiraCourseHtml.includes(gscCourseTitleHtml) &&
+    !jiraCourseHtml.includes(aimCourseTitleHtml) &&
+    !jiraCourseHtml.includes(aipCourseTitleHtml) &&
+    !jiraCourseHtml.includes(peCourseTitleHtml) &&
+    !jiraCourseHtml.includes(aifCourseTitleHtml) &&
+    !jiraCourseHtml.includes(pyCourseTitleHtml) &&
+    !jiraCourseHtml.includes(dsCourseTitleHtml) &&
+    !jiraCourseHtml.includes(mernCourseTitleHtml) &&
+    !jiraCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("Jira for Project Management course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, or Internships metadata");
+  } else fail("Jira for Project Management course first-byte HTML mixed another route's metadata");
+
+  const mernAfter = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
+  const mernAfterHtml = await mernAfter.text();
+  if (mernAfterHtml.includes(mernCourseTitleHtml) && !mernAfterHtml.includes(jiraCourseTitleHtml)) {
+    pass("MERN Stack Development course first-byte SEO remains unchanged");
+  } else fail("MERN Stack Development course first-byte SEO changed by Jira for Project Management work");
+
+  const jiraVid = await fetch(`${injOrigin}/Blog/jira-for-project-management/videos`);
+  const jiraVidHtml = await jiraVid.text();
+  if (jiraVid.status === 200 && jiraVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Jira for Project Management /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("Jira for Project Management /videos headers changed");
+  if (jiraVid.headers.get("link") === `<${canonicalUrl(JIRA_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Jira for Project Management /videos Link header still parent-canonical");
+  } else fail("Jira for Project Management /videos Link header changed");
+  if (!jiraVidHtml.includes(jiraCourseTitleHtml) && !jiraVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("Jira for Project Management /videos HTML was not given Jira listing or SMM metadata");
+  } else fail("Jira for Project Management /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

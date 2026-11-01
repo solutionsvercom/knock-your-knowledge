@@ -184,7 +184,8 @@ export default function BlogPost() {
                   slug === "artificial-intelligence-fundamentals" ||
                   slug === "python-programming" ||
                   slug === "data-science" ||
-                  slug === "mern-stack-development"
+                  slug === "mern-stack-development" ||
+                  slug === "jira-for-project-management"
                     ? "p"
                     : "h2"
                 }
@@ -445,7 +446,8 @@ export default function BlogPost() {
                     slug === "artificial-intelligence-fundamentals" ||
                     slug === "python-programming" ||
                     slug === "data-science" ||
-                    slug === "mern-stack-development" ? (
+                    slug === "mern-stack-development" ||
+                    slug === "jira-for-project-management" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

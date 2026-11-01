@@ -190,6 +190,19 @@ export const MERN_STACK_COURSE_SEO = {
   productName: "MERN Stack Development",
 };
 
+export const JIRA_COURSE_PATH = "/Blog/jira-for-project-management";
+
+/** First-byte + Helmet SEO for the Jira for Project Management course page only. */
+export const JIRA_COURSE_SEO = {
+  title: "Jira for Project Management Course & Jira Training | KYK",
+  description:
+    "Learn Jira for Project Management with KYK's beginner course: Jira Basics, Scrum & Kanban, Backlogs & Sprints, Reporting. 10 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Jira for Project Management Course – Beginner Jira Training",
+  ogImage: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Jira for Project Management",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -359,6 +372,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: MERN_STACK_COURSE_SEO.ogImage,
       twitterCard: MERN_STACK_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === JIRA_COURSE_PATH) {
+    return {
+      title: JIRA_COURSE_SEO.title,
+      description: JIRA_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: JIRA_COURSE_SEO.ogImage,
+      twitterCard: JIRA_COURSE_SEO.twitterCard,
     };
   }
   return null;

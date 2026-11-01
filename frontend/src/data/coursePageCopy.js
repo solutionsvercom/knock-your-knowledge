@@ -615,10 +615,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["power-bi-dashboarding", "sql-for-data-analysis", "python-for-analytics"],
   },
   "jira-for-project-management": {
+    introHeading: "Jira Training covering Scrum, Kanban, Backlogs and Sprints",
     intro:
-      "Jira for Project Management is a beginner KYK course on Agile work in Jira. You cover Jira basics, Scrum and Kanban, backlogs and sprints, reporting, and team workflow, using Jira and Confluence. Catalog projects include sprint board setup and a release tracker.",
+      "This Jira for Project Management Course is beginner Jira Training at Knock Your Knowledge. It is a Jira Course for Agile Project Management: 10 hours, five topics, and 20 videos covering Jira Basics, Scrum & Kanban, Backlogs & Sprints, Reporting, and Team Workflow. You use Jira and Confluence. Catalog projects are Sprint Board Setup and Release Tracker. The published course fee is ₹199/- plus 18% GST at checkout. This is Beginner, not a coding course. It is a Business Analytics-track retail course, not an internship. SQL for Data Analysis teaches SQL queries. Python for Analytics is cleaning, visualisation, and reporting. Power BI Dashboarding and Tableau Visualization are dashboard courses. Python Programming is the Python language. Data Science is wrangling, EDA, and ML. MERN Stack Development is JavaScript full-stack web. Jira is boards, sprints, reporting, and team workflow.",
     whyLearn:
-      "Delivery work lives in boards, sprints, and epics. This course is how those objects work in Jira — and how Confluence sits beside them — so you can run a board instead of only watching one.",
+      "Delivery work lives in boards, sprints, and epics. This Jira for Project Management Course is Jira Training for those Agile workflows — Scrum, Kanban, backlogs, sprints, reporting, and team workflow in Jira, with Confluence beside the board — so you can run a board instead of only watching one. It is a Business Analytics-track retail course, not an internship programme and not a coding course.",
     whoFor: [
       "Beginners joining a team that already uses Jira",
       "Students who need Scrum, Kanban, backlogs, and sprints in one short course",
@@ -626,18 +627,18 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Jira Basics":
-        "Navigate projects, issues, and boards so you can find work and update it without breaking the project.",
+        "Jira Basics is the first topic in this Jira for Project Management Course. Navigate projects, issues, and boards so you can find work and update it without breaking the project.",
       "Scrum & Kanban":
-        "See how Scrum sprints and Kanban flow differ, and when a team uses each board type.",
+        "Scrum & Kanban is the second topic. See how Scrum sprints and Kanban flow differ, and when a team uses each board type.",
       "Backlogs & Sprints":
-        "Order a backlog, plan a sprint, and use epics so work is not a flat list of tickets.",
+        "Backlogs & Sprints is the third topic. Order a backlog, plan a sprint, and use epics so work is not a flat list of tickets.",
       Reporting:
-        "Read Jira reports that show what the board is actually doing, not only what people say in standup.",
+        "Reporting is the fourth topic. Read Jira reports that show what the board is actually doing, not only what people say in standup.",
       "Team Workflow":
-        "Follow a team workflow across Jira and Confluence. Catalog projects are Sprint Board Setup and Release Tracker.",
+        "Team Workflow is the fifth topic. Follow a team workflow across Jira and Confluence. Catalog projects are Sprint Board Setup and Release Tracker.",
     },
     outcomes: [
-      "Move around Jira projects, issues, and boards",
+      "Move around Jira projects, issues, and boards after this Jira for Project Management Course",
       "Tell Scrum and Kanban boards apart in practice",
       "Work a backlog, sprint, and epic structure",
       "Use reporting to see board progress",
@@ -664,6 +665,17 @@ export const COURSE_PAGE_COPY = {
         q: "Why is it in the Analytics bundle?",
         a: "KYK places Jira on the Business Analytics track with SQL, Python for Analytics, Power BI, and Tableau. The analytics bundle includes all five.",
       },
+    ],
+    trackLinks: [
+      { text: "Cleaning, visualisation, and reporting sit on " },
+      { to: "/Blog/python-for-analytics", text: "Python for Analytics" },
+      { text: ". Dashboards in Tableau sit on " },
+      { to: "/Blog/tableau-visualization", text: "Tableau Visualization" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["sql-for-data-analysis", "power-bi-dashboarding", "mern-stack-development"],
   },
