@@ -586,33 +586,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["sql-for-data-analysis", "power-bi-dashboarding", "mern-stack-development"],
   },
   "seo-search-engine-optimization": {
+    introHeading: "SEO Training for Keyword Research, On-Page SEO and Technical SEO",
     intro:
-      "SEO — Search Engine Optimization is an intermediate KYK course on earning visibility in Google. You cover SEO fundamentals, keyword research, on-page SEO, technical SEO, and link building, with tags for Google, keywords, backlinks, and technical SEO.",
+      "This SEO Course is intermediate Search Engine Optimization Training at Knock Your Knowledge — a Search Engine Optimization Course for earning visibility in Google, not buying ads. You learn SEO across 30 hours, five topics, and 20 videos: SEO Fundamentals, Keyword Research, On-Page SEO, Technical SEO, and Link Building. Catalog tags are Google, Keywords, Backlinks, and Technical SEO. The published fee is ₹149/- plus 18% GST at checkout.",
     whyLearn:
-      "Paid ads stop when the budget stops. Organic search keeps working if pages are crawlable, relevant, and supported by links. This course is that organic path — not ads, which live in the SEM course.",
+      "Paid ads stop when the budget stops. Organic search keeps working if pages are crawlable, relevant, and supported by links. This SEO Training is that organic path — Keyword Research, On-Page SEO, Technical SEO, and Link Building in one intermediate course. Google Ads live in the separate SEM course.",
     whoFor: [
-      "Marketers who need keyword research, on-page work, technical SEO, and links in one course",
+      "Marketers who need Keyword Research, On-Page SEO, Technical SEO, and Link Building in one SEO Course",
       "Intermediate learners who already write content and want it to rank",
-      "People who will also use Search Console, which is a separate KYK course",
+      "People who will also use Search Console, which is a separate KYK course — it is not a topic on this page",
     ],
     topicDetails: {
       "SEO Fundamentals":
-        "Learn how Google discovers and ranks pages so later tactics have a frame.",
+        "SEO Fundamentals is the first topic: how Google discovers and ranks pages, so Keyword Research, On-Page SEO, Technical SEO, and Link Building have a frame. The Google tag on this course is that search context — not a separate Google Ads module.",
       "Keyword Research":
-        "Find terms people actually search, and map them to pages instead of guessing.",
+        "Keyword Research is the second topic. Find terms people actually search, using the Keywords tag, and map them to pages instead of guessing.",
       "On-Page SEO":
-        "Align titles, headings, and content with the query without stuffing the same phrase everywhere.",
+        "On-Page SEO is the third topic: align titles, headings, and content with the query without stuffing the same phrase everywhere.",
       "Technical SEO":
-        "Fix crawl and index issues that hide good content — the technical SEO tag on this course.",
+        "Technical SEO is the fourth topic and a listed tag. Fix crawl and index issues that hide good content. This course does not include Search Console; that measurement work is a separate KYK course.",
       "Link Building":
-        "Earn and evaluate backlinks as listed in the course tags, rather than treating every link as equal.",
+        "Link Building is the fifth topic. Earn and evaluate backlinks as listed in the Backlinks tag, rather than treating every link as equal. The catalog does not name a separate Off-Page SEO module.",
     },
     outcomes: [
       "Explain how search visibility works at a practical level",
-      "Run keyword research and assign terms to pages",
-      "Improve on-page SEO for a target query",
-      "Spot technical SEO issues that block indexing",
-      "Plan link building with backlinks in mind",
+      "Run Keyword Research and assign terms to pages",
+      "Improve On-Page SEO for a target query",
+      "Spot Technical SEO issues that block indexing",
+      "Plan Link Building with backlinks in mind",
     ],
     faqs: [
       {
@@ -635,6 +636,21 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEM, SMM, SMO, Search Console, and AI Tools in Digital Marketing.",
       },
+    ],
+    trackLinks: [
+      { text: "Paid search is a separate KYK course (" },
+      { to: "/Blog/sem-search-engine-marketing", text: "SEM — Search Engine Marketing" },
+      { text: "). Measurement in " },
+      { to: "/Blog/google-webmaster-search-console", text: "Google Webmaster & Search Console" },
+      { text: " is also separate. Related social courses are " },
+      { to: "/Blog/smm-social-media-marketing", text: "SMM — Social Media Marketing" },
+      { text: " and " },
+      { to: "/Blog/smo-social-media-optimization", text: "SMO — Social Media Optimization" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["sem-search-engine-marketing", "google-webmaster-search-console", "ai-tools-in-digital-marketing"],
   },

@@ -5,6 +5,7 @@ import {
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
+  SEO_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -124,10 +125,7 @@ export const COURSE_SEO = {
     h1: "Jira for Project Management",
   },
   "seo-search-engine-optimization": {
-    title: "SEO Course Online | KYK",
-    description:
-      "Learn technical SEO, on-page optimisation, keyword research, and link building. KYK Search Engine Optimization course for the Digital Marketing internship track.",
-    h1: "SEO — Search Engine Optimization",
+    ...SEO_COURSE_SEO,
   },
   "sem-search-engine-marketing": {
     title: "Search Engine Marketing Course | KYK",

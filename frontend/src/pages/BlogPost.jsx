@@ -172,7 +172,9 @@ export default function BlogPost() {
                 post={post}
                 onEnroll={enrollThisCourse}
                 feeItem={courseProduct}
-                titleAs={slug === "smm-social-media-marketing" ? "p" : "h2"}
+                titleAs={
+                  slug === "smm-social-media-marketing" || slug === "seo-search-engine-optimization" ? "p" : "h2"
+                }
               />
             ) : null}
           </div>
@@ -419,7 +421,7 @@ export default function BlogPost() {
                   }}
                 >
                   <summary className="text-sm font-semibold text-white cursor-pointer">
-                    {slug === "smm-social-media-marketing" ? (
+                    {slug === "smm-social-media-marketing" || slug === "seo-search-engine-optimization" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}
