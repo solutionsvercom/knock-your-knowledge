@@ -931,10 +931,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["seo-search-engine-optimization", "sem-search-engine-marketing", "ai-tools-in-digital-marketing"],
   },
   "ai-tools-in-digital-marketing": {
+    introHeading: "AI Marketing Tools Training for Content, SEO Tools and Automation",
     intro:
-      "AI Tools in Digital Marketing is an intermediate KYK course on using AI inside marketing work. You cover AI for content, AI SEO tools, AI ad creatives, chatbot marketing, and automation workflows, with Jasper, Surfer SEO, Canva AI, and ChatGPT named in the description and tags.",
+      "This AI Tools in Digital Marketing Course is intermediate AI Marketing Training at Knock Your Knowledge. It is AI for Digital Marketing with the catalog tools Jasper, Surfer SEO, Canva AI, and ChatGPT: 18 hours, five topics, and 20 videos covering AI for Content, AI SEO Tools, AI Ad Creatives, Chatbot Marketing, and Automation Workflows. The published course fee is ₹149/- plus 18% GST at checkout. Those tools map onto marketing work you already do — draft, support on-page SEO, design ad variants, qualify with chatbots, and chain the logins. It is not a beginner overview, and it is not the AI-track 8 Best AI Tools for Productivity course.",
     whyLearn:
-      "Marketing teams already write, optimise, design ads, and follow up. This course maps those jobs to the tools KYK lists — Jasper, Surfer SEO, Canva AI, and ChatGPT — plus chatbots and automation, instead of treating AI as a generic chat window.",
+      "Marketing teams already write, optimise, design ads, and follow up. This AI Marketing Tools Training maps those jobs to Jasper, Surfer SEO, Canva AI, and ChatGPT — plus Chatbot Marketing and Automation Workflows — instead of treating AI as a generic chat window. SEO implementation stays on the separate SEO course.",
     whoFor: [
       "Intermediate marketers who already understand content, SEO, or ads",
       "Learners who want Jasper, Surfer SEO, Canva AI, and ChatGPT in a marketing frame",
@@ -942,22 +943,22 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "AI for Content":
-        "Draft marketing content with assistants such as Jasper and ChatGPT, then edit for brand and facts.",
+        "AI for Content is the first topic: draft marketing content with assistants such as Jasper and ChatGPT, then edit for brand and facts. This is marketing copy work, not a generic productivity-tools survey.",
       "AI SEO Tools":
-        "Use AI SEO tools, including Surfer SEO as named on the course, to support on-page work — not to replace keyword strategy.",
+        "AI SEO Tools is the second topic. Use AI SEO tools, including Surfer SEO as named on the course, to support on-page work — not to replace keyword strategy on the separate SEO course.",
       "AI Ad Creatives":
-        "Explore AI-assisted ad creatives, including Canva AI as listed, for faster visual variants you still review.",
+        "AI Ad Creatives is the third topic. Explore AI-assisted ad creatives, including Canva AI as listed, for faster visual variants you still review.",
       "Chatbot Marketing":
-        "See how chatbot marketing can answer or qualify, as a dedicated topic, not a side note.",
+        "Chatbot Marketing is the fourth topic. See how chatbot marketing can answer or qualify, as a dedicated topic, not a side note.",
       "Automation Workflows":
-        "Chain the tools into automation workflows so content, SEO, and ads are not five disconnected logins.",
+        "Automation Workflows is the fifth topic. Chain Jasper, Surfer SEO, Canva AI, and ChatGPT into automation workflows so content, SEO, and ads are not five disconnected logins.",
     },
     outcomes: [
       "Draft marketing content with Jasper and ChatGPT, then edit it",
-      "Use AI SEO tools including Surfer SEO as a support layer",
-      "Produce ad creative variants with help from Canva AI",
-      "Outline a chatbot marketing use at a course level",
-      "Sketch an automation workflow across those tools",
+      "Use AI SEO Tools including Surfer SEO as a support layer",
+      "Produce AI Ad Creatives variants with help from Canva AI",
+      "Outline a Chatbot Marketing use at a course level",
+      "Sketch an Automation Workflow across those tools",
     ],
     faqs: [
       {
@@ -980,6 +981,21 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEO, SEM, SMM, SMO, and Search Console.",
       },
+    ],
+    trackLinks: [
+      { text: "This AI for Digital Marketing course does not replace " },
+      { to: "/Blog/seo-search-engine-optimization", text: "SEO — Search Engine Optimization" },
+      { text: ". Related paid and social work includes " },
+      { to: "/Blog/sem-search-engine-marketing", text: "SEM — Search Engine Marketing" },
+      { text: " and " },
+      { to: "/Blog/smm-social-media-marketing", text: "SMM — Social Media Marketing" },
+      { text: ". Productivity AI tools sit on a separate course (" },
+      { to: "/Blog/8-best-ai-tools-for-productivity", text: "8 Best AI Tools for Productivity" },
+      { text: "). Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["seo-search-engine-optimization", "sem-search-engine-marketing", "prompt-engineering"],
   },

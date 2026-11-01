@@ -9,6 +9,7 @@ import {
   SEM_COURSE_SEO,
   SMO_COURSE_SEO,
   GSC_COURSE_SEO,
+  AI_MARKETING_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -143,10 +144,7 @@ export const COURSE_SEO = {
     ...GSC_COURSE_SEO,
   },
   "ai-tools-in-digital-marketing": {
-    title: "AI Tools for Digital Marketing | KYK",
-    description:
-      "Use AI for content, SEO, ad creatives, chatbots, and marketing automation. KYK course covering Jasper, Surfer SEO, Canva AI, and ChatGPT workflows.",
-    h1: "AI Tools in Digital Marketing",
+    ...AI_MARKETING_COURSE_SEO,
   },
 };
 

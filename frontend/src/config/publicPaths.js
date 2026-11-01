@@ -99,6 +99,19 @@ export const GSC_COURSE_SEO = {
   productName: "Google Webmaster & Search Console",
 };
 
+export const AI_MARKETING_COURSE_PATH = "/Blog/ai-tools-in-digital-marketing";
+
+/** First-byte + Helmet SEO for the AI Tools in Digital Marketing course page only. */
+export const AI_MARKETING_COURSE_SEO = {
+  title: "AI for Digital Marketing Course & AI Tools Training | KYK",
+  description:
+    "Learn AI for Digital Marketing with KYK's intermediate course: Jasper, Surfer SEO, Canva AI and ChatGPT. 18 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+  h1: "AI Tools in Digital Marketing Course – Intermediate AI Marketing Training",
+  ogImage: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "AI Tools in Digital Marketing",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -208,6 +221,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: GSC_COURSE_SEO.title,
       description: GSC_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === AI_MARKETING_COURSE_PATH) {
+    return {
+      title: AI_MARKETING_COURSE_SEO.title,
+      description: AI_MARKETING_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };
