@@ -32,6 +32,8 @@ import {
   AI_PRODUCTIVITY_COURSE_PATH,
   PROMPT_ENGINEERING_COURSE_SEO,
   PROMPT_ENGINEERING_COURSE_PATH,
+  AI_FUNDAMENTALS_COURSE_SEO,
+  AI_FUNDAMENTALS_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -69,6 +71,8 @@ if (!titles.includes(AI_PRODUCTIVITY_COURSE_SEO.title)) titles.push(AI_PRODUCTIV
 if (!descriptions.includes(AI_PRODUCTIVITY_COURSE_SEO.description)) descriptions.push(AI_PRODUCTIVITY_COURSE_SEO.description);
 if (!titles.includes(PROMPT_ENGINEERING_COURSE_SEO.title)) titles.push(PROMPT_ENGINEERING_COURSE_SEO.title);
 if (!descriptions.includes(PROMPT_ENGINEERING_COURSE_SEO.description)) descriptions.push(PROMPT_ENGINEERING_COURSE_SEO.description);
+if (!titles.includes(AI_FUNDAMENTALS_COURSE_SEO.title)) titles.push(AI_FUNDAMENTALS_COURSE_SEO.title);
+if (!descriptions.includes(AI_FUNDAMENTALS_COURSE_SEO.description)) descriptions.push(AI_FUNDAMENTALS_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -543,6 +547,64 @@ if (PROMPT_ENGINEERING_COURSE_SEO.productName === "Prompt Engineering") {
   pass("Prompt Engineering productName is unchanged for the videos page title");
 } else fail("Prompt Engineering productName changed");
 
+const aifCourseTitleHtml = AI_FUNDAMENTALS_COURSE_SEO.title.replace(/&/g, "&amp;");
+const aifCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  AI_FUNDAMENTALS_COURSE_PATH
+);
+if (aifCourseShell.includes(aifCourseTitleHtml)) pass("Initial HTML title for AI Fundamentals course");
+else fail("Initial HTML missing AI Fundamentals course title");
+if (aifCourseShell.includes(AI_FUNDAMENTALS_COURSE_SEO.description)) pass("Initial HTML description for AI Fundamentals course");
+else fail("Initial HTML missing AI Fundamentals course description");
+if ((aifCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("AI Fundamentals course initial HTML has exactly one canonical");
+else fail("AI Fundamentals course initial HTML canonical count is not 1");
+if (aifCourseShell.includes(`href="${canonicalUrl(AI_FUNDAMENTALS_COURSE_PATH)}"`)) pass("AI Fundamentals course initial HTML canonical is the course URL");
+else fail("AI Fundamentals course initial HTML canonical is not the course URL");
+if (aifCourseShell.includes('content="index, follow"')) pass("AI Fundamentals course initial HTML robots is index, follow");
+else fail("AI Fundamentals course initial HTML missing index, follow");
+if (
+  documentLinkHeader(AI_FUNDAMENTALS_COURSE_PATH) ===
+  `<${canonicalUrl(AI_FUNDAMENTALS_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("AI Fundamentals course Link header is self-canonical");
+} else fail("AI Fundamentals course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change SMM");
+} else fail("AI Fundamentals course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change SEO course");
+} else fail("AI Fundamentals course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change SEM course");
+} else fail("AI Fundamentals course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change SMO course");
+} else fail("AI Fundamentals course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change GSC course");
+} else fail("AI Fundamentals course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change AI marketing course");
+} else fail("AI Fundamentals course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change AI productivity course");
+} else fail("AI Fundamentals course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change Prompt Engineering");
+} else fail("AI Fundamentals course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(AI_FUNDAMENTALS_COURSE_SEO.title) === false) {
+  pass("AI Fundamentals course HTML SEO injection does not change /Internships");
+} else fail("AI Fundamentals course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/artificial-intelligence-fundamentals/videos") ===
+  `<${canonicalUrl(AI_FUNDAMENTALS_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("AI Fundamentals course /videos Link header still points at the parent course");
+} else fail("AI Fundamentals course /videos Link header is not the parent course");
+if (AI_FUNDAMENTALS_COURSE_SEO.productName === "Artificial Intelligence Fundamentals") {
+  pass("AI Fundamentals productName is unchanged for the videos page title");
+} else fail("AI Fundamentals productName changed");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -562,10 +624,11 @@ if (
   blogPostSrc.includes("ai-tools-in-digital-marketing") &&
   blogPostSrc.includes("8-best-ai-tools-for-productivity") &&
   blogPostSrc.includes("prompt-engineering") &&
+  blogPostSrc.includes("artificial-intelligence-fundamentals") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, and Prompt Engineering course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, and AI Fundamentals course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -659,6 +722,23 @@ if (
 ) {
   pass("Prompt Engineering course FAQs retain original answers and add contextual course links");
 } else fail("Prompt Engineering course FAQ set or track links missing");
+if (
+  smmCopy.includes('q: "Is this course for beginners?"') &&
+  smmCopy.includes('q: "Does it teach ChatGPT prompting?"') &&
+  smmCopy.includes('q: "What tags are listed?"') &&
+  smmCopy.includes('q: "Can I take it with the other AI courses?"') &&
+  smmCopy.includes('q: "Are there videos?"') &&
+  smmCopy.includes('a: "Yes. KYK lists Artificial Intelligence Fundamentals as Beginner level, 35 hrs."') &&
+  smmCopy.includes('a: "Prompt design for ChatGPT, Claude, and Gemini is a separate course: Prompt Engineering. This course focuses on AI, ML, neural networks, NLP, and use cases."') &&
+  smmCopy.includes('a: "The course enrol card lists five topics and twenty videos."') &&
+  smmCopy.includes('relatedSlugs: ["prompt-engineering", "8-best-ai-tools-for-productivity", "python-programming"]') &&
+  smmCopy.includes('to: "/Blog/prompt-engineering"') &&
+  smmCopy.includes('to: "/Blog/8-best-ai-tools-for-productivity"') &&
+  smmCopy.includes('to: "/Blog/ai-tools-in-digital-marketing"') &&
+  smmCopy.includes('to: "/Bundles/ai"')
+) {
+  pass("AI Fundamentals course FAQs retain original answers, Python related card, and contextual course links");
+} else fail("AI Fundamentals course FAQ set, Python related card, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -680,9 +760,11 @@ if (
   jsonLdSrc.includes("google-webmaster-search-console") &&
   jsonLdSrc.includes('instructor === "Lisa Monroe"') &&
   jsonLdSrc.includes('instructor === "Tom Watts"') &&
-  jsonLdSrc.includes("prompt-engineering")
+  jsonLdSrc.includes("prompt-engineering") &&
+  jsonLdSrc.includes('instructor === "Dr. Meera Singh"') &&
+  jsonLdSrc.includes("artificial-intelligence-fundamentals")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, and Prompt Engineering courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, and AI Fundamentals courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -797,7 +879,8 @@ try {
     !internHtml.includes(gscCourseTitleHtml) &&
     !internHtml.includes(aimCourseTitleHtml) &&
     !internHtml.includes(aipCourseTitleHtml) &&
-    !internHtml.includes(peCourseTitleHtml)
+    !internHtml.includes(peCourseTitleHtml) &&
+    !internHtml.includes(aifCourseTitleHtml)
   ) {
     pass("/Internships first-byte SEO unchanged");
   } else fail("/Internships first-byte SEO changed");
@@ -831,7 +914,8 @@ try {
     !smmAfterHtml.includes(gscCourseTitleHtml) &&
     !smmAfterHtml.includes(aimCourseTitleHtml) &&
     !smmAfterHtml.includes(aipCourseTitleHtml) &&
-    !smmAfterHtml.includes(peCourseTitleHtml)
+    !smmAfterHtml.includes(peCourseTitleHtml) &&
+    !smmAfterHtml.includes(aifCourseTitleHtml)
   ) {
     pass("SMM first-byte SEO remains unchanged");
   } else fail("SMM first-byte SEO changed by later course work");
@@ -1021,10 +1105,12 @@ try {
     !homeHtml.includes(aipCourseTitleHtml) &&
     !bundlesHtml.includes(aipCourseTitleHtml) &&
     !homeHtml.includes(peCourseTitleHtml) &&
-    !bundlesHtml.includes(peCourseTitleHtml)
+    !bundlesHtml.includes(peCourseTitleHtml) &&
+    !homeHtml.includes(aifCourseTitleHtml) &&
+    !bundlesHtml.includes(aifCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, or Prompt Engineering course metadata");
-  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, or Prompt Engineering course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, or AI Fundamentals course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, or AI Fundamentals course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -1164,9 +1250,10 @@ try {
     !peCourseHtml.includes(gscCourseTitleHtml) &&
     !peCourseHtml.includes(aimCourseTitleHtml) &&
     !peCourseHtml.includes(aipCourseTitleHtml) &&
+    !peCourseHtml.includes(aifCourseTitleHtml) &&
     !peCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
   ) {
-    pass("Prompt Engineering course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, or Internships metadata");
+    pass("Prompt Engineering course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, AI Fundamentals, or Internships metadata");
   } else fail("Prompt Engineering course first-byte HTML mixed another route's metadata");
 
   const aipAfter = await fetch(`${injOrigin}${AI_PRODUCTIVITY_COURSE_PATH}`);
@@ -1186,6 +1273,53 @@ try {
   if (!peVidHtml.includes(peCourseTitleHtml) && !peVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("Prompt Engineering /videos HTML was not given Prompt Engineering listing or SMM metadata");
   } else fail("Prompt Engineering /videos HTML contains listing metadata");
+
+  const aifCourseRes = await fetch(`${injOrigin}${AI_FUNDAMENTALS_COURSE_PATH}`);
+  const aifCourseHtml = await aifCourseRes.text();
+  if (aifCourseRes.status === 200) pass("Express-like /Blog/artificial-intelligence-fundamentals returns HTTP 200");
+  else fail(`AI Fundamentals course HTTP ${aifCourseRes.status}`);
+  if (aifCourseHtml.includes(aifCourseTitleHtml) && aifCourseHtml.includes(AI_FUNDAMENTALS_COURSE_SEO.description)) {
+    pass("AI Fundamentals course initial HTML has the new title and description");
+  } else fail("AI Fundamentals course initial HTML missing title or description");
+  if ((aifCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("AI Fundamentals course initial HTML has one canonical");
+  else fail("AI Fundamentals course initial HTML canonical count is not 1");
+  if (aifCourseRes.headers.get("link") === `<${canonicalUrl(AI_FUNDAMENTALS_COURSE_PATH)}>; rel="canonical"`) {
+    pass("AI Fundamentals course response Link header is self-canonical");
+  } else fail("AI Fundamentals course Link header was incorrect");
+  if (aifCourseHtml.includes('content="index, follow"') && !aifCourseHtml.includes("noindex")) {
+    pass("AI Fundamentals course initial HTML is index, follow");
+  } else fail("AI Fundamentals course initial HTML not indexable");
+  if (
+    !aifCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !aifCourseHtml.includes(seoCourseTitleHtml) &&
+    !aifCourseHtml.includes(semCourseTitleHtml) &&
+    !aifCourseHtml.includes(smoCourseTitleHtml) &&
+    !aifCourseHtml.includes(gscCourseTitleHtml) &&
+    !aifCourseHtml.includes(aimCourseTitleHtml) &&
+    !aifCourseHtml.includes(aipCourseTitleHtml) &&
+    !aifCourseHtml.includes(peCourseTitleHtml) &&
+    !aifCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("AI Fundamentals course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, or Internships metadata");
+  } else fail("AI Fundamentals course first-byte HTML mixed another route's metadata");
+
+  const peAfter = await fetch(`${injOrigin}${PROMPT_ENGINEERING_COURSE_PATH}`);
+  const peAfterHtml = await peAfter.text();
+  if (peAfterHtml.includes(peCourseTitleHtml) && !peAfterHtml.includes(aifCourseTitleHtml)) {
+    pass("Prompt Engineering course first-byte SEO remains unchanged");
+  } else fail("Prompt Engineering course first-byte SEO changed by AI Fundamentals work");
+
+  const aifVid = await fetch(`${injOrigin}/Blog/artificial-intelligence-fundamentals/videos`);
+  const aifVidHtml = await aifVid.text();
+  if (aifVid.status === 200 && aifVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("AI Fundamentals /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("AI Fundamentals /videos headers changed");
+  if (aifVid.headers.get("link") === `<${canonicalUrl(AI_FUNDAMENTALS_COURSE_PATH)}>; rel="canonical"`) {
+    pass("AI Fundamentals /videos Link header still parent-canonical");
+  } else fail("AI Fundamentals /videos Link header changed");
+  if (!aifVidHtml.includes(aifCourseTitleHtml) && !aifVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("AI Fundamentals /videos HTML was not given AI Fundamentals listing or SMM metadata");
+  } else fail("AI Fundamentals /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

@@ -138,6 +138,19 @@ export const PROMPT_ENGINEERING_COURSE_SEO = {
   productName: "Prompt Engineering",
 };
 
+export const AI_FUNDAMENTALS_COURSE_PATH = "/Blog/artificial-intelligence-fundamentals";
+
+/** First-byte + Helmet SEO for the Artificial Intelligence Fundamentals course page only. */
+export const AI_FUNDAMENTALS_COURSE_SEO = {
+  title: "AI Fundamentals Course & Beginner AI Training | KYK",
+  description:
+    "Learn AI Fundamentals with KYK's beginner course: machine learning, neural networks and NLP. 35 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Artificial Intelligence Fundamentals Course – Beginner AI Training",
+  ogImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Artificial Intelligence Fundamentals",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -271,6 +284,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: PROMPT_ENGINEERING_COURSE_SEO.title,
       description: PROMPT_ENGINEERING_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === AI_FUNDAMENTALS_COURSE_PATH) {
+    return {
+      title: AI_FUNDAMENTALS_COURSE_SEO.title,
+      description: AI_FUNDAMENTALS_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

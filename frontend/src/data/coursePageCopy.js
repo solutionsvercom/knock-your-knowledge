@@ -162,10 +162,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["python-programming", "data-science", "jira-for-project-management"],
   },
   "artificial-intelligence-fundamentals": {
+    introHeading: "Introduction to Artificial Intelligence for Machine Learning, Neural Networks and NLP",
     intro:
-      "Artificial Intelligence Fundamentals is a beginner KYK course on how AI systems work. You cover an introduction to AI, machine learning basics, neural networks, NLP essentials, and real-world AI use cases — without jumping straight into a single vendor tool.",
+      "This Artificial Intelligence Fundamentals Course is beginner Artificial Intelligence Training at Knock Your Knowledge. It is an AI Fundamentals Course and an Introduction to Artificial Intelligence: 35 hours, five topics, and 20 videos covering Introduction to AI, Machine Learning Basics, Neural Networks, NLP Essentials, and Real-world AI Use Cases. The published course fee is ₹199/- plus 18% GST at checkout. You study foundational AI concepts — Machine Learning Fundamentals (how models learn from examples), Neural Networks (stacked layers that transform inputs), and Natural Language Processing (how systems handle text). This course does not teach vendor chat or image products. Prompt Engineering covers ChatGPT, Claude, and Gemini; 8 Best AI Tools for Productivity covers Notion AI, Midjourney, Runway, and Perplexity; AI Tools in Digital Marketing covers Jasper, Surfer SEO, Canva AI, and ChatGPT for marketing work.",
     whyLearn:
-      "Prompt tools are easier to use when you know what models can and cannot do. This course gives that foundation: ML, neural networks, and NLP, then maps them to real-world AI applications.",
+      "Prompt and product courses are easier when you know what models can and cannot do. This Artificial Intelligence Training gives that foundation: Machine Learning Fundamentals, Neural Networks, and Natural Language Processing, then maps them to Real-world AI Use Cases. It is concept-first, not a tool tour.",
     whoFor: [
       "Beginners who want AI concepts before Prompt Engineering or AI tools courses",
       "Students who need a plain-language path through ML, neural networks, and NLP",
@@ -173,22 +174,22 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Introduction to AI":
-        "Learn what artificial intelligence covers in practice — problems machines can help with, and where human judgement still leads.",
+        "Introduction to AI is the first topic in this AI Fundamentals Course. Learn what artificial intelligence covers in practice — problems machines can help with, and where human judgement still leads. This is an Introduction to Artificial Intelligence, not a vendor-tool workshop.",
       "Machine Learning Basics":
-        "See how models learn from examples, and how training data differs from hard-coded rules.",
+        "Machine Learning Basics is the second topic: Machine Learning Fundamentals for beginners. See how models learn from examples, and how training data differs from hard-coded rules.",
       "Neural Networks":
-        "Build a working mental model of neural networks as stacked layers that transform inputs — enough to follow modern AI discussions.",
+        "Neural Networks is the third topic. Build a working mental model of Neural Networks as stacked layers that transform inputs — enough to follow modern AI discussions without training a model yourself.",
       "NLP Essentials":
-        "Cover natural language processing essentials so text, prompts, and language models are not a black box.",
+        "NLP Essentials is the fourth topic. Cover Natural Language Processing so text, prompts, and language models are not a black box. The catalog names NLP as a concept, not a specific chat product.",
       "Real-world AI Use Cases":
-        "Connect the ideas to applications people already use, so the theory has somewhere to land.",
+        "Real-world AI Use Cases is the fifth topic. Connect Introduction to AI, Machine Learning Basics, Neural Networks, and NLP Essentials to applications people already use, so the theory has somewhere to land.",
     },
     outcomes: [
-      "Explain core AI ideas in clear language",
-      "Describe how machine learning differs from rule-based software",
-      "Recognise what neural networks are doing at a high level",
-      "Relate NLP essentials to text and language products",
-      "Point to real-world AI use cases using the course framing",
+      "Explain core AI ideas in clear language after this Artificial Intelligence Fundamentals Course",
+      "Describe how Machine Learning Fundamentals differs from rule-based software",
+      "Recognise what Neural Networks are doing at a high level",
+      "Relate NLP Essentials and Natural Language Processing to text and language products",
+      "Point to Real-world AI Use Cases using the course framing",
     ],
     faqs: [
       {
@@ -211,6 +212,19 @@ export const COURSE_PAGE_COPY = {
         q: "Are there videos?",
         a: "The course enrol card lists five topics and twenty videos.",
       },
+    ],
+    trackLinks: [
+      { text: "Prompt design for ChatGPT, Claude, and Gemini sits on " },
+      { to: "/Blog/prompt-engineering", text: "Prompt Engineering" },
+      { text: ". Day-to-day products such as Notion AI and Midjourney are on " },
+      { to: "/Blog/8-best-ai-tools-for-productivity", text: "8 Best AI Tools for Productivity" },
+      { text: ". Marketing-specific AI is a separate course (" },
+      { to: "/Blog/ai-tools-in-digital-marketing", text: "AI Tools in Digital Marketing" },
+      { text: "). Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/ai", text: "AI & Prompt Engineering Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["prompt-engineering", "8-best-ai-tools-for-productivity", "python-programming"],
   },

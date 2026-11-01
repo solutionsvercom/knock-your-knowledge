@@ -257,6 +257,15 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "artificial-intelligence-fundamentals") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Dr. Meera Singh") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
       if (
         slug === "smm-social-media-marketing" ||
@@ -266,7 +275,8 @@ export function jsonLdForPath(pathname) {
         slug === "google-webmaster-search-console" ||
         slug === "ai-tools-in-digital-marketing" ||
         slug === "8-best-ai-tools-for-productivity" ||
-        slug === "prompt-engineering"
+        slug === "prompt-engineering" ||
+        slug === "artificial-intelligence-fundamentals"
       ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));

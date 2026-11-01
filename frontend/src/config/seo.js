@@ -12,6 +12,7 @@ import {
   AI_MARKETING_COURSE_SEO,
   AI_PRODUCTIVITY_COURSE_SEO,
   PROMPT_ENGINEERING_COURSE_SEO,
+  AI_FUNDAMENTALS_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -83,10 +84,7 @@ export const COURSE_SEO = {
     h1: "MERN Stack Development",
   },
   "artificial-intelligence-fundamentals": {
-    title: "Artificial Intelligence Course for Beginners | KYK",
-    description:
-      "Understand core AI concepts — machine learning, neural networks, NLP, and real-world use cases. Beginner AI internship course at Knock Your Knowledge.",
-    h1: "Artificial Intelligence Fundamentals",
+    ...AI_FUNDAMENTALS_COURSE_SEO,
   },
   "prompt-engineering": {
     ...PROMPT_ENGINEERING_COURSE_SEO,
