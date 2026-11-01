@@ -176,7 +176,8 @@ export default function BlogPost() {
                   slug === "smm-social-media-marketing" ||
                   slug === "seo-search-engine-optimization" ||
                   slug === "sem-search-engine-marketing" ||
-                  slug === "smo-social-media-optimization"
+                  slug === "smo-social-media-optimization" ||
+                  slug === "google-webmaster-search-console"
                     ? "p"
                     : "h2"
                 }
@@ -429,7 +430,8 @@ export default function BlogPost() {
                     {slug === "smm-social-media-marketing" ||
                     slug === "seo-search-engine-optimization" ||
                     slug === "sem-search-engine-marketing" ||
-                    slug === "smo-social-media-optimization" ? (
+                    slug === "smo-social-media-optimization" ||
+                    slug === "google-webmaster-search-console" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

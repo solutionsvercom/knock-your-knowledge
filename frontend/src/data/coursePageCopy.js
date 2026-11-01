@@ -866,33 +866,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["smm-social-media-marketing", "seo-search-engine-optimization", "ai-tools-in-digital-marketing"],
   },
   "google-webmaster-search-console": {
+    introHeading: "Google Search Console Training for Indexing, Performance and Core Web Vitals",
     intro:
-      "Google Webmaster & Search Console is a beginner KYK course on measuring and debugging search. You cover GSC overview, performance reports, index coverage, Core Web Vitals, and sitemaps & robots, with tags for Search Console, Core Web Vitals, and indexing.",
+      "This Google Search Console Course is beginner GSC Training at Knock Your Knowledge. It teaches measuring and understanding search presence in Search Console: 10 hours, five topics, and 20 videos covering GSC Overview, Performance Reports, Index Coverage, Core Web Vitals, and Sitemaps & Robots. Catalog tags are Search Console, Core Web Vitals, and Indexing. The published course fee is ₹149/- plus 18% GST at checkout. SEO fundamentals, keyword research, on-page SEO, technical SEO, and link building sit in a separate SEO course — this page is Search Console measurement, not a complete SEO implementation course.",
     whyLearn:
-      "SEO changes are guesses until Search Console shows queries, pages, and coverage. This course is how to read GSC — performance, index coverage, Core Web Vitals, sitemaps, and robots — so you can see what Google actually did.",
+      "SEO changes are guesses until Search Console shows queries, pages, and coverage. This Google Search Console Training is how to read GSC — Performance Reports, Index Coverage, Core Web Vitals, sitemaps, and robots — so you can see what Google actually did. It does not replace the SEO implementation course.",
     whoFor: [
-      "Beginners who have a site and need Search Console, not another content course",
-      "SEO learners who already took the SEO course and need measurement",
-      "Site owners who must debug indexing and Core Web Vitals",
+      "Beginners who have a site and need Search Console measurement, not another content or SEO implementation course",
+      "SEO learners who already took the SEO course and need GSC Overview, Index Coverage, and Performance Reports",
+      "Site owners who must debug Indexing and Core Web Vitals",
     ],
     topicDetails: {
       "GSC Overview":
-        "Set up and navigate Google Search Console so property, menus, and reports make sense.",
+        "GSC Overview is the first topic: set up and navigate Google Search Console so property, menus, and reports make sense. This is beginner measurement work, not SEO implementation.",
       "Performance Reports":
-        "Read queries, pages, clicks, and impressions instead of only watching rank-tracker screenshots.",
+        "Performance Reports is the second topic. Read Search Console queries, pages, clicks, and impressions instead of only watching rank-tracker screenshots. These reports are search performance in GSC, not generic website uptime monitoring.",
       "Index Coverage":
-        "See which URLs are indexed or excluded, matching the indexing tag on this course.",
+        "Index Coverage is the third topic, matching the Indexing tag. See which URLs are indexed or excluded so you can debug search presence in Search Console.",
       "Core Web Vitals":
-        "Use Core Web Vitals reports to find pages that struggle on real-user experience metrics.",
+        "Core Web Vitals is the fourth topic and a listed tag. Use Core Web Vitals reports to find pages that struggle on real-user experience metrics.",
       "Sitemaps & Robots":
-        "Submit sitemaps and understand robots guidance so crawlers can find what you intend to publish.",
+        "Sitemaps & Robots is the fifth topic. Submit sitemaps and understand robots guidance so crawlers can find what you intend to publish.",
     },
     outcomes: [
       "Navigate Google Search Console without getting lost",
-      "Use performance reports for queries and pages",
-      "Check index coverage when a URL is missing",
+      "Use Performance Reports for queries and pages",
+      "Check Index Coverage when a URL is missing",
       "Read Core Web Vitals at a beginner level",
-      "Work with sitemaps and robots as listed in the fifth topic",
+      "Work with Sitemaps & Robots as listed in the fifth topic",
     ],
     faqs: [
       {
@@ -915,6 +916,17 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEO, SEM, SMM, SMO, and AI Tools in Digital Marketing.",
       },
+    ],
+    trackLinks: [
+      { text: "SEO implementation is a separate KYK course (" },
+      { to: "/Blog/seo-search-engine-optimization", text: "SEO — Search Engine Optimization" },
+      { text: ") covering fundamentals, keyword research, on-page SEO, technical SEO, and link building. This Google Search Console Course is measurement. Related paid search is " },
+      { to: "/Blog/sem-search-engine-marketing", text: "SEM — Search Engine Marketing" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["seo-search-engine-optimization", "sem-search-engine-marketing", "ai-tools-in-digital-marketing"],
   },

@@ -86,6 +86,19 @@ export const SMO_COURSE_SEO = {
   productName: "SMO — Social Media Optimization",
 };
 
+export const GSC_COURSE_PATH = "/Blog/google-webmaster-search-console";
+
+/** First-byte + Helmet SEO for the Google Webmaster & Search Console course page only. */
+export const GSC_COURSE_SEO = {
+  title: "Google Search Console Course & Webmaster Tools Training | KYK",
+  description:
+    "Learn Google Search Console with KYK's beginner course: indexing, performance, Core Web Vitals and sitemaps. 10 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+  h1: "Google Search Console Course – Beginner GSC Training",
+  ogImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Google Webmaster & Search Console",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -187,6 +200,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: SMO_COURSE_SEO.title,
       description: SMO_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === GSC_COURSE_PATH) {
+    return {
+      title: GSC_COURSE_SEO.title,
+      description: GSC_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

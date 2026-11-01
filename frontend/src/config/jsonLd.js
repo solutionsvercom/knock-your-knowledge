@@ -221,12 +221,22 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "google-webmaster-search-console") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Emily Ross") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
       if (
         slug === "smm-social-media-marketing" ||
         slug === "seo-search-engine-optimization" ||
         slug === "sem-search-engine-marketing" ||
-        slug === "smo-social-media-optimization"
+        slug === "smo-social-media-optimization" ||
+        slug === "google-webmaster-search-console"
       ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));

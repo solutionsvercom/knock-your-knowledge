@@ -8,6 +8,7 @@ import {
   SEO_COURSE_SEO,
   SEM_COURSE_SEO,
   SMO_COURSE_SEO,
+  GSC_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -139,10 +140,7 @@ export const COURSE_SEO = {
     ...SMO_COURSE_SEO,
   },
   "google-webmaster-search-console": {
-    title: "Google Search Console Course | KYK",
-    description:
-      "Use Google Search Console to monitor indexing, performance, Core Web Vitals, sitemaps, and robots. KYK webmaster course for Digital Marketing learners.",
-    h1: "Google Webmaster & Search Console",
+    ...GSC_COURSE_SEO,
   },
   "ai-tools-in-digital-marketing": {
     title: "AI Tools for Digital Marketing | KYK",

@@ -24,6 +24,8 @@ import {
   SEM_COURSE_PATH,
   SMO_COURSE_SEO,
   SMO_COURSE_PATH,
+  GSC_COURSE_SEO,
+  GSC_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -53,6 +55,8 @@ if (!titles.includes(SEM_COURSE_SEO.title)) titles.push(SEM_COURSE_SEO.title);
 if (!descriptions.includes(SEM_COURSE_SEO.description)) descriptions.push(SEM_COURSE_SEO.description);
 if (!titles.includes(SMO_COURSE_SEO.title)) titles.push(SMO_COURSE_SEO.title);
 if (!descriptions.includes(SMO_COURSE_SEO.description)) descriptions.push(SMO_COURSE_SEO.description);
+if (!titles.includes(GSC_COURSE_SEO.title)) titles.push(GSC_COURSE_SEO.title);
+if (!descriptions.includes(GSC_COURSE_SEO.description)) descriptions.push(GSC_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -325,6 +329,52 @@ if (SMO_COURSE_SEO.productName === "SMO — Social Media Optimization") {
   pass("SMO productName is unchanged for the videos page title");
 } else fail("SMO productName changed");
 
+const gscCourseTitleHtml = GSC_COURSE_SEO.title.replace(/&/g, "&amp;");
+const gscCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  GSC_COURSE_PATH
+);
+if (gscCourseShell.includes(gscCourseTitleHtml)) pass("Initial HTML title for GSC course");
+else fail("Initial HTML missing GSC course title");
+if (gscCourseShell.includes(GSC_COURSE_SEO.description)) pass("Initial HTML description for GSC course");
+else fail("Initial HTML missing GSC course description");
+if ((gscCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("GSC course initial HTML has exactly one canonical");
+else fail("GSC course initial HTML canonical count is not 1");
+if (gscCourseShell.includes(`href="${canonicalUrl(GSC_COURSE_PATH)}"`)) pass("GSC course initial HTML canonical is the course URL");
+else fail("GSC course initial HTML canonical is not the course URL");
+if (gscCourseShell.includes('content="index, follow"')) pass("GSC course initial HTML robots is index, follow");
+else fail("GSC course initial HTML missing index, follow");
+if (
+  documentLinkHeader(GSC_COURSE_PATH) ===
+  `<${canonicalUrl(GSC_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("GSC course Link header is self-canonical");
+} else fail("GSC course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(GSC_COURSE_SEO.title) === false) {
+  pass("GSC course HTML SEO injection does not change SMM");
+} else fail("GSC course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(GSC_COURSE_SEO.title) === false) {
+  pass("GSC course HTML SEO injection does not change SEO course");
+} else fail("GSC course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(GSC_COURSE_SEO.title) === false) {
+  pass("GSC course HTML SEO injection does not change SEM course");
+} else fail("GSC course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(GSC_COURSE_SEO.title) === false) {
+  pass("GSC course HTML SEO injection does not change SMO course");
+} else fail("GSC course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(GSC_COURSE_SEO.title) === false) {
+  pass("GSC course HTML SEO injection does not change /Internships");
+} else fail("GSC course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/google-webmaster-search-console/videos") ===
+  `<${canonicalUrl(GSC_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("GSC course /videos Link header still points at the parent course");
+} else fail("GSC course /videos Link header is not the parent course");
+if (GSC_COURSE_SEO.productName === "Google Webmaster & Search Console") {
+  pass("GSC productName is unchanged for the videos page title");
+} else fail("GSC productName changed");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -340,10 +390,11 @@ if (
   blogPostSrc.includes("seo-search-engine-optimization") &&
   blogPostSrc.includes("sem-search-engine-marketing") &&
   blogPostSrc.includes("smo-social-media-optimization") &&
+  blogPostSrc.includes("google-webmaster-search-console") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, and SMO course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, and GSC course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -379,6 +430,19 @@ if (
 ) {
   pass("SMO course FAQs retain original answers and add contextual course links");
 } else fail("SMO course FAQ set or track links missing");
+if (
+  smmCopy.includes('q: "Is this the full SEO course?"') &&
+  smmCopy.includes('q: "How long is it?"') &&
+  smmCopy.includes('q: "What tags are listed?"') &&
+  smmCopy.includes('q: "Do I need a website?"') &&
+  smmCopy.includes('a: "10 hrs, Beginner."') &&
+  smmCopy.includes('a: "No. SEO — Search Engine Optimization covers fundamentals, keywords, on-page, technical SEO, and links. This course is Search Console, coverage, Core Web Vitals, sitemaps, and robots."') &&
+  smmCopy.includes('a: "Search Console is tied to a property you verify. The course teaches GSC; it does not replace hosting or a CMS."') &&
+  smmCopy.includes('to: "/Blog/seo-search-engine-optimization"') &&
+  smmCopy.includes('to: "/Blog/sem-search-engine-marketing"')
+) {
+  pass("GSC course FAQs retain original answers and add contextual course links");
+} else fail("GSC course FAQ set or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -396,9 +460,10 @@ if (
   jsonLdSrc.includes('instructor === "Emily Ross"') &&
   jsonLdSrc.includes('instructor === "Jasmine Patel"') &&
   jsonLdSrc.includes('instructor === "Paul Martinez"') &&
-  jsonLdSrc.includes('instructor === "Kevin Wu"')
+  jsonLdSrc.includes('instructor === "Kevin Wu"') &&
+  jsonLdSrc.includes("google-webmaster-search-console")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, and SMO courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, and GSC courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -507,7 +572,8 @@ try {
     !internHtml.includes(SMM_COURSE_SEO.title) &&
     !internHtml.includes(seoCourseTitleHtml) &&
     !internHtml.includes(semCourseTitleHtml) &&
-    !internHtml.includes(smoCourseTitleHtml)
+    !internHtml.includes(smoCourseTitleHtml) &&
+    !internHtml.includes(gscCourseTitleHtml)
   ) {
     pass("/Internships first-byte SEO unchanged");
   } else fail("/Internships first-byte SEO changed");
@@ -537,7 +603,8 @@ try {
     smmAfterHtml.includes(smmTitleHtml) &&
     !smmAfterHtml.includes(seoCourseTitleHtml) &&
     !smmAfterHtml.includes(semCourseTitleHtml) &&
-    !smmAfterHtml.includes(smoCourseTitleHtml)
+    !smmAfterHtml.includes(smoCourseTitleHtml) &&
+    !smmAfterHtml.includes(gscCourseTitleHtml)
   ) {
     pass("SMM first-byte SEO remains unchanged");
   } else fail("SMM first-byte SEO changed by later course work");
@@ -567,7 +634,12 @@ try {
 
   const seoAfter = await fetch(`${injOrigin}${SEO_COURSE_PATH}`);
   const seoAfterHtml = await seoAfter.text();
-  if (seoAfterHtml.includes(seoCourseTitleHtml) && !seoAfterHtml.includes(semCourseTitleHtml) && !seoAfterHtml.includes(smoCourseTitleHtml)) {
+  if (
+    seoAfterHtml.includes(seoCourseTitleHtml) &&
+    !seoAfterHtml.includes(semCourseTitleHtml) &&
+    !seoAfterHtml.includes(smoCourseTitleHtml) &&
+    !seoAfterHtml.includes(gscCourseTitleHtml)
+  ) {
     pass("SEO course first-byte SEO remains unchanged");
   } else fail("SEO course first-byte SEO changed by later course work");
 
@@ -597,9 +669,40 @@ try {
 
   const semAfter = await fetch(`${injOrigin}${SEM_COURSE_PATH}`);
   const semAfterHtml = await semAfter.text();
-  if (semAfterHtml.includes(semCourseTitleHtml) && !semAfterHtml.includes(smoCourseTitleHtml)) {
+  if (semAfterHtml.includes(semCourseTitleHtml) && !semAfterHtml.includes(smoCourseTitleHtml) && !semAfterHtml.includes(gscCourseTitleHtml)) {
     pass("SEM course first-byte SEO remains unchanged");
-  } else fail("SEM course first-byte SEO changed by SMO work");
+  } else fail("SEM course first-byte SEO changed by later course work");
+
+  const gscCourseRes = await fetch(`${injOrigin}${GSC_COURSE_PATH}`);
+  const gscCourseHtml = await gscCourseRes.text();
+  if (gscCourseRes.status === 200) pass("Express-like /Blog/google-webmaster-search-console returns HTTP 200");
+  else fail(`GSC course HTTP ${gscCourseRes.status}`);
+  if (gscCourseHtml.includes(gscCourseTitleHtml) && gscCourseHtml.includes(GSC_COURSE_SEO.description)) {
+    pass("GSC course initial HTML has the new title and description");
+  } else fail("GSC course initial HTML missing title or description");
+  if ((gscCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("GSC course initial HTML has one canonical");
+  else fail("GSC course initial HTML canonical count is not 1");
+  if (gscCourseRes.headers.get("link") === `<${canonicalUrl(GSC_COURSE_PATH)}>; rel="canonical"`) {
+    pass("GSC course response Link header is self-canonical");
+  } else fail("GSC course Link header was incorrect");
+  if (gscCourseHtml.includes('content="index, follow"') && !gscCourseHtml.includes("noindex")) {
+    pass("GSC course initial HTML is index, follow");
+  } else fail("GSC course initial HTML not indexable");
+  if (
+    !gscCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !gscCourseHtml.includes(seoCourseTitleHtml) &&
+    !gscCourseHtml.includes(semCourseTitleHtml) &&
+    !gscCourseHtml.includes(smoCourseTitleHtml) &&
+    !gscCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("GSC course first-byte HTML does not reuse SMM, SEO, SEM, SMO, or Internships metadata");
+  } else fail("GSC course first-byte HTML mixed another route's metadata");
+
+  const smoAfter = await fetch(`${injOrigin}${SMO_COURSE_PATH}`);
+  const smoAfterHtml = await smoAfter.text();
+  if (smoAfterHtml.includes(smoCourseTitleHtml) && !smoAfterHtml.includes(gscCourseTitleHtml)) {
+    pass("SMO course first-byte SEO remains unchanged");
+  } else fail("SMO course first-byte SEO changed by GSC work");
 
   const coursesRes = await fetch(`${injOrigin}/Courses`);
   const coursesHtml = await coursesRes.text();
@@ -608,7 +711,8 @@ try {
     !coursesHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
     !coursesHtml.includes(seoCourseTitleHtml) &&
     !coursesHtml.includes(semCourseTitleHtml) &&
-    !coursesHtml.includes(smoCourseTitleHtml)
+    !coursesHtml.includes(smoCourseTitleHtml) &&
+    !coursesHtml.includes(gscCourseTitleHtml)
   ) {
     pass("/Courses first-byte HTML is still the shared shell");
   } else fail("/Courses first-byte HTML was injected");
@@ -626,10 +730,12 @@ try {
     !homeHtml.includes(semCourseTitleHtml) &&
     !bundlesHtml.includes(semCourseTitleHtml) &&
     !homeHtml.includes(smoCourseTitleHtml) &&
-    !bundlesHtml.includes(smoCourseTitleHtml)
+    !bundlesHtml.includes(smoCourseTitleHtml) &&
+    !homeHtml.includes(gscCourseTitleHtml) &&
+    !bundlesHtml.includes(gscCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, or SMO course metadata");
-  } else fail("SEO, SEM, or SMO course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, or GSC course metadata");
+  } else fail("SEO, SEM, SMO, or GSC course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -671,6 +777,18 @@ try {
   if (!smoVidHtml.includes(smoCourseTitleHtml) && !smoVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("SMO /videos HTML was not given SMO listing or SMM metadata");
   } else fail("SMO /videos HTML contains listing metadata");
+
+  const gscVid = await fetch(`${injOrigin}/Blog/google-webmaster-search-console/videos`);
+  const gscVidHtml = await gscVid.text();
+  if (gscVid.status === 200 && gscVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("GSC /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("GSC /videos headers changed");
+  if (gscVid.headers.get("link") === `<${canonicalUrl(GSC_COURSE_PATH)}>; rel="canonical"`) {
+    pass("GSC /videos Link header still parent-canonical");
+  } else fail("GSC /videos Link header changed");
+  if (!gscVidHtml.includes(gscCourseTitleHtml) && !gscVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("GSC /videos HTML was not given GSC listing or SMM metadata");
+  } else fail("GSC /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }
