@@ -13,6 +13,7 @@ import {
   AI_PRODUCTIVITY_COURSE_SEO,
   PROMPT_ENGINEERING_COURSE_SEO,
   AI_FUNDAMENTALS_COURSE_SEO,
+  PYTHON_PROGRAMMING_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -66,10 +67,7 @@ const STATIC_SEO = {
 
 export const COURSE_SEO = {
   "python-programming": {
-    title: "Python Programming Course Online for Beginners | KYK",
-    description:
-      "Learn Python from scratch at Knock Your Knowledge — variables, loops, OOP, file handling, APIs, and a capstone project. Beginner internship course with mentor-led practice.",
-    h1: "Python Programming",
+    ...PYTHON_PROGRAMMING_COURSE_SEO,
   },
   "data-science": {
     title: "Data Science Course Online with Python & ML | KYK",

@@ -151,6 +151,19 @@ export const AI_FUNDAMENTALS_COURSE_SEO = {
   productName: "Artificial Intelligence Fundamentals",
 };
 
+export const PYTHON_PROGRAMMING_COURSE_PATH = "/Blog/python-programming";
+
+/** First-byte + Helmet SEO for the Python Programming course page only. */
+export const PYTHON_PROGRAMMING_COURSE_SEO = {
+  title: "Python Programming Course & Beginner Python Training | KYK",
+  description:
+    "Learn Python Programming with KYK's beginner course: Python Basics, functions, OOP, files and APIs. 40 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+  h1: "Python Programming Course – Beginner Python Training",
+  ogImage: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Python Programming",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -292,6 +305,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: AI_FUNDAMENTALS_COURSE_SEO.title,
       description: AI_FUNDAMENTALS_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === PYTHON_PROGRAMMING_COURSE_PATH) {
+    return {
+      title: PYTHON_PROGRAMMING_COURSE_SEO.title,
+      description: PYTHON_PROGRAMMING_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

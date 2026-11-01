@@ -4,33 +4,34 @@
  */
 export const COURSE_PAGE_COPY = {
   "python-programming": {
+    introHeading: "Python Programming Training covering Python Basics, OOP and APIs",
     intro:
-      "Python Programming at Knock Your Knowledge is a beginner course for writing clear, working code. You start with variables, loops, and control flow, then move into functions, modules, object-oriented programming, files, and APIs before finishing with a capstone project.",
+      "This Python Programming Course is beginner Python Programming Training at Knock Your Knowledge. It is a Python Course for Beginners: 40 hours, five topics, and 20 videos covering Python Basics, Functions & Modules, OOP Concepts, File I/O & APIs, and a Capstone Project. The published course fee is ₹299/- plus 18% GST at checkout. You Learn Python as a language — Python Fundamentals and Python Coding with variables, loops, functions, classes, files, and APIs. This is not Data Science (Pandas, NumPy, ML), not MERN Stack Development (MongoDB, Express, React, Node.js), and not Python for Analytics on the Business Analytics track.",
     whyLearn:
-      "Python is the common language behind automation, data work, and many web backends. This course matters because it teaches the language itself — not a shortcut around it — so you can read error messages, reuse functions, and ship a small project you can explain.",
+      "Python is the common language behind automation, data work, and many web backends. This Python Programming Training teaches the language itself — not a shortcut around it — so you can read error messages, reuse functions, and ship a small Capstone Project you can explain. It is a language course, not an internship programme.",
     whoFor: [
-      "Beginners who want a structured path through Python basics before tackling data or web work",
-      "Students who need OOP, files, and APIs for college projects or personal scripts",
+      "Beginners who want a structured path through Python Basics before tackling data or web work",
+      "Students who need OOP Concepts, files, and APIs for college projects or personal scripts",
       "Career switchers who want to practise Python before the Data Science or MERN courses in this track",
     ],
     topicDetails: {
       "Python Basics":
-        "Cover variables, data types, operators, loops, and conditionals so you can write small programs and understand how Python executes line by line.",
+        "Python Basics is the first topic in this Python Course for Beginners. Cover variables, data types, operators, loops, and conditionals so you can write small programs and understand how Python executes line by line. This is Python Fundamentals, not a data-science library tour.",
       "Functions & Modules":
-        "Break work into reusable functions, import modules, and organise scripts so code stays readable as it grows.",
+        "Functions & Modules is the second topic. Break work into reusable functions, import modules, and organise scripts so Python Coding stays readable as it grows.",
       "OOP Concepts":
-        "Use classes, objects, and core OOP ideas to model real things in code — the same pattern used in larger Python applications.",
+        "OOP Concepts is the third topic. Use classes, objects, and core OOP ideas to model real things in code — the same pattern used in larger Python applications. The catalog tags OOP; it does not name Django or Flask.",
       "File I/O & APIs":
-        "Read and write files, then call APIs so your programs can work with real data instead of only in-memory examples.",
+        "File I/O & APIs is the fourth topic. Read and write files, then call APIs so your programs can work with real data instead of only in-memory examples.",
       "Capstone Project":
-        "Apply basics, functions, OOP, files, and APIs in one capstone so you practise connecting the topics rather than leaving them as isolated drills.",
+        "Capstone Project is the fifth topic. Apply Python Basics, functions, OOP Concepts, files, and APIs in one capstone so you practise connecting the topics rather than leaving them as isolated drills.",
     },
     outcomes: [
-      "Write Python scripts using variables, loops, and conditionals with confidence",
-      "Organise code with functions and modules instead of one long file",
-      "Use classes and objects for simple real-world models",
-      "Load data from files and call APIs in a beginner project",
-      "Finish a capstone that combines the five course topics",
+      "Write Python scripts using variables, loops, and conditionals after this Python Programming Course",
+      "Organise code with Functions & Modules instead of one long file",
+      "Use OOP Concepts — classes and objects — for simple real-world models",
+      "Load data with File I/O & APIs in a beginner project",
+      "Finish a Capstone Project that combines the five course topics",
     ],
     faqs: [
       {
@@ -53,6 +54,19 @@ export const COURSE_PAGE_COPY = {
         q: "Are there course videos?",
         a: "KYK lists five topics and twenty videos for this course. Enrol to unlock playback on the course videos page.",
       },
+    ],
+    trackLinks: [
+      { text: "Wrangling, EDA, and ML sit on " },
+      { to: "/Blog/data-science", text: "Data Science" },
+      { text: ". Full-stack web with MongoDB, Express, React, and Node.js is " },
+      { to: "/Blog/mern-stack-development", text: "MERN Stack Development" },
+      { text: ". Cleaning, visualisation, and reporting sit on the analytics track (" },
+      { to: "/Blog/python-for-analytics", text: "Python for Analytics" },
+      { text: "). Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/development", text: "Development Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["data-science", "mern-stack-development", "python-for-analytics"],
   },

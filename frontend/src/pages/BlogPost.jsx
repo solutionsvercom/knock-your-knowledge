@@ -181,7 +181,8 @@ export default function BlogPost() {
                   slug === "ai-tools-in-digital-marketing" ||
                   slug === "8-best-ai-tools-for-productivity" ||
                   slug === "prompt-engineering" ||
-                  slug === "artificial-intelligence-fundamentals"
+                  slug === "artificial-intelligence-fundamentals" ||
+                  slug === "python-programming"
                     ? "p"
                     : "h2"
                 }
@@ -439,7 +440,8 @@ export default function BlogPost() {
                     slug === "ai-tools-in-digital-marketing" ||
                     slug === "8-best-ai-tools-for-productivity" ||
                     slug === "prompt-engineering" ||
-                    slug === "artificial-intelligence-fundamentals" ? (
+                    slug === "artificial-intelligence-fundamentals" ||
+                    slug === "python-programming" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}
