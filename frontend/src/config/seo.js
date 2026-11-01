@@ -14,6 +14,7 @@ import {
   PROMPT_ENGINEERING_COURSE_SEO,
   AI_FUNDAMENTALS_COURSE_SEO,
   PYTHON_PROGRAMMING_COURSE_SEO,
+  DATA_SCIENCE_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -70,10 +71,7 @@ export const COURSE_SEO = {
     ...PYTHON_PROGRAMMING_COURSE_SEO,
   },
   "data-science": {
-    title: "Data Science Course Online with Python & ML | KYK",
-    description:
-      "Study data analysis, visualization, and machine learning with Python, Pandas, and Scikit-learn. KYK Data Science internship course with practical modules and projects.",
-    h1: "Data Science",
+    ...DATA_SCIENCE_COURSE_SEO,
   },
   "mern-stack-development": {
     title: "MERN Stack Development Course Online | KYK",

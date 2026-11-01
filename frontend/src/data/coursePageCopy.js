@@ -71,32 +71,33 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["data-science", "mern-stack-development", "python-for-analytics"],
   },
   "data-science": {
+    introHeading: "Data Science Training covering Data Wrangling, EDA and ML Models",
     intro:
-      "Data Science at Knock Your Knowledge is an intermediate course on analysing and modelling data with Python. You work through wrangling, exploratory analysis, machine learning models, feature engineering, and deployment using Pandas, NumPy, Matplotlib, and Scikit-learn.",
+      "This Data Science Course is Intermediate Data Science Training at Knock Your Knowledge. Data science here is Python for Data Science: you take tables through Data Wrangling, Exploratory Data Analysis (EDA), Machine Learning with ML Models, Feature Engineering, and a simple Deployment step. You Learn Data Science as Data Science Fundamentals — Data Analysis and Data Visualization with Python, Pandas, NumPy, and Matplotlib, then Scikit-learn for models. The catalog lists 55 hours, five topics, and 20 videos. The published course fee is ₹299/- plus 18% GST at checkout. This is Intermediate, not a beginner language course: you should already be comfortable with basic Python. It is a Development-track retail course, not an internship. Python Programming teaches the language itself. Python for Analytics sits on the Business Analytics track (cleaning, visualisation, reporting). MERN Stack Development is a separate full-stack web course.",
     whyLearn:
-      "Raw datasets are messy, and models only help if you can clean, explore, and ship them. This course connects those steps in one path so you are not stuck with a notebook that never leaves your laptop.",
+      "Raw datasets are messy, and models only help if you can clean, explore, and ship them. This Data Science Course connects Data Wrangling, EDA, ML Models, Feature Engineering, and Deployment in one path so you are not stuck with a notebook that never leaves your laptop. It is Data Science Training on the Development track, not an internship programme.",
     whoFor: [
-      "Learners who already know basic Python and want to apply it to data",
-      "Analysts moving from spreadsheets into Pandas, EDA, and ML models",
-      "Students preparing a data-science skill set before a Business Analytics or Development track project",
+      "Learners who already know basic Python and want to apply it to Data Analysis",
+      "Analysts moving from spreadsheets into Pandas, EDA, and ML Models",
+      "Students preparing a Development-track data-science skill set before a Business Analytics or MERN project",
     ],
     topicDetails: {
       "Data Wrangling":
-        "Clean and reshape datasets with Python and Pandas so missing values, types, and joins do not block the rest of the workflow.",
-      EDA: "Explore distributions, relationships, and visual summaries with Matplotlib so you understand the data before you fit a model.",
+        "Data Wrangling is the first topic in this Data Science Course. Clean and reshape datasets with Python and Pandas so missing values, types, and joins do not block the rest of the workflow. NumPy sits beside Pandas for numeric arrays. This is table work, not SQL or a separate reporting course.",
+      EDA: "EDA is the second topic — Exploratory Data Analysis. Explore distributions, relationships, and visual summaries with Matplotlib so you understand the data before you fit a model. This is Data Visualization on the Development track, not Tableau or Power BI.",
       "ML Models":
-        "Train machine learning models with Scikit-learn and practise the basic fit–evaluate loop on structured data.",
+        "ML Models is the third topic. Train machine learning models with Scikit-learn and practise the basic fit–evaluate loop on structured data. The catalog tags ML; it does not name TensorFlow or Keras.",
       "Feature Engineering":
-        "Create and select features that models can use, instead of passing raw columns straight into an algorithm.",
+        "Feature Engineering is the fourth topic. Create and select features that models can use, instead of passing raw columns straight into an algorithm.",
       Deployment:
-        "Take a trained workflow beyond the notebook so the analysis can be shared or run as a simple deployed output.",
+        "Deployment is the fifth topic. Take a trained workflow beyond the notebook so the analysis can be shared or run as a simple deployed output. The catalog does not name a cloud or web framework for this step.",
     },
     outcomes: [
-      "Wrangle tabular data in Python with Pandas and NumPy",
-      "Run exploratory analysis and plots with Matplotlib",
-      "Train and evaluate basic Scikit-learn models",
-      "Engineer features instead of using only raw columns",
-      "Package the workflow for a simple deployment step",
+      "Wrangle tabular data in Python with Pandas and NumPy after this Data Science Course",
+      "Run Exploratory Data Analysis and plots with Matplotlib",
+      "Train and evaluate basic Scikit-learn ML Models",
+      "Use Feature Engineering instead of only raw columns",
+      "Package the workflow for a simple Deployment step",
     ],
     faqs: [
       {
@@ -119,6 +120,19 @@ export const COURSE_PAGE_COPY = {
         q: "Can I buy it with Python and MERN?",
         a: "Yes. The Development bundle includes Python Programming, Data Science, and MERN Stack together.",
       },
+    ],
+    trackLinks: [
+      { text: "Python as a language is " },
+      { to: "/Blog/python-programming", text: "Python Programming" },
+      { text: ". Cleaning, visualisation, and reporting sit on the analytics track (" },
+      { to: "/Blog/python-for-analytics", text: "Python for Analytics" },
+      { text: "). Full-stack web with MongoDB, Express, React, and Node.js is " },
+      { to: "/Blog/mern-stack-development", text: "MERN Stack Development" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/development", text: "Development Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["python-programming", "python-for-analytics", "sql-for-data-analysis"],
   },

@@ -182,7 +182,8 @@ export default function BlogPost() {
                   slug === "8-best-ai-tools-for-productivity" ||
                   slug === "prompt-engineering" ||
                   slug === "artificial-intelligence-fundamentals" ||
-                  slug === "python-programming"
+                  slug === "python-programming" ||
+                  slug === "data-science"
                     ? "p"
                     : "h2"
                 }
@@ -441,7 +442,8 @@ export default function BlogPost() {
                     slug === "8-best-ai-tools-for-productivity" ||
                     slug === "prompt-engineering" ||
                     slug === "artificial-intelligence-fundamentals" ||
-                    slug === "python-programming" ? (
+                    slug === "python-programming" ||
+                    slug === "data-science" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

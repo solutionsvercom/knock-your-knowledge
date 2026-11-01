@@ -36,6 +36,8 @@ import {
   AI_FUNDAMENTALS_COURSE_PATH,
   PYTHON_PROGRAMMING_COURSE_SEO,
   PYTHON_PROGRAMMING_COURSE_PATH,
+  DATA_SCIENCE_COURSE_SEO,
+  DATA_SCIENCE_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +79,8 @@ if (!titles.includes(AI_FUNDAMENTALS_COURSE_SEO.title)) titles.push(AI_FUNDAMENT
 if (!descriptions.includes(AI_FUNDAMENTALS_COURSE_SEO.description)) descriptions.push(AI_FUNDAMENTALS_COURSE_SEO.description);
 if (!titles.includes(PYTHON_PROGRAMMING_COURSE_SEO.title)) titles.push(PYTHON_PROGRAMMING_COURSE_SEO.title);
 if (!descriptions.includes(PYTHON_PROGRAMMING_COURSE_SEO.description)) descriptions.push(PYTHON_PROGRAMMING_COURSE_SEO.description);
+if (!titles.includes(DATA_SCIENCE_COURSE_SEO.title)) titles.push(DATA_SCIENCE_COURSE_SEO.title);
+if (!descriptions.includes(DATA_SCIENCE_COURSE_SEO.description)) descriptions.push(DATA_SCIENCE_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -676,6 +680,76 @@ if (
   pass("Python Programming metadata does not call this retail course a mentor-led internship");
 } else fail("Python Programming metadata still uses internship or mentor-led wording");
 
+const dsCourseTitleHtml = DATA_SCIENCE_COURSE_SEO.title.replace(/&/g, "&amp;");
+const dsCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  DATA_SCIENCE_COURSE_PATH
+);
+if (dsCourseShell.includes(dsCourseTitleHtml)) pass("Initial HTML title for Data Science course");
+else fail("Initial HTML missing Data Science course title");
+if (dsCourseShell.includes(DATA_SCIENCE_COURSE_SEO.description)) pass("Initial HTML description for Data Science course");
+else fail("Initial HTML missing Data Science course description");
+if ((dsCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("Data Science course initial HTML has exactly one canonical");
+else fail("Data Science course initial HTML canonical count is not 1");
+if (dsCourseShell.includes(`href="${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}"`)) pass("Data Science course initial HTML canonical is the course URL");
+else fail("Data Science course initial HTML canonical is not the course URL");
+if (dsCourseShell.includes('content="index, follow"')) pass("Data Science course initial HTML robots is index, follow");
+else fail("Data Science course initial HTML missing index, follow");
+if (
+  documentLinkHeader(DATA_SCIENCE_COURSE_PATH) ===
+  `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Data Science course Link header is self-canonical");
+} else fail("Data Science course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change SMM");
+} else fail("Data Science course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change SEO course");
+} else fail("Data Science course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change SEM course");
+} else fail("Data Science course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change SMO course");
+} else fail("Data Science course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change GSC course");
+} else fail("Data Science course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change AI marketing course");
+} else fail("Data Science course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change AI productivity course");
+} else fail("Data Science course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Prompt Engineering");
+} else fail("Data Science course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change AI Fundamentals");
+} else fail("Data Science course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Python Programming");
+} else fail("Data Science course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change /Internships");
+} else fail("Data Science course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/data-science/videos") ===
+  `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Data Science course /videos Link header still points at the parent course");
+} else fail("Data Science course /videos Link header is not the parent course");
+if (DATA_SCIENCE_COURSE_SEO.productName === "Data Science") {
+  pass("Data Science productName is unchanged for the videos page title");
+} else fail("Data Science productName changed");
+if (
+  DATA_SCIENCE_COURSE_SEO.description.includes("mentor-led") === false &&
+  DATA_SCIENCE_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("Data Science metadata does not call this retail course a mentor-led internship");
+} else fail("Data Science metadata still uses internship or mentor-led wording");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -697,10 +771,11 @@ if (
   blogPostSrc.includes("prompt-engineering") &&
   blogPostSrc.includes("artificial-intelligence-fundamentals") &&
   blogPostSrc.includes("python-programming") &&
+  blogPostSrc.includes("data-science") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, and Python Programming course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, and Data Science course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -827,6 +902,23 @@ if (
 ) {
   pass("Python Programming course FAQs retain original answers, Development related cards, and contextual course links");
 } else fail("Python Programming course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "What level is Data Science at KYK?"') &&
+  smmCopy.includes('q: "How long is the course?"') &&
+  smmCopy.includes('q: "Which tools are included?"') &&
+  smmCopy.includes('q: "Is this the same as Python for Analytics?"') &&
+  smmCopy.includes('q: "Can I buy it with Python and MERN?"') &&
+  smmCopy.includes('a: "The listed duration is 55 hrs."') &&
+  smmCopy.includes('a: "The catalog tags Pandas, NumPy, ML, and Matplotlib. The course description also names Python and Scikit-learn."') &&
+  smmCopy.includes('relatedSlugs: ["python-programming", "python-for-analytics", "sql-for-data-analysis"]') &&
+  smmCopy.includes("Python as a language is") &&
+  smmCopy.includes('to: "/Blog/python-programming"') &&
+  smmCopy.includes('to: "/Blog/python-for-analytics"') &&
+  smmCopy.includes('to: "/Blog/mern-stack-development"') &&
+  smmCopy.includes('to: "/Bundles/development"')
+) {
+  pass("Data Science course FAQs retain original answers, related cards, and contextual course links");
+} else fail("Data Science course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -852,9 +944,11 @@ if (
   jsonLdSrc.includes('instructor === "Dr. Meera Singh"') &&
   jsonLdSrc.includes("artificial-intelligence-fundamentals") &&
   jsonLdSrc.includes('instructor === "Alex Chen"') &&
-  jsonLdSrc.includes("python-programming")
+  jsonLdSrc.includes("python-programming") &&
+  jsonLdSrc.includes('instructor === "Sarah Patel"') &&
+  jsonLdSrc.includes("data-science")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, and Python Programming courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, and Data Science courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");

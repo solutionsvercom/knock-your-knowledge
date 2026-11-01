@@ -164,6 +164,19 @@ export const PYTHON_PROGRAMMING_COURSE_SEO = {
   productName: "Python Programming",
 };
 
+export const DATA_SCIENCE_COURSE_PATH = "/Blog/data-science";
+
+/** First-byte + Helmet SEO for the Data Science course page only. */
+export const DATA_SCIENCE_COURSE_SEO = {
+  title: "Data Science Course & Intermediate Python ML Training | KYK",
+  description:
+    "Learn Data Science with KYK's intermediate course: Data Wrangling, EDA, ML Models, features and deployment. 55 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+  h1: "Data Science Course – Intermediate Python ML Training",
+  ogImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Data Science",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -313,6 +326,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: PYTHON_PROGRAMMING_COURSE_SEO.title,
       description: PYTHON_PROGRAMMING_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === DATA_SCIENCE_COURSE_PATH) {
+    return {
+      title: DATA_SCIENCE_COURSE_SEO.title,
+      description: DATA_SCIENCE_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };
