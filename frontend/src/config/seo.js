@@ -6,6 +6,7 @@ import {
   SITE_ORIGIN,
   SMM_COURSE_SEO,
   SEO_COURSE_SEO,
+  SEM_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -128,10 +129,7 @@ export const COURSE_SEO = {
     ...SEO_COURSE_SEO,
   },
   "sem-search-engine-marketing": {
-    title: "Search Engine Marketing Course | KYK",
-    description:
-      "Run Google Ads and Bing Ads campaigns — bidding, ad copy, landing pages, and ROI. KYK Search Engine Marketing course for paid-search internships.",
-    h1: "SEM — Search Engine Marketing",
+    ...SEM_COURSE_SEO,
   },
   "smm-social-media-marketing": {
     ...SMM_COURSE_SEO,

@@ -655,33 +655,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["sem-search-engine-marketing", "google-webmaster-search-console", "ai-tools-in-digital-marketing"],
   },
   "sem-search-engine-marketing": {
+    introHeading: "SEM Training for Google Ads, Keyword Bidding and Paid Search",
     intro:
-      "SEM — Search Engine Marketing is an intermediate KYK course on paid search. You cover Google Ads setup, keyword bidding, ad copy, landing pages, and ROI optimisation, including Google Ads and Bing Ads, quality score, and retargeting as named in the course description.",
+      "This SEM Course is intermediate Search Engine Marketing Training at Knock Your Knowledge — a Search Engine Marketing Course for Paid Search, so you can Learn SEM by buying the click rather than waiting on organic ranking. You cover 25 hours, five topics, and 20 videos: Google Ads Setup, Keyword Bidding, Ad Copy, Landing Pages, and ROI Optimisation. The catalog names Google Ads and Bing Ads, plus quality score and retargeting; tags are Google Ads, PPC, and Retargeting. The published fee is ₹149/- plus 18% GST at checkout.",
     whyLearn:
-      "Organic SEO takes time. SEM is how you buy the click while that work compounds — if bidding, copy, landing pages, and ROI are treated as one system, not four disconnected tasks.",
+      "Organic SEO takes time. SEM is how you buy the click while that work compounds — if Keyword Bidding, Ad Copy, Landing Pages, and ROI Optimisation are treated as one system, not four disconnected tasks. This SEM Training is that Paid Search path. Google Ads and Bing Ads are the named platforms; organic ranking lives in the separate SEO course.",
     whoFor: [
       "Marketers who must run Google Ads or Bing Ads with a budget",
-      "Intermediate learners who understand keywords and want paid-search execution",
-      "People who need retargeting and ROI optimisation, not only campaign setup",
+      "Intermediate learners who understand keywords and want Paid Search execution in a SEM Course",
+      "People who need Retargeting and ROI Optimisation, not only Google Ads Setup",
     ],
     topicDetails: {
       "Google Ads Setup":
-        "Build the account and campaign structure so Google Ads (and the Bing Ads work named in the description) start from a clean setup.",
+        "Google Ads Setup is the first topic: build the account and campaign structure so Google Ads (and the Bing Ads work named in the description) start from a clean setup. Search Console is not a topic here — that measurement work is a separate KYK course.",
       "Keyword Bidding":
-        "Bid on search terms with intent, instead of paying for every broad match that appears.",
+        "Keyword Bidding is the second topic. Bid on search terms with intent, instead of paying for every broad match that appears. PPC in the course tags is that paid-click bidding, not a separate extra module.",
       "Ad Copy":
-        "Write ads that match the query and feed quality score, which the course description names explicitly.",
+        "Ad Copy is the third topic: write ads that match the query and feed quality score, which the course description names explicitly.",
       "Landing Pages":
-        "Send traffic to a page that continues the promise in the ad, not a generic homepage.",
+        "Landing Pages is the fourth topic. Send traffic to a page that continues the promise in the ad, not a generic homepage.",
       "ROI Optimisation":
-        "Improve return, including retargeting as listed in the course tags, so spend is not only top-of-funnel.",
+        "ROI Optimisation is the fifth topic. Improve return, including Retargeting as listed in the course tags, so spend is not only top-of-funnel.",
     },
     outcomes: [
       "Set up a Google Ads campaign structure you can manage",
-      "Bid on keywords with a clear match to intent",
-      "Write ad copy that supports quality score",
-      "Choose landing pages that match the ad",
-      "Optimise ROI and use retargeting as part of paid search",
+      "Bid on keywords with a clear match to intent using Keyword Bidding",
+      "Write Ad Copy that supports quality score",
+      "Choose Landing Pages that match the ad",
+      "Run ROI Optimisation and use Retargeting as part of Paid Search",
     ],
     faqs: [
       {
@@ -704,6 +705,21 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in the marketing bundle?",
         a: "Yes, with SEO, SMM, SMO, Search Console, and AI Tools in Digital Marketing.",
       },
+    ],
+    trackLinks: [
+      { text: "Organic search is a separate KYK course (" },
+      { to: "/Blog/seo-search-engine-optimization", text: "SEO — Search Engine Optimization" },
+      { text: "). Measurement in " },
+      { to: "/Blog/google-webmaster-search-console", text: "Google Webmaster & Search Console" },
+      { text: " is also separate. Related social courses are " },
+      { to: "/Blog/smm-social-media-marketing", text: "SMM — Social Media Marketing" },
+      { text: " and " },
+      { to: "/Blog/smo-social-media-optimization", text: "SMO — Social Media Optimization" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["seo-search-engine-optimization", "smm-social-media-marketing", "ai-tools-in-digital-marketing"],
   },

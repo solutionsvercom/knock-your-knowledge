@@ -60,6 +60,19 @@ export const SEO_COURSE_SEO = {
   productName: "SEO — Search Engine Optimization",
 };
 
+export const SEM_COURSE_PATH = "/Blog/sem-search-engine-marketing";
+
+/** First-byte + Helmet SEO for the SEM course page only. */
+export const SEM_COURSE_SEO = {
+  title: "SEM Course & Search Engine Marketing Training | KYK",
+  description:
+    "Learn SEM with KYK's intermediate course: Google Ads, keyword bidding, ad copy, landing pages and ROI. 25 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+  h1: "Search Engine Marketing Course – Intermediate SEM Training",
+  ogImage: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "SEM — Search Engine Marketing",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -145,6 +158,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: SEO_COURSE_SEO.title,
       description: SEO_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === SEM_COURSE_PATH) {
+    return {
+      title: SEM_COURSE_SEO.title,
+      description: SEM_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

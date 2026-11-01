@@ -203,8 +203,21 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "sem-search-engine-marketing") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Paul Martinez") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
-      if (slug === "smm-social-media-marketing" || slug === "seo-search-engine-optimization") {
+      if (
+        slug === "smm-social-media-marketing" ||
+        slug === "seo-search-engine-optimization" ||
+        slug === "sem-search-engine-marketing"
+      ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));
       }
