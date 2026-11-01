@@ -137,33 +137,34 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["python-programming", "python-for-analytics", "sql-for-data-analysis"],
   },
   "mern-stack-development": {
+    introHeading: "MERN Stack Training covering React, Node, Express and MongoDB",
     intro:
-      "MERN Stack Development at Knock Your Knowledge is an advanced full-stack course. You build end-to-end web apps with React on the front end, Node and Express on the server, MongoDB for data, then authentication with JWT and a full-stack project.",
+      "This MERN Stack Development Course is Advanced MERN Stack Training at Knock Your Knowledge. It is Full Stack Development — Full Stack Web Development with React on the front end, Node.js and Express on the server, MongoDB for data, then Auth & JWT and a Full-Stack Project. You cover 70 hours, five topics, and 20 videos. The published course fee is ₹299/- plus 18% GST at checkout. This is Advanced, not a beginner language course: you should already know programming basics. It is a Development-track retail course, not an internship. Python Programming teaches the Python language. Data Science is Python for wrangling, EDA, ML models, feature engineering, and deployment. MERN is JavaScript full-stack web.",
     whyLearn:
-      "Hiring teams expect you to connect UI, API, and database — not only one layer. This course walks that path in order: React, Node & Express, MongoDB CRUD, Auth & JWT, then a full-stack project that uses all four.",
+      "Hiring teams expect you to connect UI, API, and database — not only one layer. This MERN Stack Development Course walks that Full Stack Training path in order: React Fundamentals, Node & Express, MongoDB CRUD, Auth & JWT, then a Full-Stack Project that uses all four. It is MERN Stack Training on the Development track, not an internship programme.",
     whoFor: [
       "Developers who already know programming basics and want a complete MERN path",
-      "Students ready for an advanced web course after Python or similar foundations",
-      "Builders who need CRUD, login, and a project they can run as a full app",
+      "Students ready for an Advanced Full Stack Web Development course after Python or similar foundations",
+      "Builders who need CRUD, login, and a Full-Stack Project they can run as a full app",
     ],
     topicDetails: {
       "React Fundamentals":
-        "Build component-based UIs in React so screens, state, and user actions live in a structure you can extend.",
+        "React Fundamentals is the first topic in this MERN Stack Development Course. Build component-based UIs in React so screens, state, and user actions live in a structure you can extend. The catalog names React; it does not name Next.js or Redux.",
       "Node & Express":
-        "Create a Node.js server with Express to handle HTTP routes and connect the UI to backend logic.",
+        "Node & Express is the second topic. Create a Node.js server with Express to handle HTTP routes and connect the UI to backend logic.",
       "MongoDB CRUD":
-        "Store and change documents in MongoDB — create, read, update, and delete — from your Express API.",
+        "MongoDB CRUD is the third topic. Store and change documents in MongoDB — create, read, update, and delete — from your Express API.",
       "Auth & JWT":
-        "Add login and protected routes using JSON Web Tokens so not every endpoint is public.",
+        "Auth & JWT is the fourth topic. Add login and protected routes using JSON Web Tokens so not every endpoint is public.",
       "Full-Stack Project":
-        "Combine React, Express, MongoDB, and JWT in one full-stack project instead of leaving each topic as a demo.",
+        "Full-Stack Project is the fifth topic. Combine React, Express, MongoDB, and JWT in one full-stack project instead of leaving each topic as a demo. The catalog does not name a separate hosting platform for this step.",
     },
     outcomes: [
-      "Build React interfaces for a real application flow",
+      "Build React interfaces for a real application flow after this MERN Stack Development Course",
       "Expose APIs with Node.js and Express",
       "Perform MongoDB CRUD from the server",
-      "Protect routes with JWT authentication",
-      "Ship a full-stack project that uses the MERN stack end to end",
+      "Protect routes with Auth & JWT",
+      "Ship a Full-Stack Project that uses the MERN stack end to end",
     ],
     faqs: [
       {
@@ -186,6 +187,17 @@ export const COURSE_PAGE_COPY = {
         q: "Are videos included?",
         a: "KYK lists five topics and twenty videos for this course on the enrol card.",
       },
+    ],
+    trackLinks: [
+      { text: "The Python language sits on " },
+      { to: "/Blog/python-programming", text: "Python Programming" },
+      { text: ". Wrangling, EDA, and ML sit on " },
+      { to: "/Blog/data-science", text: "Data Science" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/development", text: "Development Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["python-programming", "data-science", "jira-for-project-management"],
   },

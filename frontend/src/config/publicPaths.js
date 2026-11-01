@@ -177,6 +177,19 @@ export const DATA_SCIENCE_COURSE_SEO = {
   productName: "Data Science",
 };
 
+export const MERN_STACK_COURSE_PATH = "/Blog/mern-stack-development";
+
+/** First-byte + Helmet SEO for the MERN Stack Development course page only. */
+export const MERN_STACK_COURSE_SEO = {
+  title: "MERN Stack Development Course & Full Stack Training | KYK",
+  description:
+    "Learn MERN Stack Development with KYK's advanced course: React, Node & Express, MongoDB CRUD, Auth & JWT. 70 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+  h1: "MERN Stack Development Course – Advanced Full Stack Training",
+  ogImage: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "MERN Stack Development",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -338,6 +351,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
     };
   }
+  if (path === MERN_STACK_COURSE_PATH) {
+    return {
+      title: MERN_STACK_COURSE_SEO.title,
+      description: MERN_STACK_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: MERN_STACK_COURSE_SEO.ogImage,
+      twitterCard: MERN_STACK_COURSE_SEO.twitterCard,
+    };
+  }
   return null;
 }
 
@@ -374,6 +397,27 @@ export function applyInitialHtmlSeo(html, pathname) {
     /<\/head>/i,
     `    <link data-rh="true" rel="canonical" href="${seo.canonical}" />\n    <meta data-rh="true" name="robots" content="${escapeAttr(seo.robots)}" />\n  </head>`
   );
+  if (seo.ogImage) {
+    const twitterCard = seo.twitterCard || "summary_large_image";
+    next = next.replace(
+      /<meta\b[^>]*(?:property=["']og:(?:title|description|url|image)["']|name=["']twitter:(?:card|title|description|image)["'])[^>]*>\s*/gi,
+      ""
+    );
+    next = next.replace(
+      /<\/head>/i,
+      [
+        `    <meta data-rh="true" property="og:title" content="${escapeAttr(seo.title)}" />`,
+        `    <meta data-rh="true" property="og:description" content="${escapeAttr(seo.description)}" />`,
+        `    <meta data-rh="true" property="og:url" content="${escapeAttr(seo.canonical)}" />`,
+        `    <meta data-rh="true" property="og:image" content="${escapeAttr(seo.ogImage)}" />`,
+        `    <meta data-rh="true" name="twitter:card" content="${escapeAttr(twitterCard)}" />`,
+        `    <meta data-rh="true" name="twitter:title" content="${escapeAttr(seo.title)}" />`,
+        `    <meta data-rh="true" name="twitter:description" content="${escapeAttr(seo.description)}" />`,
+        `    <meta data-rh="true" name="twitter:image" content="${escapeAttr(seo.ogImage)}" />`,
+        `  </head>`,
+      ].join("\n")
+    );
+  }
   return next;
 }
 

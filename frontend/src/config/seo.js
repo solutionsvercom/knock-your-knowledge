@@ -15,6 +15,7 @@ import {
   AI_FUNDAMENTALS_COURSE_SEO,
   PYTHON_PROGRAMMING_COURSE_SEO,
   DATA_SCIENCE_COURSE_SEO,
+  MERN_STACK_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -74,10 +75,7 @@ export const COURSE_SEO = {
     ...DATA_SCIENCE_COURSE_SEO,
   },
   "mern-stack-development": {
-    title: "MERN Stack Development Course Online | KYK",
-    description:
-      "Build full-stack web apps with MongoDB, Express, React, and Node.js. KYK MERN Stack internship course covering CRUD, auth, JWT, and a complete project.",
-    h1: "MERN Stack Development",
+    ...MERN_STACK_COURSE_SEO,
   },
   "artificial-intelligence-fundamentals": {
     ...AI_FUNDAMENTALS_COURSE_SEO,

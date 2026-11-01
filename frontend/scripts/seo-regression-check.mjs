@@ -38,6 +38,8 @@ import {
   PYTHON_PROGRAMMING_COURSE_PATH,
   DATA_SCIENCE_COURSE_SEO,
   DATA_SCIENCE_COURSE_PATH,
+  MERN_STACK_COURSE_SEO,
+  MERN_STACK_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -81,6 +83,8 @@ if (!titles.includes(PYTHON_PROGRAMMING_COURSE_SEO.title)) titles.push(PYTHON_PR
 if (!descriptions.includes(PYTHON_PROGRAMMING_COURSE_SEO.description)) descriptions.push(PYTHON_PROGRAMMING_COURSE_SEO.description);
 if (!titles.includes(DATA_SCIENCE_COURSE_SEO.title)) titles.push(DATA_SCIENCE_COURSE_SEO.title);
 if (!descriptions.includes(DATA_SCIENCE_COURSE_SEO.description)) descriptions.push(DATA_SCIENCE_COURSE_SEO.description);
+if (!titles.includes(MERN_STACK_COURSE_SEO.title)) titles.push(MERN_STACK_COURSE_SEO.title);
+if (!descriptions.includes(MERN_STACK_COURSE_SEO.description)) descriptions.push(MERN_STACK_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -750,6 +754,80 @@ if (
   pass("Data Science metadata does not call this retail course a mentor-led internship");
 } else fail("Data Science metadata still uses internship or mentor-led wording");
 
+const mernCourseTitleHtml = MERN_STACK_COURSE_SEO.title.replace(/&/g, "&amp;");
+const mernCourseDescHtml = MERN_STACK_COURSE_SEO.description.replace(/&/g, "&amp;");
+const mernCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  MERN_STACK_COURSE_PATH
+);
+if (mernCourseShell.includes(mernCourseTitleHtml)) pass("Initial HTML title for MERN Stack Development course");
+else fail("Initial HTML missing MERN Stack Development course title");
+if (mernCourseShell.includes(mernCourseDescHtml)) pass("Initial HTML description for MERN Stack Development course");
+else fail("Initial HTML missing MERN Stack Development course description");
+if ((mernCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("MERN Stack Development course initial HTML has exactly one canonical");
+else fail("MERN Stack Development course initial HTML canonical count is not 1");
+if (mernCourseShell.includes(`href="${canonicalUrl(MERN_STACK_COURSE_PATH)}"`)) pass("MERN Stack Development course initial HTML canonical is the course URL");
+else fail("MERN Stack Development course initial HTML canonical is not the course URL");
+if (mernCourseShell.includes('content="index, follow"')) pass("MERN Stack Development course initial HTML robots is index, follow");
+else fail("MERN Stack Development course initial HTML missing index, follow");
+if (
+  documentLinkHeader(MERN_STACK_COURSE_PATH) ===
+  `<${canonicalUrl(MERN_STACK_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("MERN Stack Development course Link header is self-canonical");
+} else fail("MERN Stack Development course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change SMM");
+} else fail("MERN Stack Development course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change SEO course");
+} else fail("MERN Stack Development course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change SEM course");
+} else fail("MERN Stack Development course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change SMO course");
+} else fail("MERN Stack Development course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change GSC course");
+} else fail("MERN Stack Development course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change AI marketing course");
+} else fail("MERN Stack Development course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change AI productivity course");
+} else fail("MERN Stack Development course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change Prompt Engineering");
+} else fail("MERN Stack Development course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change AI Fundamentals");
+} else fail("MERN Stack Development course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change Python Programming");
+} else fail("MERN Stack Development course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change Data Science");
+} else fail("MERN Stack Development course metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(MERN_STACK_COURSE_SEO.title) === false) {
+  pass("MERN Stack Development course HTML SEO injection does not change /Internships");
+} else fail("MERN Stack Development course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/mern-stack-development/videos") ===
+  `<${canonicalUrl(MERN_STACK_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("MERN Stack Development course /videos Link header still points at the parent course");
+} else fail("MERN Stack Development course /videos Link header is not the parent course");
+if (MERN_STACK_COURSE_SEO.productName === "MERN Stack Development") {
+  pass("MERN Stack Development productName is unchanged for the videos page title");
+} else fail("MERN Stack Development productName changed");
+if (
+  MERN_STACK_COURSE_SEO.description.includes("mentor-led") === false &&
+  MERN_STACK_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("MERN Stack Development metadata does not call this retail course a mentor-led internship");
+} else fail("MERN Stack Development metadata still uses internship or mentor-led wording");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -772,10 +850,11 @@ if (
   blogPostSrc.includes("artificial-intelligence-fundamentals") &&
   blogPostSrc.includes("python-programming") &&
   blogPostSrc.includes("data-science") &&
+  blogPostSrc.includes("mern-stack-development") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, and Data Science course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, and MERN Stack Development course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -919,6 +998,22 @@ if (
 ) {
   pass("Data Science course FAQs retain original answers, related cards, and contextual course links");
 } else fail("Data Science course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "Is MERN Stack Development a beginner course?"') &&
+  smmCopy.includes('q: "Which technologies are used?"') &&
+  smmCopy.includes('q: "Does the course include authentication?"') &&
+  smmCopy.includes('q: "Do I need the Python course first?"') &&
+  smmCopy.includes('q: "Are videos included?"') &&
+  smmCopy.includes('a: "No. KYK lists it as Advanced, with 70 hrs covering React, Node & Express, MongoDB CRUD, Auth & JWT, and a full-stack project."') &&
+  smmCopy.includes('a: "KYK lists five topics and twenty videos for this course on the enrol card."') &&
+  smmCopy.includes('relatedSlugs: ["python-programming", "data-science", "jira-for-project-management"]') &&
+  smmCopy.includes("The Python language sits on") &&
+  smmCopy.includes('to: "/Blog/python-programming"') &&
+  smmCopy.includes('to: "/Blog/data-science"') &&
+  smmCopy.includes('to: "/Bundles/development"')
+) {
+  pass("MERN Stack Development course FAQs retain original answers, related cards, and contextual course links");
+} else fail("MERN Stack Development course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -946,9 +1041,11 @@ if (
   jsonLdSrc.includes('instructor === "Alex Chen"') &&
   jsonLdSrc.includes("python-programming") &&
   jsonLdSrc.includes('instructor === "Sarah Patel"') &&
-  jsonLdSrc.includes("data-science")
+  jsonLdSrc.includes("data-science") &&
+  jsonLdSrc.includes('instructor === "James Rivera"') &&
+  jsonLdSrc.includes("mern-stack-development")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, and Data Science courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, and MERN Stack Development courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -1295,10 +1392,14 @@ try {
     !homeHtml.includes(aifCourseTitleHtml) &&
     !bundlesHtml.includes(aifCourseTitleHtml) &&
     !homeHtml.includes(pyCourseTitleHtml) &&
-    !bundlesHtml.includes(pyCourseTitleHtml)
+    !bundlesHtml.includes(pyCourseTitleHtml) &&
+    !homeHtml.includes(dsCourseTitleHtml) &&
+    !bundlesHtml.includes(dsCourseTitleHtml) &&
+    !homeHtml.includes(mernCourseTitleHtml) &&
+    !bundlesHtml.includes(mernCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, or Python Programming course metadata");
-  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, or Python Programming course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, or MERN course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, or MERN course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -1557,6 +1658,70 @@ try {
   if (!pyVidHtml.includes(pyCourseTitleHtml) && !pyVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("Python Programming /videos HTML was not given Python Programming listing or SMM metadata");
   } else fail("Python Programming /videos HTML contains listing metadata");
+
+  const dsCourseRes = await fetch(`${injOrigin}${DATA_SCIENCE_COURSE_PATH}`);
+  const dsCourseHtml = await dsCourseRes.text();
+  if (dsCourseRes.status === 200) pass("Express-like /Blog/data-science returns HTTP 200");
+  else fail(`Data Science course HTTP ${dsCourseRes.status}`);
+  if (dsCourseHtml.includes(dsCourseTitleHtml) && dsCourseHtml.includes(DATA_SCIENCE_COURSE_SEO.description)) {
+    pass("Data Science course initial HTML has the new title and description");
+  } else fail("Data Science course initial HTML missing title or description");
+
+  const mernCourseRes = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
+  const mernCourseHtml = await mernCourseRes.text();
+  if (mernCourseRes.status === 200) pass("Express-like /Blog/mern-stack-development returns HTTP 200");
+  else fail(`MERN Stack Development course HTTP ${mernCourseRes.status}`);
+  if (mernCourseHtml.includes(mernCourseTitleHtml) && mernCourseHtml.includes(mernCourseDescHtml)) {
+    pass("MERN Stack Development course initial HTML has the new title and description");
+  } else fail("MERN Stack Development course initial HTML missing title or description");
+  if ((mernCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("MERN Stack Development course initial HTML has one canonical");
+  else fail("MERN Stack Development course initial HTML canonical count is not 1");
+  if (mernCourseRes.headers.get("link") === `<${canonicalUrl(MERN_STACK_COURSE_PATH)}>; rel="canonical"`) {
+    pass("MERN Stack Development course response Link header is self-canonical");
+  } else fail("MERN Stack Development course Link header was incorrect");
+  if (mernCourseHtml.includes('content="index, follow"') && !mernCourseHtml.includes("noindex")) {
+    pass("MERN Stack Development course initial HTML is index, follow");
+  } else fail("MERN Stack Development course initial HTML not indexable");
+  if (
+    !mernCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !mernCourseHtml.includes(seoCourseTitleHtml) &&
+    !mernCourseHtml.includes(semCourseTitleHtml) &&
+    !mernCourseHtml.includes(smoCourseTitleHtml) &&
+    !mernCourseHtml.includes(gscCourseTitleHtml) &&
+    !mernCourseHtml.includes(aimCourseTitleHtml) &&
+    !mernCourseHtml.includes(aipCourseTitleHtml) &&
+    !mernCourseHtml.includes(peCourseTitleHtml) &&
+    !mernCourseHtml.includes(aifCourseTitleHtml) &&
+    !mernCourseHtml.includes(pyCourseTitleHtml) &&
+    !mernCourseHtml.includes(dsCourseTitleHtml) &&
+    !mernCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("MERN Stack Development course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, or Internships metadata");
+  } else fail("MERN Stack Development course first-byte HTML mixed another route's metadata");
+
+  const pyAfter = await fetch(`${injOrigin}${PYTHON_PROGRAMMING_COURSE_PATH}`);
+  const pyAfterHtml = await pyAfter.text();
+  if (pyAfterHtml.includes(pyCourseTitleHtml) && !pyAfterHtml.includes(mernCourseTitleHtml)) {
+    pass("Python Programming course first-byte SEO remains unchanged");
+  } else fail("Python Programming course first-byte SEO changed by MERN Stack Development work");
+
+  const dsAfter = await fetch(`${injOrigin}${DATA_SCIENCE_COURSE_PATH}`);
+  const dsAfterHtml = await dsAfter.text();
+  if (dsAfterHtml.includes(dsCourseTitleHtml) && !dsAfterHtml.includes(mernCourseTitleHtml)) {
+    pass("Data Science course first-byte SEO remains unchanged");
+  } else fail("Data Science course first-byte SEO changed by MERN Stack Development work");
+
+  const mernVid = await fetch(`${injOrigin}/Blog/mern-stack-development/videos`);
+  const mernVidHtml = await mernVid.text();
+  if (mernVid.status === 200 && mernVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("MERN Stack Development /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("MERN Stack Development /videos headers changed");
+  if (mernVid.headers.get("link") === `<${canonicalUrl(MERN_STACK_COURSE_PATH)}>; rel="canonical"`) {
+    pass("MERN Stack Development /videos Link header still parent-canonical");
+  } else fail("MERN Stack Development /videos Link header changed");
+  if (!mernVidHtml.includes(mernCourseTitleHtml) && !mernVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("MERN Stack Development /videos HTML was not given MERN listing or SMM metadata");
+  } else fail("MERN Stack Development /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

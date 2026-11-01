@@ -183,7 +183,8 @@ export default function BlogPost() {
                   slug === "prompt-engineering" ||
                   slug === "artificial-intelligence-fundamentals" ||
                   slug === "python-programming" ||
-                  slug === "data-science"
+                  slug === "data-science" ||
+                  slug === "mern-stack-development"
                     ? "p"
                     : "h2"
                 }
@@ -443,7 +444,8 @@ export default function BlogPost() {
                     slug === "prompt-engineering" ||
                     slug === "artificial-intelligence-fundamentals" ||
                     slug === "python-programming" ||
-                    slug === "data-science" ? (
+                    slug === "data-science" ||
+                    slug === "mern-stack-development" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}
