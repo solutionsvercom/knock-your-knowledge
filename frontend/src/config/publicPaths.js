@@ -112,6 +112,19 @@ export const AI_MARKETING_COURSE_SEO = {
   productName: "AI Tools in Digital Marketing",
 };
 
+export const AI_PRODUCTIVITY_COURSE_PATH = "/Blog/8-best-ai-tools-for-productivity";
+
+/** First-byte + Helmet SEO for the 8 Best AI Tools for Productivity course page only. */
+export const AI_PRODUCTIVITY_COURSE_SEO = {
+  title: "AI Tools for Productivity Course | KYK",
+  description:
+    "Learn AI Tools for Productivity with KYK's beginner course: Notion AI, Midjourney, Runway and Perplexity. 12 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "8 Best AI Tools for Productivity Course – Beginner AI Productivity Tools Training",
+  ogImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "8 Best AI Tools for Productivity",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -229,6 +242,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: AI_MARKETING_COURSE_SEO.title,
       description: AI_MARKETING_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === AI_PRODUCTIVITY_COURSE_PATH) {
+    return {
+      title: AI_PRODUCTIVITY_COURSE_SEO.title,
+      description: AI_PRODUCTIVITY_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };

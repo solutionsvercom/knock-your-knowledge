@@ -10,6 +10,7 @@ import {
   SMO_COURSE_SEO,
   GSC_COURSE_SEO,
   AI_MARKETING_COURSE_SEO,
+  AI_PRODUCTIVITY_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -93,10 +94,7 @@ export const COURSE_SEO = {
     h1: "Prompt Engineering",
   },
   "8-best-ai-tools-for-productivity": {
-    title: "Best AI Tools for Productivity | KYK",
-    description:
-      "Hands-on look at leading AI tools for writing, images, video, research, and coding. KYK course on Notion AI, Midjourney, Runway, Perplexity, and workflow automation.",
-    h1: "8 Best AI Tools for Productivity",
+    ...AI_PRODUCTIVITY_COURSE_SEO,
   },
   "sql-for-data-analysis": {
     title: "SQL Course for Data Analysis | KYK",

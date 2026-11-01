@@ -268,10 +268,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["artificial-intelligence-fundamentals", "8-best-ai-tools-for-productivity", "ai-tools-in-digital-marketing"],
   },
   "8-best-ai-tools-for-productivity": {
+    introHeading: "AI Productivity Tools Training for Writing, Research and Automation",
     intro:
-      "8 Best AI Tools for Productivity is a beginner KYK course on using current AI products in daily work. The description names Notion AI, Midjourney, Runway, Perplexity, and more. Topics run from an introduction to AI tools through image and video, writing and research, coding assistants, and workflow automation.",
+      "This 8 Best AI Tools for Productivity Course is beginner AI Productivity Tools Training at Knock Your Knowledge. It is an AI Tools for Productivity course with the catalog tools Notion AI, Midjourney, Runway, and Perplexity: 12 hours, five topics, and 20 videos covering Introduction to AI Tools, Image & Video AI, Writing & Research AI, Coding Assistants, and Workflow Automation. The published course fee is ₹199/- plus 18% GST at checkout. Those products map onto daily work — draft writing, generate images and video, research, try coding assistants, and chain the steps. It is a beginner overview of productivity tools, not the marketing-track AI Tools in Digital Marketing course. The catalog names four brands plus “and more”; it does not list eight specific AI brands.",
     whyLearn:
-      "New tools appear every month, but the jobs stay similar: write, research, generate media, code, and automate. This course groups those jobs so you practise a stack — including Notion AI, Midjourney, Runway, and Perplexity — instead of collecting random sign-ups.",
+      "New tools appear every month, but the jobs stay similar: write, research, generate media, code, and automate. This AI Productivity Tools Training groups those jobs so you practise a stack — including Notion AI, Midjourney, Runway, and Perplexity — instead of collecting random sign-ups. Marketing-specific AI (Jasper, Surfer SEO, Canva AI, ChatGPT) sits on a separate course.",
     whoFor: [
       "Beginners who want a guided tour of productivity AI rather than one chatbot",
       "Creators and students who need image, video, writing, and research tools in one course",
@@ -279,22 +280,22 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Introduction to AI Tools":
-        "Map the landscape so you know which kind of tool fits writing, research, media, or automation before you open ten tabs.",
+        "Introduction to AI Tools is the first topic: map the landscape so you know which kind of tool fits writing, research, media, or automation before you open ten tabs. This is a beginner survey of productivity products, not prompt-design technique and not marketing-only AI.",
       "Image & Video AI":
-        "Use image and video AI, including tools named on the course such as Midjourney and Runway, for visual drafts you can iterate.",
+        "Image & Video AI is the second topic. Use image and video AI, including tools named on the course such as Midjourney and Runway, for visual drafts you can iterate. The catalog does not name extra image brands beyond those two.",
       "Writing & Research AI":
-        "Draft and research with assistants such as Notion AI and Perplexity, then check the output instead of pasting it blindly.",
+        "Writing & Research AI is the third topic. Draft and research with assistants such as Notion AI and Perplexity, then check the output instead of pasting it blindly. This is everyday writing and lookup, not ad copy or SEO tooling.",
       "Coding Assistants":
-        "Practise coding assistants as a way to move faster on small programming tasks, not as a replacement for reading the code.",
+        "Coding Assistants is the fourth topic. Practise coding assistants as a way to move faster on small programming tasks, not as a replacement for reading the code. The catalog does not name a specific coding-assistant brand.",
       "Workflow Automation":
-        "Connect tools into a simple workflow so each AI step has an input and an output you control.",
+        "Workflow Automation is the fifth topic. Connect Notion AI, Midjourney, Runway, and Perplexity into a simple workflow so writing, media, research, and coding are not five disconnected logins.",
     },
     outcomes: [
       "Choose an AI tool type for writing, research, media, or automation",
-      "Use image and video AI including Midjourney and Runway at a beginner level",
-      "Draft and research with assistants such as Notion AI and Perplexity",
-      "Try coding assistants on small tasks",
-      "Sketch a workflow that chains more than one AI step",
+      "Use Image & Video AI including Midjourney and Runway at a beginner level",
+      "Draft and research with Writing & Research AI such as Notion AI and Perplexity",
+      "Try Coding Assistants on small tasks",
+      "Sketch a Workflow Automation that chains more than one AI step",
     ],
     faqs: [
       {
@@ -317,6 +318,19 @@ export const COURSE_PAGE_COPY = {
         q: "Can I buy it in a pack?",
         a: "Yes. It is in the AI & Prompt Engineering bundle with AI Fundamentals and Prompt Engineering.",
       },
+    ],
+    trackLinks: [
+      { text: "Prompt design for ChatGPT, Claude, and Gemini sits on " },
+      { to: "/Blog/prompt-engineering", text: "Prompt Engineering" },
+      { text: ". Core AI concepts are in " },
+      { to: "/Blog/artificial-intelligence-fundamentals", text: "Artificial Intelligence Fundamentals" },
+      { text: ". Marketing-specific AI tools are a separate course (" },
+      { to: "/Blog/ai-tools-in-digital-marketing", text: "AI Tools in Digital Marketing" },
+      { text: "). Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/ai", text: "AI & Prompt Engineering Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["prompt-engineering", "artificial-intelligence-fundamentals", "ai-tools-in-digital-marketing"],
   },

@@ -28,6 +28,8 @@ import {
   GSC_COURSE_PATH,
   AI_MARKETING_COURSE_SEO,
   AI_MARKETING_COURSE_PATH,
+  AI_PRODUCTIVITY_COURSE_SEO,
+  AI_PRODUCTIVITY_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -61,6 +63,8 @@ if (!titles.includes(GSC_COURSE_SEO.title)) titles.push(GSC_COURSE_SEO.title);
 if (!descriptions.includes(GSC_COURSE_SEO.description)) descriptions.push(GSC_COURSE_SEO.description);
 if (!titles.includes(AI_MARKETING_COURSE_SEO.title)) titles.push(AI_MARKETING_COURSE_SEO.title);
 if (!descriptions.includes(AI_MARKETING_COURSE_SEO.description)) descriptions.push(AI_MARKETING_COURSE_SEO.description);
+if (!titles.includes(AI_PRODUCTIVITY_COURSE_SEO.title)) titles.push(AI_PRODUCTIVITY_COURSE_SEO.title);
+if (!descriptions.includes(AI_PRODUCTIVITY_COURSE_SEO.description)) descriptions.push(AI_PRODUCTIVITY_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -428,6 +432,58 @@ if (AI_MARKETING_COURSE_SEO.productName === "AI Tools in Digital Marketing") {
   pass("AI marketing productName is unchanged for the videos page title");
 } else fail("AI marketing productName changed");
 
+const aipCourseTitleHtml = AI_PRODUCTIVITY_COURSE_SEO.title.replace(/&/g, "&amp;");
+const aipCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  AI_PRODUCTIVITY_COURSE_PATH
+);
+if (aipCourseShell.includes(aipCourseTitleHtml)) pass("Initial HTML title for AI productivity course");
+else fail("Initial HTML missing AI productivity course title");
+if (aipCourseShell.includes(AI_PRODUCTIVITY_COURSE_SEO.description)) pass("Initial HTML description for AI productivity course");
+else fail("Initial HTML missing AI productivity course description");
+if ((aipCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("AI productivity course initial HTML has exactly one canonical");
+else fail("AI productivity course initial HTML canonical count is not 1");
+if (aipCourseShell.includes(`href="${canonicalUrl(AI_PRODUCTIVITY_COURSE_PATH)}"`)) pass("AI productivity course initial HTML canonical is the course URL");
+else fail("AI productivity course initial HTML canonical is not the course URL");
+if (aipCourseShell.includes('content="index, follow"')) pass("AI productivity course initial HTML robots is index, follow");
+else fail("AI productivity course initial HTML missing index, follow");
+if (
+  documentLinkHeader(AI_PRODUCTIVITY_COURSE_PATH) ===
+  `<${canonicalUrl(AI_PRODUCTIVITY_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("AI productivity course Link header is self-canonical");
+} else fail("AI productivity course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change SMM");
+} else fail("AI productivity course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change SEO course");
+} else fail("AI productivity course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change SEM course");
+} else fail("AI productivity course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change SMO course");
+} else fail("AI productivity course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change GSC course");
+} else fail("AI productivity course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change AI marketing course");
+} else fail("AI productivity course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(AI_PRODUCTIVITY_COURSE_SEO.title) === false) {
+  pass("AI productivity course HTML SEO injection does not change /Internships");
+} else fail("AI productivity course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/8-best-ai-tools-for-productivity/videos") ===
+  `<${canonicalUrl(AI_PRODUCTIVITY_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("AI productivity course /videos Link header still points at the parent course");
+} else fail("AI productivity course /videos Link header is not the parent course");
+if (AI_PRODUCTIVITY_COURSE_SEO.productName === "8 Best AI Tools for Productivity") {
+  pass("AI productivity productName is unchanged for the videos page title");
+} else fail("AI productivity productName changed");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -445,10 +501,11 @@ if (
   blogPostSrc.includes("smo-social-media-optimization") &&
   blogPostSrc.includes("google-webmaster-search-console") &&
   blogPostSrc.includes("ai-tools-in-digital-marketing") &&
+  blogPostSrc.includes("8-best-ai-tools-for-productivity") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, and AI marketing course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, and AI productivity course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -510,6 +567,22 @@ if (
 ) {
   pass("AI marketing course FAQs retain original answers and add contextual course links");
 } else fail("AI marketing course FAQ set or track links missing");
+if (
+  smmCopy.includes('q: "Which tools are named on the course?"') &&
+  smmCopy.includes('q: "How long is it?"') &&
+  smmCopy.includes('q: "Does this replace Prompt Engineering?"') &&
+  smmCopy.includes('q: "Is coding required?"') &&
+  smmCopy.includes('q: "Can I buy it in a pack?"') &&
+  smmCopy.includes('a: "12 hrs, Beginner level."') &&
+  smmCopy.includes('a: "The description lists Notion AI, Midjourney, Runway, Perplexity, and more. Tags highlight Midjourney, Runway, Notion AI, and Perplexity. The course does not list a full set of eight brand names in the catalog."') &&
+  smmCopy.includes('a: "No. Prompt Engineering teaches prompt techniques for ChatGPT, Claude, and Gemini. This course is about productivity tools across writing, media, coding, and automation."') &&
+  smmCopy.includes('to: "/Blog/prompt-engineering"') &&
+  smmCopy.includes('to: "/Blog/artificial-intelligence-fundamentals"') &&
+  smmCopy.includes('to: "/Blog/ai-tools-in-digital-marketing"') &&
+  smmCopy.includes('to: "/Bundles/ai"')
+) {
+  pass("AI productivity course FAQs retain original answers and add contextual course links");
+} else fail("AI productivity course FAQ set or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -529,9 +602,10 @@ if (
   jsonLdSrc.includes('instructor === "Paul Martinez"') &&
   jsonLdSrc.includes('instructor === "Kevin Wu"') &&
   jsonLdSrc.includes("google-webmaster-search-console") &&
-  jsonLdSrc.includes('instructor === "Lisa Monroe"')
+  jsonLdSrc.includes('instructor === "Lisa Monroe"') &&
+  jsonLdSrc.includes('instructor === "Tom Watts"')
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, and AI marketing courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, and AI productivity courses");
 } else fail("JSON-LD instructor checks missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
@@ -570,6 +644,8 @@ if (pricing.includes("DEVELOPMENT_BUNDLE_FEE = 799") && pricing.includes("AI_BUN
 } else fail("Bundle fees changed");
 if (pricing.includes("MARKETING_COURSE_FEE = 149")) pass("Marketing course fee still ₹149");
 else fail("Marketing course fee changed");
+if (pricing.includes("AI_COURSE_FEE = 199")) pass("AI course fee still ₹199");
+else fail("AI course fee changed");
 
 const checkout = fs.readFileSync(path.join(root, "src/pages/Checkout.jsx"), "utf8");
 if (checkout.includes("payWithCashfree") && checkout.includes("createCashfreeOrder")) pass("Checkout Cashfree handlers still present");
@@ -642,7 +718,8 @@ try {
     !internHtml.includes(semCourseTitleHtml) &&
     !internHtml.includes(smoCourseTitleHtml) &&
     !internHtml.includes(gscCourseTitleHtml) &&
-    !internHtml.includes(aimCourseTitleHtml)
+    !internHtml.includes(aimCourseTitleHtml) &&
+    !internHtml.includes(aipCourseTitleHtml)
   ) {
     pass("/Internships first-byte SEO unchanged");
   } else fail("/Internships first-byte SEO changed");
@@ -674,7 +751,8 @@ try {
     !smmAfterHtml.includes(semCourseTitleHtml) &&
     !smmAfterHtml.includes(smoCourseTitleHtml) &&
     !smmAfterHtml.includes(gscCourseTitleHtml) &&
-    !smmAfterHtml.includes(aimCourseTitleHtml)
+    !smmAfterHtml.includes(aimCourseTitleHtml) &&
+    !smmAfterHtml.includes(aipCourseTitleHtml)
   ) {
     pass("SMM first-byte SEO remains unchanged");
   } else fail("SMM first-byte SEO changed by later course work");
@@ -709,7 +787,8 @@ try {
     !seoAfterHtml.includes(semCourseTitleHtml) &&
     !seoAfterHtml.includes(smoCourseTitleHtml) &&
     !seoAfterHtml.includes(gscCourseTitleHtml) &&
-    !seoAfterHtml.includes(aimCourseTitleHtml)
+    !seoAfterHtml.includes(aimCourseTitleHtml) &&
+    !seoAfterHtml.includes(aipCourseTitleHtml)
   ) {
     pass("SEO course first-byte SEO remains unchanged");
   } else fail("SEO course first-byte SEO changed by later course work");
@@ -744,7 +823,8 @@ try {
     semAfterHtml.includes(semCourseTitleHtml) &&
     !semAfterHtml.includes(smoCourseTitleHtml) &&
     !semAfterHtml.includes(gscCourseTitleHtml) &&
-    !semAfterHtml.includes(aimCourseTitleHtml)
+    !semAfterHtml.includes(aimCourseTitleHtml) &&
+    !semAfterHtml.includes(aipCourseTitleHtml)
   ) {
     pass("SEM course first-byte SEO remains unchanged");
   } else fail("SEM course first-byte SEO changed by later course work");
@@ -776,7 +856,12 @@ try {
 
   const smoAfter = await fetch(`${injOrigin}${SMO_COURSE_PATH}`);
   const smoAfterHtml = await smoAfter.text();
-  if (smoAfterHtml.includes(smoCourseTitleHtml) && !smoAfterHtml.includes(gscCourseTitleHtml) && !smoAfterHtml.includes(aimCourseTitleHtml)) {
+  if (
+    smoAfterHtml.includes(smoCourseTitleHtml) &&
+    !smoAfterHtml.includes(gscCourseTitleHtml) &&
+    !smoAfterHtml.includes(aimCourseTitleHtml) &&
+    !smoAfterHtml.includes(aipCourseTitleHtml)
+  ) {
     pass("SMO course first-byte SEO remains unchanged");
   } else fail("SMO course first-byte SEO changed by later course work");
 
@@ -808,9 +893,13 @@ try {
 
   const gscAfter = await fetch(`${injOrigin}${GSC_COURSE_PATH}`);
   const gscAfterHtml = await gscAfter.text();
-  if (gscAfterHtml.includes(gscCourseTitleHtml) && !gscAfterHtml.includes(aimCourseTitleHtml)) {
+  if (
+    gscAfterHtml.includes(gscCourseTitleHtml) &&
+    !gscAfterHtml.includes(aimCourseTitleHtml) &&
+    !gscAfterHtml.includes(aipCourseTitleHtml)
+  ) {
     pass("GSC course first-byte SEO remains unchanged");
-  } else fail("GSC course first-byte SEO changed by AI marketing work");
+  } else fail("GSC course first-byte SEO changed by later course work");
 
   const coursesRes = await fetch(`${injOrigin}/Courses`);
   const coursesHtml = await coursesRes.text();
@@ -821,7 +910,8 @@ try {
     !coursesHtml.includes(semCourseTitleHtml) &&
     !coursesHtml.includes(smoCourseTitleHtml) &&
     !coursesHtml.includes(gscCourseTitleHtml) &&
-    !coursesHtml.includes(aimCourseTitleHtml)
+    !coursesHtml.includes(aimCourseTitleHtml) &&
+    !coursesHtml.includes(aipCourseTitleHtml)
   ) {
     pass("/Courses first-byte HTML is still the shared shell");
   } else fail("/Courses first-byte HTML was injected");
@@ -843,10 +933,12 @@ try {
     !homeHtml.includes(gscCourseTitleHtml) &&
     !bundlesHtml.includes(gscCourseTitleHtml) &&
     !homeHtml.includes(aimCourseTitleHtml) &&
-    !bundlesHtml.includes(aimCourseTitleHtml)
+    !bundlesHtml.includes(aimCourseTitleHtml) &&
+    !homeHtml.includes(aipCourseTitleHtml) &&
+    !bundlesHtml.includes(aipCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, or AI marketing course metadata");
-  } else fail("SEO, SEM, SMO, GSC, or AI marketing course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, or AI productivity course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, or AI productivity course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -912,6 +1004,51 @@ try {
   if (!aimVidHtml.includes(aimCourseTitleHtml) && !aimVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("AI marketing /videos HTML was not given AI marketing listing or SMM metadata");
   } else fail("AI marketing /videos HTML contains listing metadata");
+
+  const aipCourseRes = await fetch(`${injOrigin}${AI_PRODUCTIVITY_COURSE_PATH}`);
+  const aipCourseHtml = await aipCourseRes.text();
+  if (aipCourseRes.status === 200) pass("Express-like /Blog/8-best-ai-tools-for-productivity returns HTTP 200");
+  else fail(`AI productivity course HTTP ${aipCourseRes.status}`);
+  if (aipCourseHtml.includes(aipCourseTitleHtml) && aipCourseHtml.includes(AI_PRODUCTIVITY_COURSE_SEO.description)) {
+    pass("AI productivity course initial HTML has the new title and description");
+  } else fail("AI productivity course initial HTML missing title or description");
+  if ((aipCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("AI productivity course initial HTML has one canonical");
+  else fail("AI productivity course initial HTML canonical count is not 1");
+  if (aipCourseRes.headers.get("link") === `<${canonicalUrl(AI_PRODUCTIVITY_COURSE_PATH)}>; rel="canonical"`) {
+    pass("AI productivity course response Link header is self-canonical");
+  } else fail("AI productivity course Link header was incorrect");
+  if (aipCourseHtml.includes('content="index, follow"') && !aipCourseHtml.includes("noindex")) {
+    pass("AI productivity course initial HTML is index, follow");
+  } else fail("AI productivity course initial HTML not indexable");
+  if (
+    !aipCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !aipCourseHtml.includes(seoCourseTitleHtml) &&
+    !aipCourseHtml.includes(semCourseTitleHtml) &&
+    !aipCourseHtml.includes(smoCourseTitleHtml) &&
+    !aipCourseHtml.includes(gscCourseTitleHtml) &&
+    !aipCourseHtml.includes(aimCourseTitleHtml) &&
+    !aipCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("AI productivity course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, or Internships metadata");
+  } else fail("AI productivity course first-byte HTML mixed another route's metadata");
+
+  const aimAfter = await fetch(`${injOrigin}${AI_MARKETING_COURSE_PATH}`);
+  const aimAfterHtml = await aimAfter.text();
+  if (aimAfterHtml.includes(aimCourseTitleHtml) && !aimAfterHtml.includes(aipCourseTitleHtml)) {
+    pass("AI marketing course first-byte SEO remains unchanged");
+  } else fail("AI marketing course first-byte SEO changed by AI productivity work");
+
+  const aipVid = await fetch(`${injOrigin}/Blog/8-best-ai-tools-for-productivity/videos`);
+  const aipVidHtml = await aipVid.text();
+  if (aipVid.status === 200 && aipVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("AI productivity /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("AI productivity /videos headers changed");
+  if (aipVid.headers.get("link") === `<${canonicalUrl(AI_PRODUCTIVITY_COURSE_PATH)}>; rel="canonical"`) {
+    pass("AI productivity /videos Link header still parent-canonical");
+  } else fail("AI productivity /videos Link header changed");
+  if (!aipVidHtml.includes(aipCourseTitleHtml) && !aipVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("AI productivity /videos HTML was not given AI productivity listing or SMM metadata");
+  } else fail("AI productivity /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

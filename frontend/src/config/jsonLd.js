@@ -239,6 +239,15 @@ export function jsonLdForPath(pathname) {
           extras.instructor = course.instructor;
         }
       }
+      if (slug === "8-best-ai-tools-for-productivity") {
+        const post = getBlogBySlug(slug);
+        extras.image = course.image;
+        extras.description = post?.intro || COURSE_SEO[slug].description;
+        extras.vatExcluded = true;
+        if (course.instructor === "Tom Watts") {
+          extras.instructor = course.instructor;
+        }
+      }
       graph.push(courseNode(course, COURSE_SEO[slug], extras));
       if (
         slug === "smm-social-media-marketing" ||
@@ -246,7 +255,8 @@ export function jsonLdForPath(pathname) {
         slug === "sem-search-engine-marketing" ||
         slug === "smo-social-media-optimization" ||
         slug === "google-webmaster-search-console" ||
-        slug === "ai-tools-in-digital-marketing"
+        slug === "ai-tools-in-digital-marketing" ||
+        slug === "8-best-ai-tools-for-productivity"
       ) {
         const faqs = getBlogBySlug(slug)?.faqs || [];
         if (faqs.length) graph.push(faqPageNode(faqs, path));
