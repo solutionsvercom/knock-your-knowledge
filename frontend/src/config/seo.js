@@ -11,6 +11,7 @@ import {
   GSC_COURSE_SEO,
   AI_MARKETING_COURSE_SEO,
   AI_PRODUCTIVITY_COURSE_SEO,
+  PROMPT_ENGINEERING_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -88,10 +89,7 @@ export const COURSE_SEO = {
     h1: "Artificial Intelligence Fundamentals",
   },
   "prompt-engineering": {
-    title: "Prompt Engineering Course Online | ChatGPT & AI | KYK",
-    description:
-      "Learn prompt design for ChatGPT, Claude, and Gemini. KYK Prompt Engineering course covers chain-of-thought, few-shot prompting, and practical AI workflows.",
-    h1: "Prompt Engineering",
+    ...PROMPT_ENGINEERING_COURSE_SEO,
   },
   "8-best-ai-tools-for-productivity": {
     ...AI_PRODUCTIVITY_COURSE_SEO,

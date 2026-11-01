@@ -215,10 +215,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["prompt-engineering", "8-best-ai-tools-for-productivity", "python-programming"],
   },
   "prompt-engineering": {
+    introHeading: "Prompt Engineering Training for ChatGPT, Claude and Gemini",
     intro:
-      "Prompt Engineering at Knock Your Knowledge is a beginner course on writing prompts that get useful work from ChatGPT, Claude, and Gemini. You practise prompt design, working with AI tools, chain-of-thought, few-shot prompting, and advanced use cases.",
+      "This Prompt Engineering Course is beginner Prompt Engineering Training at Knock Your Knowledge. It is ChatGPT Prompt Engineering with Claude and Gemini: 15 hours, five topics, and 20 videos covering Prompt Design Techniques, Working with AI Tools, Chain-of-Thought, Few-Shot Prompting, and Advanced Use Cases. The published course fee is ₹199/- plus 18% GST at checkout. Prompt engineering is AI Prompt Writing — you set the role, task, constraints, and output so those three products return usable work instead of generic chat. This course focuses on prompt design and AI Prompt Techniques, not Artificial Intelligence Fundamentals (AI, ML, neural networks, NLP), not 8 Best AI Tools for Productivity, and not AI Tools in Digital Marketing.",
     whyLearn:
-      "Generic prompts waste time. This course is about techniques — chain-of-thought, few-shot examples, and structured design — so you can steer the same tools toward clearer answers and repeatable workflows.",
+      "Generic prompts waste time. This Prompt Engineering Training is about AI Prompt Techniques — Chain-of-Thought, Few-Shot Prompting, and structured Prompt Design Techniques — so you can steer ChatGPT, Claude, and Gemini toward clearer answers and repeatable workflows. It is not a theory survey and not a tour of productivity or marketing products.",
     whoFor: [
       "Beginners who already use ChatGPT, Claude, or Gemini and want better results",
       "Students and professionals who need prompt patterns, not model training",
@@ -226,22 +227,22 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Prompt Design Techniques":
-        "Structure prompts with role, task, constraints, and output format so the model has something specific to follow.",
+        "Prompt Design Techniques is the first topic: structure prompts with role, task, constraints, and output format so ChatGPT, Claude, or Gemini has something specific to follow. This is AI Prompt Writing, not model training.",
       "Working with AI Tools":
-        "Practise the same techniques across ChatGPT, Claude, and Gemini instead of memorising one chat box.",
+        "Working with AI Tools is the second topic. Practise the same ChatGPT Prompt Engineering methods across ChatGPT, Claude, and Gemini instead of memorising one chat box. The catalog names those three products only.",
       "Chain-of-Thought":
-        "Ask models to reason step by step on multi-part tasks so answers are easier to check.",
+        "Chain-of-Thought is the third topic. Ask models to reason step by step on multi-part tasks so answers are easier to check. It is one of the AI Prompt Techniques this beginner course names.",
       "Few-Shot Prompting":
-        "Give short examples in the prompt so the model copies the pattern you actually want.",
+        "Few-Shot Prompting is the fourth topic. Give short examples in the prompt so the model copies the pattern you actually want, instead of guessing from a one-shot request.",
       "Advanced Use Cases":
-        "Combine the techniques on harder tasks once the basic patterns are in place.",
+        "Advanced Use Cases is the fifth topic. Combine Prompt Design Techniques, Chain-of-Thought, and Few-Shot Prompting on harder tasks once the basic patterns are in place.",
     },
     outcomes: [
       "Design prompts with a clear task and output shape",
       "Work across ChatGPT, Claude, and Gemini with the same method",
-      "Use chain-of-thought on problems that need steps",
-      "Apply few-shot examples instead of one-shot guesses",
-      "Handle advanced use cases with those techniques together",
+      "Use Chain-of-Thought on problems that need steps",
+      "Apply Few-Shot Prompting instead of one-shot guesses",
+      "Handle Advanced Use Cases with those techniques together",
     ],
     faqs: [
       {
@@ -264,6 +265,19 @@ export const COURSE_PAGE_COPY = {
         q: "Is it in a bundle?",
         a: "Yes. It is part of the AI & Prompt Engineering bundle with AI Fundamentals and 8 Best AI Tools for Productivity.",
       },
+    ],
+    trackLinks: [
+      { text: "AI, ML, neural networks, and NLP sit on " },
+      { to: "/Blog/artificial-intelligence-fundamentals", text: "Artificial Intelligence Fundamentals" },
+      { text: ". Day-to-day products such as Notion AI and Midjourney are on " },
+      { to: "/Blog/8-best-ai-tools-for-productivity", text: "8 Best AI Tools for Productivity" },
+      { text: ". Marketing-specific AI is a separate course (" },
+      { to: "/Blog/ai-tools-in-digital-marketing", text: "AI Tools in Digital Marketing" },
+      { text: "). Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/ai", text: "AI & Prompt Engineering Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["artificial-intelligence-fundamentals", "8-best-ai-tools-for-productivity", "ai-tools-in-digital-marketing"],
   },

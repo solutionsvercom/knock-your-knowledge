@@ -179,7 +179,8 @@ export default function BlogPost() {
                   slug === "smo-social-media-optimization" ||
                   slug === "google-webmaster-search-console" ||
                   slug === "ai-tools-in-digital-marketing" ||
-                  slug === "8-best-ai-tools-for-productivity"
+                  slug === "8-best-ai-tools-for-productivity" ||
+                  slug === "prompt-engineering"
                     ? "p"
                     : "h2"
                 }
@@ -435,7 +436,8 @@ export default function BlogPost() {
                     slug === "smo-social-media-optimization" ||
                     slug === "google-webmaster-search-console" ||
                     slug === "ai-tools-in-digital-marketing" ||
-                    slug === "8-best-ai-tools-for-productivity" ? (
+                    slug === "8-best-ai-tools-for-productivity" ||
+                    slug === "prompt-engineering" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

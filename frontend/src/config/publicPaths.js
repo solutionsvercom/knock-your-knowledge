@@ -125,6 +125,19 @@ export const AI_PRODUCTIVITY_COURSE_SEO = {
   productName: "8 Best AI Tools for Productivity",
 };
 
+export const PROMPT_ENGINEERING_COURSE_PATH = "/Blog/prompt-engineering";
+
+/** First-byte + Helmet SEO for the Prompt Engineering course page only. */
+export const PROMPT_ENGINEERING_COURSE_SEO = {
+  title: "Prompt Engineering Course & ChatGPT Prompt Training | KYK",
+  description:
+    "Learn Prompt Engineering with KYK's beginner course: ChatGPT, Claude and Gemini. 15 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Prompt Engineering Course – Beginner Prompt Engineering Training",
+  ogImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Prompt Engineering",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -250,6 +263,14 @@ export function initialHtmlSeoForPath(pathname) {
     return {
       title: AI_PRODUCTIVITY_COURSE_SEO.title,
       description: AI_PRODUCTIVITY_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+    };
+  }
+  if (path === PROMPT_ENGINEERING_COURSE_PATH) {
+    return {
+      title: PROMPT_ENGINEERING_COURSE_SEO.title,
+      description: PROMPT_ENGINEERING_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
     };
