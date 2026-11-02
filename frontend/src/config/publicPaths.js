@@ -414,6 +414,8 @@ export function initialHtmlSeoForPath(pathname) {
       description: DATA_SCIENCE_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
+      ogImage: DATA_SCIENCE_COURSE_SEO.ogImage,
+      twitterCard: DATA_SCIENCE_COURSE_SEO.twitterCard,
     };
   }
   if (path === MERN_STACK_COURSE_PATH) {

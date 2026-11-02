@@ -705,13 +705,15 @@ if (
 } else fail("Python Programming metadata still uses internship or mentor-led wording");
 
 const dsCourseTitleHtml = DATA_SCIENCE_COURSE_SEO.title.replace(/&/g, "&amp;");
+const dsCourseDescHtml = DATA_SCIENCE_COURSE_SEO.description.replace(/&/g, "&amp;");
+const dsOgImageHtml = DATA_SCIENCE_COURSE_SEO.ogImage.replace(/&/g, "&amp;");
 const dsCourseShell = applyInitialHtmlSeo(
   `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
   DATA_SCIENCE_COURSE_PATH
 );
 if (dsCourseShell.includes(dsCourseTitleHtml)) pass("Initial HTML title for Data Science course");
 else fail("Initial HTML missing Data Science course title");
-if (dsCourseShell.includes(DATA_SCIENCE_COURSE_SEO.description)) pass("Initial HTML description for Data Science course");
+if (dsCourseShell.includes(dsCourseDescHtml)) pass("Initial HTML description for Data Science course");
 else fail("Initial HTML missing Data Science course description");
 if ((dsCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("Data Science course initial HTML has exactly one canonical");
 else fail("Data Science course initial HTML canonical count is not 1");
@@ -719,6 +721,35 @@ if (dsCourseShell.includes(`href="${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}"`)) 
 else fail("Data Science course initial HTML canonical is not the course URL");
 if (dsCourseShell.includes('content="index, follow"')) pass("Data Science course initial HTML robots is index, follow");
 else fail("Data Science course initial HTML missing index, follow");
+if (dsCourseShell.includes('property="og:title"') && dsCourseShell.includes('name="twitter:card"')) {
+  pass("Data Science course initial HTML includes OG and Twitter tags");
+} else fail("Data Science course initial HTML missing OG or Twitter tags");
+if (
+  dsCourseShell.includes(`property="og:title"`) &&
+  dsCourseShell.includes(`content="${dsCourseTitleHtml}"`) &&
+  dsCourseShell.includes(`property="og:description"`) &&
+  dsCourseShell.includes(`content="${dsCourseDescHtml}"`) &&
+  dsCourseShell.includes(`property="og:url"`) &&
+  dsCourseShell.includes(`content="${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}"`)
+) {
+  pass("Data Science course initial HTML OG title, description, and URL match Helmet");
+} else fail("Data Science course initial HTML missing OG title, description, or URL");
+if (
+  dsCourseShell.includes(`content="${dsOgImageHtml}"`) &&
+  dsCourseShell.includes('content="summary_large_image"')
+) {
+  pass("Data Science course initial HTML OG image and Twitter card match");
+} else fail("Data Science course initial HTML missing OG image or Twitter card value");
+if (
+  dsCourseShell.includes('name="twitter:image"') &&
+  (dsCourseShell.match(/content="summary_large_image"/g) || []).length === 1 &&
+  (dsCourseShell.match(/property="og:image"/g) || []).length === 1
+) {
+  pass("Data Science course initial HTML has one OG image, Twitter card, and Twitter image");
+} else fail("Data Science course initial HTML OG/Twitter tags are missing or duplicated");
+if ((dsCourseShell.match(/data-rh="true"/g) || []).length === 12) {
+  pass("Data Science course initial HTML uses data-rh on first-byte SEO tags");
+} else fail("Data Science course initial HTML data-rh count is not 12");
 if (
   documentLinkHeader(DATA_SCIENCE_COURSE_PATH) ===
   `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`
@@ -758,6 +789,32 @@ if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).i
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
   pass("Data Science course HTML SEO injection does not change /Internships");
 } else fail("Data Science course metadata leaked onto /Internships");
+if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change MERN Stack Development");
+} else fail("Data Science course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Jira for Project Management");
+} else fail("Data Science course metadata leaked onto Jira for Project Management");
+if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change SQL for Data Analysis");
+} else fail("Data Science course metadata leaked onto SQL for Data Analysis");
+if (applyInitialHtmlSeo("<title>Home</title>", POWER_BI_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Power BI Dashboarding");
+} else fail("Data Science course metadata leaked onto Power BI Dashboarding");
+if (applyInitialHtmlSeo("<title>Home</title>", TABLEAU_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Tableau Visualization");
+} else fail("Data Science course metadata leaked onto Tableau Visualization");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_FOR_ANALYTICS_COURSE_PATH).includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change Python for Analytics");
+} else fail("Data Science course metadata leaked onto Python for Analytics");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(DATA_SCIENCE_COURSE_SEO.title) === false) {
+  pass("Data Science course HTML SEO injection does not change the homepage");
+} else fail("Data Science course metadata leaked onto the homepage");
+if (
+  applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes('property="og:image"') === false
+) {
+  pass("Python Programming first-byte HTML still omits OG image after Data Science OG work");
+} else fail("Python Programming first-byte HTML gained OG image from Data Science work");
 if (
   documentLinkHeader("/Blog/data-science/videos") ===
   `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`
@@ -1671,6 +1728,19 @@ if ((jsonLdSrc.match(/slug === "python-for-analytics"/g) || []).length === 2) {
 if ((jsonLdSrc.match(/slug === "python-programming"/g) || []).length === 2) {
   pass("Python Programming JSON-LD extras and FAQPage remain declared once each");
 } else fail("Python Programming JSON-LD slug handling changed");
+if ((jsonLdSrc.match(/slug === "data-science"/g) || []).length === 2) {
+  pass("Data Science JSON-LD extras and FAQPage are declared once each");
+} else fail("Data Science JSON-LD slug handling is duplicated or missing");
+if (
+  /if \(slug === "data-science"\) \{[\s\S]*?extras\.educationalLevel = "Intermediate"[\s\S]*?if \(slug === "mern-stack-development"\)/.test(
+    jsonLdSrc
+  )
+) {
+  pass("Data Science Course JSON-LD sets Intermediate educationalLevel on this slug only");
+} else fail("Data Science educationalLevel is missing or not slug-gated");
+if (jsonLdSrc.includes('instructor === "Sarah Patel"') === false) {
+  fail("Data Science Sarah Patel instructor gate missing");
+} else pass("Data Science Sarah Patel instructor gate remains catalog-gated");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
 if (internPage.includes("Apply Now") && internPage.includes("addInternshipToCart") && internPage.includes("View program")) {
@@ -2295,9 +2365,54 @@ try {
   const dsCourseHtml = await dsCourseRes.text();
   if (dsCourseRes.status === 200) pass("Express-like /Blog/data-science returns HTTP 200");
   else fail(`Data Science course HTTP ${dsCourseRes.status}`);
-  if (dsCourseHtml.includes(dsCourseTitleHtml) && dsCourseHtml.includes(DATA_SCIENCE_COURSE_SEO.description)) {
+  if (dsCourseHtml.includes(dsCourseTitleHtml) && dsCourseHtml.includes(dsCourseDescHtml)) {
     pass("Data Science course initial HTML has the new title and description");
   } else fail("Data Science course initial HTML missing title or description");
+  if ((dsCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("Data Science course initial HTML has one canonical");
+  else fail("Data Science course initial HTML canonical count is not 1");
+  if (dsCourseRes.headers.get("link") === `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Data Science course response Link header is self-canonical");
+  } else fail("Data Science course Link header was incorrect");
+  if (dsCourseHtml.includes('content="index, follow"') && !dsCourseHtml.includes("noindex")) {
+    pass("Data Science course initial HTML is index, follow");
+  } else fail("Data Science course initial HTML not indexable");
+  if (
+    dsCourseHtml.includes('property="og:title"') &&
+    dsCourseHtml.includes('property="og:description"') &&
+    dsCourseHtml.includes('property="og:url"') &&
+    dsCourseHtml.includes('property="og:image"') &&
+    dsCourseHtml.includes('name="twitter:card"') &&
+    dsCourseHtml.includes("summary_large_image") &&
+    dsCourseHtml.includes(dsOgImageHtml) &&
+    dsCourseHtml.includes('name="twitter:image"')
+  ) {
+    pass("Data Science course initial HTML has OG and Twitter metadata");
+  } else fail("Data Science course initial HTML missing OG or Twitter metadata");
+  if (
+    !dsCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !dsCourseHtml.includes(pyCourseTitleHtml) &&
+    !dsCourseHtml.includes(pythonForAnalyticsCourseTitleHtml) &&
+    !dsCourseHtml.includes(sqlCourseTitleHtml) &&
+    !dsCourseHtml.includes(powerBiCourseTitleHtml) &&
+    !dsCourseHtml.includes(tableauCourseTitleHtml) &&
+    !dsCourseHtml.includes(jiraCourseTitleHtml) &&
+    !dsCourseHtml.includes(mernCourseTitleHtml) &&
+    !dsCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("Data Science course first-byte HTML does not reuse Python Programming, Python for Analytics, SQL, Power BI, Tableau, Jira, MERN, SMM, or Internships metadata");
+  } else fail("Data Science course first-byte HTML mixed another route's metadata");
+
+  const dsVid = await fetch(`${injOrigin}/Blog/data-science/videos`);
+  const dsVidHtml = await dsVid.text();
+  if (dsVid.status === 200 && dsVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Data Science /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("Data Science /videos headers changed");
+  if (dsVid.headers.get("link") === `<${canonicalUrl(DATA_SCIENCE_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Data Science /videos Link header still parent-canonical");
+  } else fail("Data Science /videos Link header changed");
+  if (!dsVidHtml.includes(dsCourseTitleHtml) && !dsVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("Data Science /videos HTML was not given Data Science listing or SMM metadata");
+  } else fail("Data Science /videos HTML contains listing metadata");
 
   const mernCourseRes = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
   const mernCourseHtml = await mernCourseRes.text();

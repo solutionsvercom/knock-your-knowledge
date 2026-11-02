@@ -283,6 +283,7 @@ export function jsonLdForPath(pathname) {
         extras.image = course.image;
         extras.description = post?.intro || COURSE_SEO[slug].description;
         extras.vatExcluded = true;
+        extras.educationalLevel = "Intermediate";
         if (course.instructor === "Sarah Patel") {
           extras.instructor = course.instructor;
         }
