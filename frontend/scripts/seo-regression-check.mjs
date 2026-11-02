@@ -52,6 +52,8 @@ import {
   PYTHON_FOR_ANALYTICS_COURSE_PATH,
   DEVELOPMENT_BUNDLE_SEO,
   DEVELOPMENT_BUNDLE_PATH,
+  AI_BUNDLE_SEO,
+  AI_BUNDLE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -109,6 +111,8 @@ if (!titles.includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title)) titles.push(PYTHON_
 if (!descriptions.includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.description)) descriptions.push(PYTHON_FOR_ANALYTICS_COURSE_SEO.description);
 if (!titles.includes(DEVELOPMENT_BUNDLE_SEO.title)) titles.push(DEVELOPMENT_BUNDLE_SEO.title);
 if (!descriptions.includes(DEVELOPMENT_BUNDLE_SEO.description)) descriptions.push(DEVELOPMENT_BUNDLE_SEO.description);
+if (!titles.includes(AI_BUNDLE_SEO.title)) titles.push(AI_BUNDLE_SEO.title);
+if (!descriptions.includes(AI_BUNDLE_SEO.description)) descriptions.push(AI_BUNDLE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -1547,11 +1551,9 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(DEVELOPMENT_BUNDLE_
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(DEVELOPMENT_BUNDLE_SEO.title) === false) {
   pass("Development Bundle HTML SEO injection does not change /Internships");
 } else fail("Development Bundle metadata leaked onto /Internships");
-if (
-  applyInitialHtmlSeo("<title>Home</title>", "/Bundles/ai").includes('property="og:image"') === false
-) {
-  pass("AI bundle first-byte HTML still omits OG image after Development Bundle OG work");
-} else fail("AI bundle first-byte HTML gained OG image from Development Bundle work");
+if (devBundleShell.includes(devBundleOgImageHtml) && devBundleShell.includes(AI_BUNDLE_SEO.title) === false) {
+  pass("Development Bundle first-byte OG image remains the Development cover after AI bundle work");
+} else fail("Development Bundle first-byte OG image changed by AI bundle work");
 if (DEVELOPMENT_BUNDLE_SEO.productName === "Development Bundle") {
   pass("Development Bundle productName remains Development Bundle");
 } else fail("Development Bundle productName changed");
@@ -1563,6 +1565,92 @@ if (
 ) {
   pass("Development Bundle OG image is the existing Python Programming cover image");
 } else fail("Development Bundle OG image is not the verified cover image");
+
+const aiBundleTitleHtml = AI_BUNDLE_SEO.title.replace(/&/g, "&amp;");
+const aiBundleDescHtml = AI_BUNDLE_SEO.description.replace(/&/g, "&amp;");
+const aiBundleOgImageHtml = AI_BUNDLE_SEO.ogImage.replace(/&/g, "&amp;");
+const aiBundleShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  AI_BUNDLE_PATH
+);
+if (aiBundleShell.includes(aiBundleTitleHtml)) pass("Initial HTML title for AI Bundle");
+else fail("Initial HTML missing AI Bundle title");
+if (aiBundleShell.includes(aiBundleDescHtml)) pass("Initial HTML description for AI Bundle");
+else fail("Initial HTML missing AI Bundle description");
+if ((aiBundleShell.match(/rel="canonical"/g) || []).length === 1) pass("AI Bundle initial HTML has exactly one canonical");
+else fail("AI Bundle initial HTML canonical count is not 1");
+if (aiBundleShell.includes(`href="${canonicalUrl(AI_BUNDLE_PATH)}"`)) pass("AI Bundle initial HTML canonical is the bundle URL");
+else fail("AI Bundle initial HTML canonical is not the bundle URL");
+if (aiBundleShell.includes('content="index, follow"')) pass("AI Bundle initial HTML robots is index, follow");
+else fail("AI Bundle initial HTML missing index, follow");
+if (aiBundleShell.includes('property="og:title"') && aiBundleShell.includes('name="twitter:card"')) {
+  pass("AI Bundle initial HTML includes OG and Twitter tags");
+} else fail("AI Bundle initial HTML missing OG or Twitter tags");
+if (
+  aiBundleShell.includes(`content="${aiBundleTitleHtml}"`) &&
+  aiBundleShell.includes(`content="${aiBundleDescHtml}"`) &&
+  aiBundleShell.includes(`content="${canonicalUrl(AI_BUNDLE_PATH)}"`)
+) {
+  pass("AI Bundle initial HTML OG title, description, and URL match Helmet");
+} else fail("AI Bundle initial HTML missing OG title, description, or URL");
+if (
+  aiBundleShell.includes(`content="${aiBundleOgImageHtml}"`) &&
+  aiBundleShell.includes('content="summary_large_image"')
+) {
+  pass("AI Bundle initial HTML OG image and Twitter card match");
+} else fail("AI Bundle initial HTML missing OG image or Twitter card value");
+if (
+  aiBundleShell.includes('name="twitter:image"') &&
+  (aiBundleShell.match(/content="summary_large_image"/g) || []).length === 1 &&
+  (aiBundleShell.match(/property="og:image"/g) || []).length === 1
+) {
+  pass("AI Bundle initial HTML has one OG image, Twitter card, and Twitter image");
+} else fail("AI Bundle initial HTML OG/Twitter tags are missing or duplicated");
+if ((aiBundleShell.match(/data-rh="true"/g) || []).length === 12) {
+  pass("AI Bundle initial HTML uses data-rh on first-byte SEO tags");
+} else fail("AI Bundle initial HTML data-rh count is not 12");
+if (documentLinkHeader(AI_BUNDLE_PATH) === `<${canonicalUrl(AI_BUNDLE_PATH)}>; rel="canonical"`) {
+  pass("AI Bundle Link header is self-canonical");
+} else fail("AI Bundle Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_BUNDLE_PATH).includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change Development Bundle");
+} else fail("AI Bundle metadata leaked onto Development Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Bundles/analytics").includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change Analytics bundle");
+} else fail("AI Bundle metadata leaked onto Analytics bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Bundles/marketing").includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change Marketing bundle");
+} else fail("AI Bundle metadata leaked onto Marketing bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change AI Fundamentals");
+} else fail("AI Bundle metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change Prompt Engineering");
+} else fail("AI Bundle metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change the homepage");
+} else fail("AI Bundle metadata leaked onto the homepage");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(AI_BUNDLE_SEO.title) === false) {
+  pass("AI Bundle HTML SEO injection does not change /Internships");
+} else fail("AI Bundle metadata leaked onto /Internships");
+if (AI_BUNDLE_SEO.productName === "AI & Prompt Engineering Bundle") {
+  pass("AI Bundle productName remains AI & Prompt Engineering Bundle");
+} else fail("AI Bundle productName changed");
+if (AI_BUNDLE_SEO.h1 === "AI & Prompt Engineering Bundle – AI Fundamentals, Prompts and Tools Training") {
+  pass("AI Bundle H1 is the approved training heading");
+} else fail("AI Bundle H1 is not the approved heading");
+if (AI_BUNDLE_SEO.title === "AI & Prompt Engineering Course Bundle | KYK") {
+  pass("AI Bundle title remains the approved Helmet title");
+} else fail("AI Bundle title changed");
+if (
+  AI_BUNDLE_SEO.ogImage === "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80" &&
+  AI_BUNDLE_SEO.ogImage !== DEVELOPMENT_BUNDLE_SEO.ogImage
+) {
+  pass("AI Bundle OG image is the existing AI Fundamentals cover image");
+} else fail("AI Bundle OG image is not the verified cover image");
+if (AI_BUNDLE_SEO.title !== DEVELOPMENT_BUNDLE_SEO.title && AI_BUNDLE_SEO.description !== DEVELOPMENT_BUNDLE_SEO.description) {
+  pass("AI Bundle title and description are isolated from Development Bundle");
+} else fail("AI Bundle metadata collided with Development Bundle");
 
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
@@ -1956,6 +2044,24 @@ if (
 ) {
   pass("Development Bundle Product name stays Development Bundle and FAQs come from bundle copy");
 } else fail("Development Bundle Product name or FAQ source changed");
+if (
+  /if \(slug === "ai" && offer\) \{[\s\S]*?"@type": "Product"[\s\S]*?name: "AI & Prompt Engineering Bundle"[\s\S]*?price: String\(offer\.fee\)[\s\S]*?valueAddedTaxIncluded: false[\s\S]*?faqPageNode\(faqs, path\)/.test(
+    jsonLdSrc
+  )
+) {
+  pass("AI Bundle JSON-LD adds Product/Offer and FAQPage on this slug only");
+} else fail("AI Bundle Product/Offer or FAQPage is missing or not slug-gated");
+if (
+  jsonLdSrc.includes('name: "AI & Prompt Engineering Bundle"') &&
+  jsonLdSrc.includes("BUNDLE_PAGE_COPY.ai")
+) {
+  pass("AI Bundle Product name stays AI & Prompt Engineering Bundle and FAQs come from bundle copy");
+} else fail("AI Bundle Product name or FAQ source changed");
+if (
+  /if \(slug === "development" && offer\) \{[\s\S]*?if \(slug === "ai" && offer\) \{/.test(jsonLdSrc)
+) {
+  pass("Development Bundle JSON-LD Product block remains separate from the AI Bundle block");
+} else fail("Development and AI Bundle JSON-LD Product blocks were merged or reordered unsafely");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
 if (internPage.includes("Apply Now") && internPage.includes("addInternshipToCart") && internPage.includes("View program")) {
@@ -2035,10 +2141,46 @@ if (
   pass("AI, Analytics, and Marketing bundle copy remain unchanged");
 } else fail("Another bundle's copy was changed by Development Bundle work");
 
+if (bundleCopySrc.includes('introHeading: "AI Fundamentals, Prompt Engineering and productivity tools in one AI pack"')) {
+  pass("AI Bundle intro H2 copy is the approved heading");
+} else fail("AI Bundle intro H2 copy is missing or changed");
+const aiFaqQuestions = [
+  "What is inside the AI & Prompt Engineering bundle?",
+  "How much do I save versus three separate courses?",
+  "Does this teach me to train my own model?",
+  "Which AI products are named?",
+  "Is this the AI internship program?",
+  "How long are the three courses together?",
+];
+const aiFaqAnswers = [
+  "Artificial Intelligence Fundamentals, Prompt Engineering, and 8 Best AI Tools for Productivity.",
+  "₹199/- × 3 = ₹597/- if bought alone. The pack is ₹499/-, which is ₹98/- less.",
+  "No. Fundamentals explains AI, ML, neural networks, and NLP. Prompt Engineering and the tools course are about using existing products, not training models.",
+  "Prompt Engineering names ChatGPT, Claude, and Gemini. The tools course names Notion AI, Midjourney, Runway, and Perplexity. Other brand names are not listed in the catalog.",
+  "No. This is a course bundle. The AI & Prompt Engineering Internship is a separate 1–3 month program.",
+  "Listed durations are 35 hrs, 15 hrs, and 12 hrs — 62 hrs in total.",
+];
+if (aiFaqQuestions.every((q) => bundleCopySrc.includes(`q: "${q}"`))) {
+  pass("AI Bundle keeps all six original FAQ questions");
+} else fail("AI Bundle FAQ questions changed");
+if (aiFaqAnswers.every((a) => bundleCopySrc.includes(`a: "${a}"`))) {
+  pass("AI Bundle keeps all six original FAQ answers");
+} else fail("AI Bundle FAQ answers changed");
+if (
+  bundleCopySrc.includes('introHeading: "Python, Data Science and MERN Stack in one Development pack"') &&
+  bundleCopySrc.includes("The Business Analytics bundle is five KYK courses") &&
+  bundleCopySrc.includes("The Advanced Digital Marketing bundle")
+) {
+  pass("Development, Analytics, and Marketing bundle copy remain unchanged after AI Bundle work");
+} else fail("Another bundle's copy was changed by AI Bundle work");
+
 const bundleDetailSrc = fs.readFileSync(path.join(root, "src/pages/BundleDetail.jsx"), "utf8");
-if (bundleDetailSrc.includes('slug === "development" ? BUNDLE_SEO.development.h1 : offer.pageTitle')) {
+if (bundleDetailSrc.includes('slug === "development"') && bundleDetailSrc.includes("BUNDLE_SEO.development.h1")) {
   pass("Development Bundle page uses the approved H1 on this slug only");
 } else fail("Development Bundle H1 is not slug-gated");
+if (bundleDetailSrc.includes('slug === "ai"') && bundleDetailSrc.includes("BUNDLE_SEO.ai.h1")) {
+  pass("AI Bundle page uses the approved H1 on this slug only");
+} else fail("AI Bundle H1 is not slug-gated");
 if (bundleDetailSrc.includes("copy?.introHeading") && bundleDetailSrc.includes("<h2")) {
   pass("Bundle detail renders the introductory H2 from copy when present");
 } else fail("Bundle detail missing introductory H2");
@@ -2058,12 +2200,12 @@ if (bundleDetailSrc.includes("addBundle") && bundleDetailSrc.includes("addCourse
   pass("Bundle detail still uses catalog pricing and cart CTAs");
 } else fail("Bundle detail lost pricing or cart CTAs");
 if (
-  seoSrc.includes('title: "AI & Prompt Engineering Course Bundle | KYK"') &&
+  AI_BUNDLE_SEO.title === "AI & Prompt Engineering Course Bundle | KYK" &&
   seoSrc.includes('title: "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK"') &&
   seoSrc.includes('title: "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK"')
 ) {
-  pass("AI, Analytics, and Marketing bundle Helmet titles remain unchanged");
-} else fail("Another bundle Helmet title changed by Development Bundle work");
+  pass("AI Bundle title is preserved and Analytics/Marketing Helmet titles remain unchanged");
+} else fail("AI, Analytics, or Marketing bundle Helmet title changed unexpectedly");
 
 const checkout = fs.readFileSync(path.join(root, "src/pages/Checkout.jsx"), "utf8");
 if (checkout.includes("payWithCashfree") && checkout.includes("createCashfreeOrder")) pass("Checkout Cashfree handlers still present");
@@ -3224,6 +3366,80 @@ try {
   if (!videosAfterDevBundleHtml.includes(devBundleTitleHtml)) {
     pass("Generic /videos HTML was not given Development Bundle metadata");
   } else fail("Generic /videos HTML contains Development Bundle metadata");
+
+  const aiBundleRes = await fetch(`${injOrigin}${AI_BUNDLE_PATH}`);
+  const aiBundleHtml = await aiBundleRes.text();
+  if (aiBundleRes.status === 200) pass("Express-like /Bundles/ai returns HTTP 200");
+  else fail(`AI Bundle HTTP ${aiBundleRes.status}`);
+  if (aiBundleHtml.includes(aiBundleTitleHtml) && aiBundleHtml.includes(aiBundleDescHtml)) {
+    pass("AI Bundle initial HTML has the approved title and description");
+  } else fail("AI Bundle initial HTML missing title or description");
+  if ((aiBundleHtml.match(/rel="canonical"/g) || []).length === 1) pass("AI Bundle initial HTML has one canonical");
+  else fail("AI Bundle initial HTML canonical count is not 1");
+  if (aiBundleRes.headers.get("link") === `<${canonicalUrl(AI_BUNDLE_PATH)}>; rel="canonical"`) {
+    pass("AI Bundle response Link header is self-canonical");
+  } else fail("AI Bundle Link header was incorrect");
+  if (aiBundleHtml.includes('content="index, follow"') && !aiBundleHtml.includes("noindex")) {
+    pass("AI Bundle initial HTML is index, follow");
+  } else fail("AI Bundle initial HTML not indexable");
+  if (
+    aiBundleHtml.includes('property="og:title"') &&
+    aiBundleHtml.includes('property="og:image"') &&
+    aiBundleHtml.includes('name="twitter:card"') &&
+    aiBundleHtml.includes("summary_large_image") &&
+    aiBundleHtml.includes(aiBundleOgImageHtml) &&
+    (aiBundleHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("AI Bundle initial HTML has OG, Twitter, and data-rh metadata");
+  } else fail("AI Bundle initial HTML missing OG, Twitter, or data-rh metadata");
+  if (!aiBundleHtml.includes(devBundleTitleHtml) && !aiBundleHtml.includes(SMM_COURSE_SEO.title) && !aiBundleHtml.includes(INTERNSHIPS_LISTING_SEO.title)) {
+    pass("AI Bundle first-byte HTML does not reuse Development, course, or internships metadata");
+  } else fail("AI Bundle first-byte HTML mixed another route's metadata");
+
+  const developmentAfterAi = await fetch(`${injOrigin}${DEVELOPMENT_BUNDLE_PATH}`);
+  const developmentAfterAiHtml = await developmentAfterAi.text();
+  if (developmentAfterAiHtml.includes(devBundleTitleHtml) && !developmentAfterAiHtml.includes(aiBundleTitleHtml)) {
+    pass("Development Bundle first-byte SEO remains unchanged after AI Bundle work");
+  } else fail("Development Bundle first-byte SEO changed by AI Bundle work");
+
+  const analyticsAfterAi = await fetch(`${injOrigin}/Bundles/analytics`);
+  const analyticsAfterAiHtml = await analyticsAfterAi.text();
+  if (!analyticsAfterAiHtml.includes(aiBundleTitleHtml) && !analyticsAfterAiHtml.includes(aiBundleDescHtml)) {
+    pass("Analytics bundle first-byte HTML remains unchanged after AI Bundle work");
+  } else fail("Analytics bundle first-byte HTML picked up AI Bundle metadata");
+
+  const marketingAfterAi = await fetch(`${injOrigin}/Bundles/marketing`);
+  const marketingAfterAiHtml = await marketingAfterAi.text();
+  if (!marketingAfterAiHtml.includes(aiBundleTitleHtml)) {
+    pass("Marketing bundle first-byte HTML remains unchanged after AI Bundle work");
+  } else fail("Marketing bundle first-byte HTML picked up AI Bundle metadata");
+
+  const pythonAfterAiBundle = await fetch(`${injOrigin}${PYTHON_PROGRAMMING_COURSE_PATH}`);
+  const pythonAfterAiBundleHtml = await pythonAfterAiBundle.text();
+  if (pythonAfterAiBundleHtml.includes(pyCourseTitleHtml) && !pythonAfterAiBundleHtml.includes(aiBundleTitleHtml)) {
+    pass("Python Programming course first-byte SEO remains unchanged after AI Bundle work");
+  } else fail("Python Programming course first-byte SEO changed by AI Bundle work");
+
+  const aifAfterAiBundle = await fetch(`${injOrigin}${AI_FUNDAMENTALS_COURSE_PATH}`);
+  const aifAfterAiBundleHtml = await aifAfterAiBundle.text();
+  if (aifAfterAiBundleHtml.includes(aifCourseTitleHtml) && !aifAfterAiBundleHtml.includes(aiBundleTitleHtml)) {
+    pass("AI Fundamentals course first-byte SEO remains unchanged after AI Bundle work");
+  } else fail("AI Fundamentals course first-byte SEO changed by AI Bundle work");
+
+  const homeAfterAiBundle = await fetch(`${injOrigin}/`);
+  const homeAfterAiBundleHtml = await homeAfterAiBundle.text();
+  if (!homeAfterAiBundleHtml.includes(aiBundleTitleHtml) && !homeAfterAiBundleHtml.includes(aiBundleDescHtml)) {
+    pass("Homepage first-byte HTML remains unchanged after AI Bundle work");
+  } else fail("Homepage first-byte HTML picked up AI Bundle metadata");
+
+  const videosAfterAiBundle = await fetch(`${injOrigin}/Blog/python-programming/videos`);
+  const videosAfterAiBundleHtml = await videosAfterAiBundle.text();
+  if (videosAfterAiBundle.status === 200 && videosAfterAiBundle.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Generic /videos route still 200 with X-Robots-Tag noindex, nofollow after AI Bundle work");
+  } else fail("Generic /videos headers changed by AI Bundle work");
+  if (!videosAfterAiBundleHtml.includes(aiBundleTitleHtml) && !videosAfterAiBundleHtml.includes(devBundleTitleHtml)) {
+    pass("Generic /videos HTML was not given AI or Development Bundle metadata");
+  } else fail("Generic /videos HTML contains bundle metadata");
 } finally {
   injectionServer.close();
 }

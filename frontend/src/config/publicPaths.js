@@ -268,6 +268,19 @@ export const DEVELOPMENT_BUNDLE_SEO = {
   productName: "Development Bundle",
 };
 
+export const AI_BUNDLE_PATH = "/Bundles/ai";
+
+/** First-byte + Helmet SEO for the AI & Prompt Engineering Bundle page only. */
+export const AI_BUNDLE_SEO = {
+  title: "AI & Prompt Engineering Course Bundle | KYK",
+  description:
+    "KYK AI bundle: Artificial Intelligence Fundamentals, Prompt Engineering, and 8 Best AI Tools for Productivity. 3 courses, 62 listed hours, ₹499/- instead of ₹597/- + 18% GST.",
+  h1: "AI & Prompt Engineering Bundle – AI Fundamentals, Prompts and Tools Training",
+  ogImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "AI & Prompt Engineering Bundle",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -501,6 +514,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: DEVELOPMENT_BUNDLE_SEO.ogImage,
       twitterCard: DEVELOPMENT_BUNDLE_SEO.twitterCard,
+    };
+  }
+  if (path === AI_BUNDLE_PATH) {
+    return {
+      title: AI_BUNDLE_SEO.title,
+      description: AI_BUNDLE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: AI_BUNDLE_SEO.ogImage,
+      twitterCard: AI_BUNDLE_SEO.twitterCard,
     };
   }
   return null;

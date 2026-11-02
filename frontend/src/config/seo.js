@@ -22,6 +22,7 @@ import {
   TABLEAU_COURSE_SEO,
   PYTHON_FOR_ANALYTICS_COURSE_SEO,
   DEVELOPMENT_BUNDLE_SEO,
+  AI_BUNDLE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -147,10 +148,7 @@ export const BUNDLE_SEO = {
     ...DEVELOPMENT_BUNDLE_SEO,
   },
   ai: {
-    title: "AI & Prompt Engineering Course Bundle | KYK",
-    description:
-      "KYK AI pack: Artificial Intelligence Fundamentals, Prompt Engineering, and 8 Best AI Tools for ₹499/- instead of ₹597/-. Three AI courses in one bundle.",
-    h1: "AI & Prompt Engineering Bundle",
+    ...AI_BUNDLE_SEO,
   },
   analytics: {
     title: "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK",

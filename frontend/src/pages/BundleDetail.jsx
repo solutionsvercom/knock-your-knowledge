@@ -89,7 +89,11 @@ export default function BundleDetail() {
             Bundle · {offer.titles.length} courses
           </p>
           <h1 className="text-3xl sm:text-5xl font-black text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            {slug === "development" ? BUNDLE_SEO.development.h1 : offer.pageTitle}
+            {slug === "development"
+              ? BUNDLE_SEO.development.h1
+              : slug === "ai"
+                ? BUNDLE_SEO.ai.h1
+                : offer.pageTitle}
           </h1>
           {copy?.introHeading ? (
             <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -239,7 +243,7 @@ export default function BundleDetail() {
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                 >
                   <summary className="text-sm font-semibold text-white cursor-pointer">
-                    {slug === "development" ? (
+                    {slug === "development" || slug === "ai" ? (
                       <strong
                         className="text-sm font-semibold text-white"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

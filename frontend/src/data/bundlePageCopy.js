@@ -57,6 +57,7 @@ export const BUNDLE_PAGE_COPY = {
     ],
   },
   ai: {
+    introHeading: "AI Fundamentals, Prompt Engineering and productivity tools in one AI pack",
     intro:
       "The AI & Prompt Engineering bundle is KYK’s three-course AI path: how models work, how to prompt ChatGPT, Claude, and Gemini, and how to use productivity tools such as Notion AI, Midjourney, Runway, and Perplexity. It is built for people who want concepts, prompting, and tools — not a single chatbot tutorial.",
     whoFor: [

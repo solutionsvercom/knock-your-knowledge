@@ -388,7 +388,12 @@ export function jsonLdForPath(pathname) {
     const slug = bundleMatch[1];
     const offer = RETAIL_BUNDLES.find((b) => b.slug === slug);
     const included = catalogCourses().filter((c) => offer?.titles?.includes(c.title));
-    const bundleName = slug === "development" ? offer?.pageTitle || "Development Bundle" : BUNDLE_SEO[slug].h1;
+    const bundleName =
+      slug === "development"
+        ? offer?.pageTitle || "Development Bundle"
+        : slug === "ai"
+          ? offer?.pageTitle || "AI & Prompt Engineering Bundle"
+          : BUNDLE_SEO[slug].h1;
     graph.push(
       breadcrumb([
         { name: "Home", path: "/" },
@@ -439,6 +444,38 @@ export function jsonLdForPath(pathname) {
       };
       graph.push(product);
       const faqs = BUNDLE_PAGE_COPY.development?.faqs || [];
+      if (faqs.length) graph.push(faqPageNode(faqs, path));
+    }
+    if (slug === "ai" && offer) {
+      const url = canonicalUrl(path);
+      const product = {
+        "@type": "Product",
+        "@id": `${url}#product`,
+        name: "AI & Prompt Engineering Bundle",
+        description: BUNDLE_SEO.ai.description,
+        url,
+        image: included[0]?.image,
+        brand: {
+          "@type": "Organization",
+          name: SITE_NAME,
+          sameAs: `${SITE_ORIGIN}/`,
+        },
+        offers: {
+          "@type": "Offer",
+          category: "Paid",
+          price: String(offer.fee),
+          priceCurrency: "INR",
+          url,
+          priceSpecification: {
+            "@type": "UnitPriceSpecification",
+            price: String(offer.fee),
+            priceCurrency: "INR",
+            valueAddedTaxIncluded: false,
+          },
+        },
+      };
+      graph.push(product);
+      const faqs = BUNDLE_PAGE_COPY.ai?.faqs || [];
       if (faqs.length) graph.push(faqPageNode(faqs, path));
     }
     return { "@context": "https://schema.org", "@graph": graph };
