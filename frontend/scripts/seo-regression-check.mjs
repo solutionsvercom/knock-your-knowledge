@@ -16,6 +16,8 @@ import {
   applyInitialHtmlSeo,
   documentLinkHeader,
   INTERNSHIPS_LISTING_SEO,
+  CAREER_GUIDE_PATH,
+  CAREER_GUIDE_SEO,
   SMM_COURSE_SEO,
   SMM_COURSE_PATH,
   SEO_COURSE_SEO,
@@ -137,6 +139,8 @@ if (!titles.includes(ANALYTICS_INTERNSHIP_SEO.title)) titles.push(ANALYTICS_INTE
 if (!descriptions.includes(ANALYTICS_INTERNSHIP_SEO.description)) descriptions.push(ANALYTICS_INTERNSHIP_SEO.description);
 if (!titles.includes(MARKETING_INTERNSHIP_SEO.title)) titles.push(MARKETING_INTERNSHIP_SEO.title);
 if (!descriptions.includes(MARKETING_INTERNSHIP_SEO.description)) descriptions.push(MARKETING_INTERNSHIP_SEO.description);
+if (!titles.includes(CAREER_GUIDE_SEO.title)) titles.push(CAREER_GUIDE_SEO.title);
+if (!descriptions.includes(CAREER_GUIDE_SEO.description)) descriptions.push(CAREER_GUIDE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -245,6 +249,65 @@ if (
 if (applyInitialHtmlSeo("<title>Home</title>", "/Courses").includes("Internship Programs at KYK") === false) {
   pass("Internships HTML SEO injection does not leak onto /Courses");
 } else fail("HTML SEO injection leaked internships metadata onto /Courses");
+
+const careerGuideShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  CAREER_GUIDE_PATH
+);
+const careerGuideTitleHtml = CAREER_GUIDE_SEO.title.replace(/&/g, "&amp;");
+if (careerGuideShell.includes(careerGuideTitleHtml)) pass("Initial HTML title for /Blog Career Guide listing");
+else fail("Initial HTML missing Career Guide listing title");
+if (careerGuideShell.includes(CAREER_GUIDE_SEO.description)) pass("Initial HTML description for /Blog Career Guide listing");
+else fail("Initial HTML missing Career Guide listing description");
+if ((careerGuideShell.match(/rel="canonical"/g) || []).length === 1) pass("Career Guide listing initial HTML has exactly one canonical");
+else fail("Career Guide listing initial HTML canonical count is not 1");
+if (careerGuideShell.includes('href="https://knockyourknowledge.com/Blog"')) pass("Career Guide listing canonical is /Blog");
+else fail("Career Guide listing canonical is not /Blog");
+if (careerGuideShell.includes('content="index, follow"')) pass("Career Guide listing initial HTML robots is index, follow");
+else fail("Career Guide listing initial HTML missing index, follow");
+if (
+  careerGuideShell.includes('property="og:title"') &&
+  careerGuideShell.includes('property="og:image"') &&
+  careerGuideShell.includes(CAREER_GUIDE_SEO.ogImage) &&
+  careerGuideShell.includes('name="twitter:card"') &&
+  careerGuideShell.includes("summary_large_image") &&
+  (careerGuideShell.match(/data-rh="true"/g) || []).length === 12
+) {
+  pass("Career Guide listing initial HTML has OG, Twitter, and data-rh metadata");
+} else fail("Career Guide listing initial HTML missing OG, Twitter, or data-rh metadata");
+if (
+  documentLinkHeader(CAREER_GUIDE_PATH) ===
+  "<https://knockyourknowledge.com/Blog>; rel=\"canonical\""
+) {
+  pass("Career Guide listing Link header is self-canonical");
+} else fail("Career Guide listing Link header incorrect");
+if (!/startsWith\(["']\/Blog["']\)/.test(fs.readFileSync(path.join(root, "src/config/publicPaths.js"), "utf8"))) {
+  pass("publicPaths.js does not use startsWith(\"/Blog\") for listing SEO");
+} else fail("publicPaths.js uses startsWith(\"/Blog\") which would leak listing SEO");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(careerGuideTitleHtml) === false) {
+  pass("Career Guide listing HTML SEO injection does not leak onto homepage");
+} else fail("Career Guide listing metadata leaked onto homepage");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(careerGuideTitleHtml) === false) {
+  pass("Career Guide listing HTML SEO injection does not leak onto /Internships");
+} else fail("Career Guide listing metadata leaked onto /Internships");
+if (COURSE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(careerGuideTitleHtml) === false)) {
+  pass("Career Guide listing first-byte SEO does not leak onto 17 course /Blog/:slug routes");
+} else fail("Career Guide listing metadata leaked onto a course /Blog/:slug route");
+if (CAREER_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(careerGuideTitleHtml) === false)) {
+  pass("Career Guide listing first-byte SEO does not leak onto career article routes");
+} else fail("Career Guide listing metadata leaked onto a career article route");
+if (INTERNSHIP_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Internships/${slug}`).includes(careerGuideTitleHtml) === false)) {
+  pass("Career Guide listing first-byte SEO does not leak onto internship detail routes");
+} else fail("Career Guide listing metadata leaked onto an internship detail route");
+if (BUNDLE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Bundles/${slug}`).includes(careerGuideTitleHtml) === false)) {
+  pass("Career Guide listing first-byte SEO does not leak onto bundle detail routes");
+} else fail("Career Guide listing metadata leaked onto a bundle detail route");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/python-programming/videos").includes(careerGuideTitleHtml) === false) {
+  pass("Career Guide listing first-byte SEO does not leak onto course /videos routes");
+} else fail("Career Guide listing metadata leaked onto a course /videos route");
+if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(INTERNSHIPS_LISTING_SEO.title) === false) {
+  pass("Internships listing metadata does not overwrite /Blog Career Guide first-byte HTML");
+} else fail("Internships listing metadata leaked onto /Blog");
 
 const smmShell = applyInitialHtmlSeo(
   `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
@@ -3443,6 +3506,97 @@ if (
   pass("Analytics Internship JSON-LD programme block remains separate from the Marketing Internship block");
 } else fail("Analytics and Marketing Internship JSON-LD programme blocks were merged or reordered unsafely");
 
+if (
+  /if \(path === "\/Blog"\) \{/.test(jsonLd) &&
+  /if \(path === "\/Blog"\) \{[\s\S]*?"@type": "CollectionPage"/.test(jsonLd) &&
+  /if \(path === "\/Blog"\) \{[\s\S]*?CAREER_SLUGS/.test(jsonLd) &&
+  /if \(path === "\/Blog"\) \{[\s\S]*?"@type": "ItemList"/.test(jsonLd) &&
+  /if \(path === "\/Blog"\) \{[\s\S]*?name: "Career Guide", path: "\/Blog"/.test(jsonLd)
+) {
+  pass("Career Guide listing JSON-LD is gated to path === \"/Blog\" with BreadcrumbList, CollectionPage, and ItemList");
+} else fail("Career Guide listing JSON-LD missing CollectionPage, ItemList, breadcrumbs, or exact /Blog gate");
+const careerGuideJsonLdBlock =
+  jsonLd.match(/if \(path === "\/Blog"\) \{[\s\S]*?return \{ "@context": "https:\/\/schema.org", "@graph": graph \};/)?.[0] || "";
+if (careerGuideJsonLdBlock.includes("CollectionPage") && careerGuideJsonLdBlock.includes("ItemList") && careerGuideJsonLdBlock.includes("CAREER_SLUGS")) {
+  pass("Career Guide listing JSON-LD block is self-contained through its return");
+} else fail("Career Guide listing JSON-LD block could not be isolated");
+if (!careerGuideJsonLdBlock.includes("JobPosting")) {
+  pass("Career Guide listing JSON-LD does not add JobPosting");
+} else fail("Career Guide listing JSON-LD includes JobPosting");
+if (!careerGuideJsonLdBlock.includes("AggregateRating")) {
+  pass("Career Guide listing JSON-LD does not add AggregateRating");
+} else fail("Career Guide listing JSON-LD includes AggregateRating");
+if (!careerGuideJsonLdBlock.includes('"@type": "Review"') && !careerGuideJsonLdBlock.includes("Review")) {
+  pass("Career Guide listing JSON-LD does not add Review");
+} else fail("Career Guide listing JSON-LD includes Review");
+if (!careerGuideJsonLdBlock.includes('"@type": "Course"') && !careerGuideJsonLdBlock.includes("courseNode")) {
+  pass("Career Guide listing JSON-LD ItemList does not include Course entities");
+} else fail("Career Guide listing JSON-LD includes Course");
+if (/if \(courseMatch && CAREER_SEO[\s\S]*?CollectionPage/.test(jsonLd) === false) {
+  pass("Career article JSON-LD routes do not receive Career Guide CollectionPage");
+} else fail("Career Guide CollectionPage leaked onto career article JSON-LD");
+if (/if \(courseMatch && COURSE_SEO[\s\S]*?if \(path === "\/Blog"\) \{/.test(jsonLd) === false) {
+  pass("Career Guide listing JSON-LD is not nested inside course detail JSON-LD");
+} else fail("Career Guide listing JSON-LD appears inside the course-detail branch");
+
+const blogSrc = fs.readFileSync(path.join(root, "src/pages/Blog.jsx"), "utf8");
+if (blogSrc.includes("pageSeo.h1") && blogSrc.includes(CAREER_GUIDE_SEO.h1) === false) {
+  pass("Career Guide listing H1 is read from SEO configuration");
+} else if (blogSrc.includes("pageSeo.h1")) {
+  pass("Career Guide listing H1 is read from SEO configuration");
+} else fail("Career Guide listing H1 is not sourced from seoForPath(\"/Blog\")");
+if (blogSrc.includes("Guides for applying to KYK internships and preparing for internship interviews")) {
+  pass("Career Guide listing renders the approved intro H2");
+} else fail("Career Guide listing missing approved intro H2");
+if (blogSrc.includes("paid, real-time internship programmes") && blogSrc.includes("distinct from")) {
+  pass("Career Guide listing intro states paid internships are distinct from courses and bundles");
+} else fail("Career Guide listing intro missing paid-internship or distinct-from-courses wording");
+if (!blogSrc.includes("post.rating") && !blogSrc.includes("Star")) {
+  pass("Career Guide listing does not render unverified card ratings");
+} else fail("Career Guide listing still renders rating stars or post.rating");
+if (
+  blogSrc.includes('to="/Blog/how-to-land-your-first-internship"') &&
+  blogSrc.includes('to="/Blog/internship-interview-prep"') &&
+  blogSrc.includes('to="/Internships"') &&
+  blogSrc.includes('to: "/Internships/development"') &&
+  blogSrc.includes('to: "/Internships/ai"') &&
+  blogSrc.includes('to: "/Internships/analytics"') &&
+  blogSrc.includes('to: "/Internships/marketing"') &&
+  blogSrc.includes('to="/Courses"') &&
+  blogSrc.includes('to="/Bundles"') &&
+  blogSrc.includes('to: "/Bundles/development"') &&
+  blogSrc.includes('to: "/Bundles/ai"') &&
+  blogSrc.includes('to: "/Bundles/analytics"') &&
+  blogSrc.includes('to: "/Bundles/marketing"') &&
+  blogSrc.includes('to: "/Blog/python-programming"') &&
+  blogSrc.includes('to: "/Blog/prompt-engineering"') &&
+  blogSrc.includes('to: "/Blog/sql-for-data-analysis"') &&
+  blogSrc.includes('to: "/Blog/seo-search-engine-optimization"')
+) {
+  pass("Career Guide listing internal links point at existing article, internship, course, and bundle routes");
+} else fail("Career Guide listing is missing an approved internal link destination");
+if (!blogSrc.includes("/videos")) {
+  pass("Career Guide listing does not link noindex /videos routes");
+} else fail("Career Guide listing links a /videos route");
+if (seoSrc.includes("...CAREER_GUIDE_SEO") && seoSrc.includes('"/Blog":')) {
+  pass("STATIC_SEO[\"/Blog\"] spreads CAREER_GUIDE_SEO without changing other static routes");
+} else fail("STATIC_SEO[\"/Blog\"] is not mapped from CAREER_GUIDE_SEO");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(developmentInternTitleHtml)) {
+  pass("Development Internship first-byte mapping remains after Career Guide listing work");
+} else fail("Development Internship first-byte mapping was broken by Career Guide listing work");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_INTERNSHIP_PATH).includes(aiInternTitleHtml)) {
+  pass("AI Internship first-byte mapping remains after Career Guide listing work");
+} else fail("AI Internship first-byte mapping was broken by Career Guide listing work");
+if (applyInitialHtmlSeo("<title>Home</title>", ANALYTICS_INTERNSHIP_PATH).includes(analyticsInternTitleHtml)) {
+  pass("Analytics Internship first-byte mapping remains after Career Guide listing work");
+} else fail("Analytics Internship first-byte mapping was broken by Career Guide listing work");
+if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_INTERNSHIP_PATH).includes(marketingInternTitleHtml)) {
+  pass("Marketing Internship first-byte mapping remains after Career Guide listing work");
+} else fail("Marketing Internship first-byte mapping was broken by Career Guide listing work");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(INTERNSHIPS_LISTING_SEO.title)) {
+  pass("Internships listing first-byte mapping remains after Career Guide listing work");
+} else fail("Internships listing first-byte mapping was broken by Career Guide listing work");
+
 const spaShell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const injectionServer = http.createServer((req, res) => {
   const pathname = new URL(req.url, "http://127.0.0.1").pathname;
@@ -5292,6 +5446,114 @@ try {
   if (!videosAfterMarketingInternHtml.includes(marketingInternTitleHtml) && !videosAfterMarketingInternHtml.includes(marketingInternDescHtml)) {
     pass("SEO /videos HTML was not given Marketing Internship metadata");
   } else fail("SEO /videos HTML contains Marketing Internship metadata");
+
+  const careerGuideRes = await fetch(`${injOrigin}${CAREER_GUIDE_PATH}`);
+  const careerGuideHtml = await careerGuideRes.text();
+  if (careerGuideRes.status === 200) pass("Express-like /Blog Career Guide listing returns HTTP 200");
+  else fail(`Career Guide listing HTTP ${careerGuideRes.status}`);
+  if (careerGuideHtml.includes(careerGuideTitleHtml) && careerGuideHtml.includes(CAREER_GUIDE_SEO.description)) {
+    pass("Career Guide listing initial HTML has the approved title and description");
+  } else fail("Career Guide listing initial HTML missing title or description");
+  if ((careerGuideHtml.match(/rel="canonical"/g) || []).length === 1) pass("Career Guide listing injected HTML has one canonical");
+  else fail("Career Guide listing injected HTML canonical count is not 1");
+  if (careerGuideRes.headers.get("link") === `<${canonicalUrl(CAREER_GUIDE_PATH)}>; rel="canonical"`) {
+    pass("Career Guide listing response Link header is self-canonical");
+  } else fail("Career Guide listing Link header was incorrect");
+  if (careerGuideHtml.includes('content="index, follow"') && !careerGuideHtml.includes("noindex")) {
+    pass("Career Guide listing initial HTML is index, follow");
+  } else fail("Career Guide listing initial HTML not indexable");
+  if (
+    careerGuideHtml.includes('property="og:title"') &&
+    careerGuideHtml.includes('property="og:image"') &&
+    careerGuideHtml.includes(CAREER_GUIDE_SEO.ogImage) &&
+    careerGuideHtml.includes('name="twitter:card"') &&
+    careerGuideHtml.includes("summary_large_image") &&
+    careerGuideHtml.includes('name="twitter:image"') &&
+    (careerGuideHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("Career Guide listing initial HTML has OG, Twitter image, and data-rh metadata");
+  } else fail("Career Guide listing initial HTML missing OG, Twitter, or data-rh metadata");
+  if (
+    !careerGuideHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
+    !careerGuideHtml.includes(developmentInternTitleHtml) &&
+    !careerGuideHtml.includes(aiInternTitleHtml) &&
+    !careerGuideHtml.includes(analyticsInternTitleHtml) &&
+    !careerGuideHtml.includes(marketingInternTitleHtml) &&
+    !careerGuideHtml.includes(marketingBundleTitleHtml) &&
+    !careerGuideHtml.includes(analyticsBundleTitleHtml) &&
+    !careerGuideHtml.includes(seoCourseTitleHtml)
+  ) {
+    pass("Career Guide listing first-byte HTML does not reuse internship, bundle, or course metadata");
+  } else fail("Career Guide listing first-byte HTML mixed another route's metadata");
+
+  const internshipsAfterCareerGuide = await fetch(`${injOrigin}/Internships`);
+  const internshipsAfterCareerGuideHtml = await internshipsAfterCareerGuide.text();
+  if (internshipsAfterCareerGuideHtml.includes(INTERNSHIPS_LISTING_SEO.title) && !internshipsAfterCareerGuideHtml.includes(careerGuideTitleHtml)) {
+    pass("Internships listing first-byte SEO remains unchanged after Career Guide listing work");
+  } else fail("Internships listing first-byte SEO changed by Career Guide listing work");
+
+  const homeAfterCareerGuide = await fetch(`${injOrigin}/`);
+  const homeAfterCareerGuideHtml = await homeAfterCareerGuide.text();
+  if (!homeAfterCareerGuideHtml.includes(careerGuideTitleHtml) && !homeAfterCareerGuideHtml.includes(CAREER_GUIDE_SEO.description)) {
+    pass("Homepage first-byte HTML remains unchanged after Career Guide listing work");
+  } else fail("Homepage first-byte HTML picked up Career Guide listing metadata");
+
+  let careerGuideCourseLeak = false;
+  for (const slug of COURSE_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes(careerGuideTitleHtml) || html.includes(CAREER_GUIDE_SEO.description)) careerGuideCourseLeak = true;
+  }
+  if (!careerGuideCourseLeak) pass("All 17 course /Blog/:slug first-byte pages omit Career Guide listing metadata");
+  else fail("A course /Blog/:slug first-byte page contains Career Guide listing metadata");
+
+  let careerGuideArticleLeak = false;
+  for (const slug of CAREER_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes(careerGuideTitleHtml) || html.includes(CAREER_GUIDE_SEO.description)) careerGuideArticleLeak = true;
+  }
+  if (!careerGuideArticleLeak) pass("Both career article first-byte pages omit Career Guide listing metadata");
+  else fail("A career article first-byte page contains Career Guide listing metadata");
+
+  const internDetailPaths = [DEVELOPMENT_INTERNSHIP_PATH, AI_INTERNSHIP_PATH, ANALYTICS_INTERNSHIP_PATH, MARKETING_INTERNSHIP_PATH];
+  const internDetailTitles = [developmentInternTitleHtml, aiInternTitleHtml, analyticsInternTitleHtml, marketingInternTitleHtml];
+  let internDetailOk = true;
+  for (let i = 0; i < internDetailPaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${internDetailPaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(internDetailTitles[i]) || html.includes(careerGuideTitleHtml)) internDetailOk = false;
+  }
+  if (internDetailOk) pass("All four internship detail first-byte pages remain unchanged after Career Guide listing work");
+  else fail("An internship detail first-byte page changed or picked up Career Guide listing metadata");
+
+  const bundlePaths = [DEVELOPMENT_BUNDLE_PATH, AI_BUNDLE_PATH, ANALYTICS_BUNDLE_PATH, MARKETING_BUNDLE_PATH];
+  const bundleTitles = [
+    DEVELOPMENT_BUNDLE_SEO.title.replace(/&/g, "&amp;"),
+    AI_BUNDLE_SEO.title.replace(/&/g, "&amp;"),
+    analyticsBundleTitleHtml,
+    marketingBundleTitleHtml,
+  ];
+  let bundleOk = true;
+  for (let i = 0; i < bundlePaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${bundlePaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(bundleTitles[i]) || html.includes(careerGuideTitleHtml)) bundleOk = false;
+  }
+  if (bundleOk) pass("All four bundle detail first-byte pages remain unchanged after Career Guide listing work");
+  else fail("A bundle detail first-byte page changed or picked up Career Guide listing metadata");
+
+  const videosAfterCareerGuide = await fetch(`${injOrigin}/Blog/seo-search-engine-optimization/videos`);
+  const videosAfterCareerGuideHtml = await videosAfterCareerGuide.text();
+  if (videosAfterCareerGuide.status === 200 && videosAfterCareerGuide.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SEO /videos route still 200 with X-Robots-Tag noindex, nofollow after Career Guide listing work");
+  } else fail("SEO /videos headers changed by Career Guide listing work");
+  if (videosAfterCareerGuide.headers.get("link") === `<${canonicalUrl(SEO_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SEO /videos Link header remains the parent course canonical after Career Guide listing work");
+  } else fail("SEO /videos Link header changed by Career Guide listing work");
+  if (!videosAfterCareerGuideHtml.includes(careerGuideTitleHtml) && !videosAfterCareerGuideHtml.includes(CAREER_GUIDE_SEO.description)) {
+    pass("SEO /videos HTML was not given Career Guide listing metadata");
+  } else fail("SEO /videos HTML contains Career Guide listing metadata");
 } finally {
   injectionServer.close();
 }

@@ -2,6 +2,7 @@ import {
   canonicalUrl,
   INDEXABLE_PATHS,
   INTERNSHIPS_LISTING_SEO,
+  CAREER_GUIDE_SEO,
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
@@ -61,10 +62,7 @@ const STATIC_SEO = {
     h1: "Internship Programs",
   },
   "/Blog": {
-    title: "Career Guide | Internship Tips & Interview Prep | KYK",
-    description:
-      "KYK Career Guide articles on landing your first internship and preparing for interviews across Development, AI, Analytics, and Digital Marketing tracks.",
-    h1: "Career Guide",
+    ...CAREER_GUIDE_SEO,
   },
   "/LiveClasses": {
     title: "Live Classes | Interactive Sessions for KYK Internship Tracks",

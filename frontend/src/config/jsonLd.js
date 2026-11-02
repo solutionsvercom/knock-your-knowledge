@@ -14,7 +14,7 @@ import {
   canonicalUrl,
   seoForPath,
 } from "@/config/seo";
-import { SITE_ORIGIN } from "@/config/publicPaths";
+import { CAREER_SLUGS, SITE_ORIGIN } from "@/config/publicPaths";
 
 const ORG_ID = `${SITE_ORIGIN}/#organization`;
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
@@ -171,6 +171,41 @@ export function jsonLdForPath(pathname) {
           "@type": "ListItem",
           position: i + 1,
           item: courseNode(course, COURSE_SEO[course.slug], { name: course.title }),
+        })),
+      }
+    );
+    return { "@context": "https://schema.org", "@graph": graph };
+  }
+
+  if (path === "/Blog") {
+    const url = canonicalUrl(path);
+    const articles = CAREER_SLUGS.map((slug) => ({
+      name: CAREER_SEO[slug]?.h1 || getBlogBySlug(slug)?.title,
+      url: canonicalUrl(`/Blog/${slug}`),
+    })).filter((article) => article.name);
+    graph.push(
+      breadcrumb([
+        { name: "Home", path: "/" },
+        { name: "Career Guide", path: "/Blog" },
+      ]),
+      {
+        "@type": "CollectionPage",
+        "@id": `${url}#collection`,
+        name: seo.h1 || "Career Guide",
+        url,
+        description: seo.description,
+        mainEntity: { "@id": `${url}#itemlist` },
+      },
+      {
+        "@type": "ItemList",
+        "@id": `${url}#itemlist`,
+        name: "KYK Career Guide articles",
+        numberOfItems: articles.length,
+        itemListElement: articles.map((article, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          url: article.url,
+          name: article.name,
         })),
       }
     );
@@ -728,10 +763,6 @@ export function jsonLdForPath(pathname) {
     "/Internships": [
       { name: "Home", path: "/" },
       { name: "Internships", path: "/Internships" },
-    ],
-    "/Blog": [
-      { name: "Home", path: "/" },
-      { name: "Career Guide", path: "/Blog" },
     ],
     "/LiveClasses": [
       { name: "Home", path: "/" },

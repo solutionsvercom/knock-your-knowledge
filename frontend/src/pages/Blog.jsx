@@ -1,7 +1,31 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CAREER_BLOGS } from "@/data/courseBlogs";
-import { Clock, BookOpen, Search, ArrowRight, Star } from "lucide-react";
+import { seoForPath } from "@/config/seo";
+import { Clock, BookOpen, Search, ArrowRight } from "lucide-react";
+
+const pageSeo = seoForPath("/Blog");
+
+const PROGRAMME_LINKS = [
+  { to: "/Internships/development", text: "Development Internship" },
+  { to: "/Internships/ai", text: "AI & Prompt Engineering Internship" },
+  { to: "/Internships/analytics", text: "Business Analytics Internship" },
+  { to: "/Internships/marketing", text: "Advanced Digital Marketing Internship" },
+];
+
+const BUNDLE_LINKS = [
+  { to: "/Bundles/development", text: "Development Bundle" },
+  { to: "/Bundles/ai", text: "AI & Prompt Engineering Bundle" },
+  { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+  { to: "/Bundles/marketing", text: "Advanced Digital Marketing Bundle" },
+];
+
+const COURSE_EXAMPLE_LINKS = [
+  { to: "/Blog/python-programming", text: "Python Programming" },
+  { to: "/Blog/prompt-engineering", text: "Prompt Engineering" },
+  { to: "/Blog/sql-for-data-analysis", text: "SQL for Data Analysis" },
+  { to: "/Blog/seo-search-engine-optimization", text: "SEO — Search Engine Optimization" },
+];
 
 export default function Blog() {
   const [search, setSearch] = useState("");
@@ -33,20 +57,18 @@ export default function Blog() {
             className="text-4xl lg:text-5xl font-black text-white mb-4"
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Career{" "}
-            <span
-              style={{
-                background: "linear-gradient(90deg, #60a5fa, #a78bfa)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
-              Guide
-            </span>
+            {pageSeo.h1}
           </h1>
-          <p className="text-base max-w-2xl mx-auto mb-8" style={{ color: "#475569" }}>
-            {CAREER_BLOGS.length} career articles to help you land internships and prepare for interviews.
+          <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Guides for applying to KYK internships and preparing for internship interviews
+          </h2>
+          <p className="text-base max-w-2xl mx-auto mb-4" style={{ color: "#94a3b8" }}>
+            This Career Guide has two practical articles: how to land a first internship, and internship interview prep.
+            Knock Your Knowledge also offers paid, real-time internship programmes. Those programmes are distinct from
+            KYK courses and course bundles.
+          </p>
+          <p className="text-sm max-w-2xl mx-auto mb-8" style={{ color: "#94a3b8" }}>
+            {CAREER_BLOGS.length} career articles on this page. They are not a job guarantee, stipend, or course pack.
           </p>
 
           <div className="relative max-w-md mx-auto">
@@ -67,7 +89,7 @@ export default function Blog() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <p className="text-sm mb-6" style={{ color: "#475569" }}>
+        <p className="text-sm mb-6" style={{ color: "#94a3b8" }}>
           Showing{" "}
           <span className="font-semibold" style={{ color: "#a78bfa" }}>
             {filtered.length}
@@ -120,15 +142,10 @@ export default function Blog() {
                 <p className="text-xs leading-relaxed mb-4 line-clamp-2 flex-1" style={{ color: "#64748b" }}>
                   {post.excerpt}
                 </p>
-                <div className="flex items-center justify-between text-xs" style={{ color: "#475569" }}>
+                <div className="flex items-center text-xs" style={{ color: "#94a3b8" }}>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5" /> {post.readMins} min read
                   </span>
-                  {post.rating ? (
-                    <span className="flex items-center gap-1" style={{ color: "#fbbf24" }}>
-                      <Star className="w-3.5 h-3.5 fill-yellow-400" /> {post.rating}
-                    </span>
-                  ) : null}
                 </div>
                 <span
                   className="mt-4 inline-flex items-center gap-1 text-sm font-semibold"
@@ -144,11 +161,92 @@ export default function Blog() {
         {filtered.length === 0 ? (
           <div className="text-center py-16">
             <BookOpen className="w-10 h-10 mx-auto mb-3" style={{ color: "#334155" }} />
-            <p className="text-sm" style={{ color: "#475569" }}>
+            <p className="text-sm" style={{ color: "#94a3b8" }}>
               No career guides match your search.
             </p>
           </div>
         ) : null}
+
+        <section className="mt-12">
+          <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Career articles
+          </h2>
+          <ul className="space-y-2 text-sm">
+            <li>
+              <Link to="/Blog/how-to-land-your-first-internship" className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+                How to Land Your First Internship
+              </Link>
+            </li>
+            <li>
+              <Link to="/Blog/internship-interview-prep" className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+                Internship Interview Prep Essentials
+              </Link>
+            </li>
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Paid internship programmes
+          </h2>
+          <p className="text-sm mb-4" style={{ color: "#94a3b8" }}>
+            Explore KYK’s paid internship programmes. Each programme is a separate product from this Career Guide, from
+            individual courses, and from course bundles.
+          </p>
+          <p className="text-sm mb-3">
+            <Link to="/Internships" className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+              All internship programmes
+            </Link>
+          </p>
+          <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+            {PROGRAMME_LINKS.map((item) => (
+              <li key={item.to}>
+                <Link to={item.to} className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+                  {item.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-10">
+          <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+            Courses and bundles
+          </h2>
+          <p className="text-sm mb-4" style={{ color: "#94a3b8" }}>
+            Courses and bundles are not internships. Use them if you want a listed course or a track pack.
+          </p>
+          <p className="text-sm mb-3">
+            <Link to="/Courses" className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+              All internship courses
+            </Link>
+            <span style={{ color: "#64748b" }}> · </span>
+            <Link to="/Bundles" className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+              All course bundles
+            </Link>
+          </p>
+          <ul className="grid sm:grid-cols-2 gap-2 text-sm mb-4">
+            {BUNDLE_LINKS.map((item) => (
+              <li key={item.to}>
+                <Link to={item.to} className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+                  {item.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xs mb-2" style={{ color: "#64748b" }}>
+            Course examples named in the career articles:
+          </p>
+          <ul className="grid sm:grid-cols-2 gap-2 text-sm">
+            {COURSE_EXAMPLE_LINKS.map((item) => (
+              <li key={item.to}>
+                <Link to={item.to} className="font-semibold hover:text-violet-200" style={{ color: "#a78bfa" }}>
+                  {item.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </div>
   );

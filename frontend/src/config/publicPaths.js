@@ -34,6 +34,18 @@ export const INTERNSHIPS_LISTING_SEO = {
     "Explore development, AI, business analytics and digital marketing internship programmes at KnockYourKnowledge. Discover programme details and apply online.",
 };
 
+export const CAREER_GUIDE_PATH = "/Blog";
+
+/** First-byte + Helmet SEO for the Career Guide listing page only. */
+export const CAREER_GUIDE_SEO = {
+  title: "Career Guide | Internship Tips & Interview Prep | KYK",
+  description:
+    "KYK Career Guide: two articles on landing a first internship and internship interview prep. Then explore KYK’s paid internship programmes. Separate from courses and bundles.",
+  h1: "Career Guide – Internship Tips and Interview Prep",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
 export const SMM_COURSE_PATH = "/Blog/smm-social-media-marketing";
 
 /** First-byte + Helmet SEO for the SMM course page only. */
@@ -426,6 +438,16 @@ export function initialHtmlSeoForPath(pathname) {
       description: INTERNSHIPS_LISTING_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
+    };
+  }
+  if (path === CAREER_GUIDE_PATH) {
+    return {
+      title: CAREER_GUIDE_SEO.title,
+      description: CAREER_GUIDE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: CAREER_GUIDE_SEO.ogImage,
+      twitterCard: CAREER_GUIDE_SEO.twitterCard,
     };
   }
   if (path === DEVELOPMENT_INTERNSHIP_PATH) {
