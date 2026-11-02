@@ -1803,6 +1803,13 @@ if ((jsonLdSrc.match(/slug === "tableau-visualization"/g) || []).length === 2) {
 if ((jsonLdSrc.match(/slug === "python-for-analytics"/g) || []).length === 2) {
   pass("Python for Analytics JSON-LD extras and FAQPage are declared once each");
 } else fail("Python for Analytics JSON-LD slug handling is duplicated or missing");
+if (
+  /if \(slug === "python-for-analytics"\) \{[\s\S]*?extras\.educationalLevel = "Intermediate"[\s\S]*?graph\.push\(courseNode/.test(
+    jsonLdSrc
+  )
+) {
+  pass("Python for Analytics Course JSON-LD sets Intermediate educationalLevel on this slug only");
+} else fail("Python for Analytics educationalLevel is missing or not slug-gated");
 if ((jsonLdSrc.match(/slug === "python-programming"/g) || []).length === 2) {
   pass("Python Programming JSON-LD extras and FAQPage remain declared once each");
 } else fail("Python Programming JSON-LD slug handling changed");
