@@ -62,6 +62,8 @@ import {
   DEVELOPMENT_INTERNSHIP_PATH,
   AI_INTERNSHIP_SEO,
   AI_INTERNSHIP_PATH,
+  ANALYTICS_INTERNSHIP_SEO,
+  ANALYTICS_INTERNSHIP_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -129,6 +131,8 @@ if (!titles.includes(DEVELOPMENT_INTERNSHIP_SEO.title)) titles.push(DEVELOPMENT_
 if (!descriptions.includes(DEVELOPMENT_INTERNSHIP_SEO.description)) descriptions.push(DEVELOPMENT_INTERNSHIP_SEO.description);
 if (!titles.includes(AI_INTERNSHIP_SEO.title)) titles.push(AI_INTERNSHIP_SEO.title);
 if (!descriptions.includes(AI_INTERNSHIP_SEO.description)) descriptions.push(AI_INTERNSHIP_SEO.description);
+if (!titles.includes(ANALYTICS_INTERNSHIP_SEO.title)) titles.push(ANALYTICS_INTERNSHIP_SEO.title);
+if (!descriptions.includes(ANALYTICS_INTERNSHIP_SEO.description)) descriptions.push(ANALYTICS_INTERNSHIP_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -2102,6 +2106,144 @@ if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).incl
   pass("Development Internship first-byte mapping remains after AI Internship work");
 } else fail("Development Internship first-byte mapping was broken by AI Internship work");
 
+const analyticsInternTitleHtml = ANALYTICS_INTERNSHIP_SEO.title.replace(/&/g, "&amp;");
+const analyticsInternDescHtml = ANALYTICS_INTERNSHIP_SEO.description.replace(/&/g, "&amp;");
+const analyticsInternOgImageHtml = ANALYTICS_INTERNSHIP_SEO.ogImage.replace(/&/g, "&amp;");
+const analyticsInternShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  ANALYTICS_INTERNSHIP_PATH
+);
+if (analyticsInternShell.includes(analyticsInternTitleHtml)) pass("Initial HTML title for Analytics Internship");
+else fail("Initial HTML missing Analytics Internship title");
+if (analyticsInternShell.includes(analyticsInternDescHtml)) pass("Initial HTML description for Analytics Internship");
+else fail("Initial HTML missing Analytics Internship description");
+if ((analyticsInternShell.match(/rel="canonical"/g) || []).length === 1) pass("Analytics Internship initial HTML has exactly one canonical");
+else fail("Analytics Internship initial HTML canonical count is not 1");
+if (analyticsInternShell.includes(`href="${canonicalUrl(ANALYTICS_INTERNSHIP_PATH)}"`)) {
+  pass("Analytics Internship initial HTML canonical is the internship URL");
+} else fail("Analytics Internship initial HTML canonical is not the internship URL");
+if (analyticsInternShell.includes('content="index, follow"')) pass("Analytics Internship initial HTML robots is index, follow");
+else fail("Analytics Internship initial HTML missing index, follow");
+if (analyticsInternShell.includes('property="og:title"') && analyticsInternShell.includes('name="twitter:card"')) {
+  pass("Analytics Internship initial HTML includes OG and Twitter tags");
+} else fail("Analytics Internship initial HTML missing OG or Twitter tags");
+if (
+  analyticsInternShell.includes(`property="og:title"`) &&
+  analyticsInternShell.includes(`content="${analyticsInternTitleHtml}"`) &&
+  analyticsInternShell.includes(`property="og:description"`) &&
+  analyticsInternShell.includes(`content="${analyticsInternDescHtml}"`) &&
+  analyticsInternShell.includes(`property="og:url"`) &&
+  analyticsInternShell.includes(`content="${canonicalUrl(ANALYTICS_INTERNSHIP_PATH)}"`)
+) {
+  pass("Analytics Internship initial HTML OG title, description, and URL match Helmet");
+} else fail("Analytics Internship initial HTML missing OG title, description, or URL");
+if (
+  analyticsInternShell.includes(`content="${analyticsInternOgImageHtml}"`) &&
+  analyticsInternShell.includes('content="summary_large_image"')
+) {
+  pass("Analytics Internship initial HTML OG image and Twitter card match");
+} else fail("Analytics Internship initial HTML missing OG image or Twitter card value");
+if (
+  analyticsInternShell.includes('name="twitter:image"') &&
+  (analyticsInternShell.match(/content="summary_large_image"/g) || []).length === 1 &&
+  (analyticsInternShell.match(/property="og:image"/g) || []).length === 1
+) {
+  pass("Analytics Internship initial HTML has one OG image, Twitter card, and Twitter image");
+} else fail("Analytics Internship initial HTML OG/Twitter tags are missing or duplicated");
+if ((analyticsInternShell.match(/data-rh="true"/g) || []).length === 12) {
+  pass("Analytics Internship initial HTML uses data-rh on first-byte SEO tags");
+} else fail("Analytics Internship initial HTML data-rh count is not 12");
+if (
+  documentLinkHeader(ANALYTICS_INTERNSHIP_PATH) ===
+  `<${canonicalUrl(ANALYTICS_INTERNSHIP_PATH)}>; rel="canonical"`
+) {
+  pass("Analytics Internship Link header is self-canonical");
+} else fail("Analytics Internship Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change /Internships/development");
+} else fail("Analytics Internship metadata leaked onto /Internships/development");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_INTERNSHIP_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change /Internships/ai");
+} else fail("Analytics Internship metadata leaked onto /Internships/ai");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships/marketing").includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change /Internships/marketing");
+} else fail("Analytics Internship metadata leaked onto /Internships/marketing");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change /Internships");
+} else fail("Analytics Internship metadata leaked onto /Internships");
+if (applyInitialHtmlSeo("<title>Home</title>", ANALYTICS_BUNDLE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Analytics Bundle");
+} else fail("Analytics Internship metadata leaked onto Analytics Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_BUNDLE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change AI Bundle");
+} else fail("Analytics Internship metadata leaked onto AI Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_BUNDLE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Development Bundle");
+} else fail("Analytics Internship metadata leaked onto Development Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_BUNDLE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Marketing Bundle");
+} else fail("Analytics Internship metadata leaked onto Marketing Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change SQL for Data Analysis");
+} else fail("Analytics Internship metadata leaked onto SQL for Data Analysis");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_FOR_ANALYTICS_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Python for Analytics");
+} else fail("Analytics Internship metadata leaked onto Python for Analytics");
+if (applyInitialHtmlSeo("<title>Home</title>", POWER_BI_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Power BI Dashboarding");
+} else fail("Analytics Internship metadata leaked onto Power BI Dashboarding");
+if (applyInitialHtmlSeo("<title>Home</title>", TABLEAU_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Tableau Visualization");
+} else fail("Analytics Internship metadata leaked onto Tableau Visualization");
+if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Jira for Project Management");
+} else fail("Analytics Internship metadata leaked onto Jira for Project Management");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change Data Science");
+} else fail("Analytics Internship metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change the homepage");
+} else fail("Analytics Internship metadata leaked onto the homepage");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/sql-for-data-analysis/videos").includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
+  pass("Analytics Internship HTML SEO injection does not change SQL /videos");
+} else fail("Analytics Internship metadata leaked onto SQL /videos");
+if (ANALYTICS_INTERNSHIP_SEO.title === "Business Analytics Internship | SQL, Power BI & Tableau | KYK") {
+  pass("Analytics Internship title remains the approved Helmet title");
+} else fail("Analytics Internship title changed");
+if (
+  ANALYTICS_INTERNSHIP_SEO.h1 ===
+  "Business Analytics Internship – SQL, Python, Power BI and Tableau Project Experience"
+) {
+  pass("Analytics Internship H1 is the approved internship heading");
+} else fail("Analytics Internship H1 is not the approved heading");
+if (
+  ANALYTICS_INTERNSHIP_SEO.ogImage ===
+  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80"
+) {
+  pass("Analytics Internship OG image is the existing listing cover image");
+} else fail("Analytics Internship OG image is not the verified listing cover");
+if (
+  ANALYTICS_INTERNSHIP_SEO.title !== DEVELOPMENT_INTERNSHIP_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.description !== DEVELOPMENT_INTERNSHIP_SEO.description &&
+  ANALYTICS_INTERNSHIP_SEO.title !== AI_INTERNSHIP_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.description !== AI_INTERNSHIP_SEO.description &&
+  ANALYTICS_INTERNSHIP_SEO.title !== ANALYTICS_BUNDLE_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.description !== ANALYTICS_BUNDLE_SEO.description &&
+  ANALYTICS_INTERNSHIP_SEO.title !== SQL_COURSE_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.title !== PYTHON_FOR_ANALYTICS_COURSE_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.title !== POWER_BI_COURSE_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.title !== TABLEAU_COURSE_SEO.title &&
+  ANALYTICS_INTERNSHIP_SEO.title !== DATA_SCIENCE_COURSE_SEO.title
+) {
+  pass("Analytics Internship title and description are isolated from other internships, Analytics Bundle, and Analytics courses");
+} else fail("Analytics Internship metadata collided with another internship, bundle, or course");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(developmentInternTitleHtml)) {
+  pass("Development Internship first-byte mapping remains after Analytics Internship work");
+} else fail("Development Internship first-byte mapping was broken by Analytics Internship work");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_INTERNSHIP_PATH).includes(aiInternTitleHtml)) {
+  pass("AI Internship first-byte mapping remains after Analytics Internship work");
+} else fail("AI Internship first-byte mapping was broken by Analytics Internship work");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -2823,11 +2965,26 @@ if (
   pass("AI Internship page uses the approved H1 and intro H2 on this slug only");
 } else fail("AI Internship H1 or intro H2 is not slug-gated");
 if (
+  internDetail.includes('slug === "analytics"') &&
+  internDetail.includes("INTERNSHIP_SEO.analytics.h1") &&
+  internDetail.includes("copy?.introHeading")
+) {
+  pass("Analytics Internship page uses the approved H1 and intro H2 on this slug only");
+} else fail("Analytics Internship H1 or intro H2 is not slug-gated");
+if (
   internDetail.includes("the internship programme you want to apply for") &&
   internDetail.includes("the internship course you want to enroll in")
 ) {
   pass("Development Internship Apply Now description is copy-corrected without changing other internships");
 } else fail("Development Internship Apply Now copy correction is missing or leaked to other internships");
+if (
+  internDetail.includes('slug === "development" || slug === "ai" || slug === "analytics"') &&
+  internDetail.includes("the internship programme you want to apply for") &&
+  internDetail.includes("the internship course you want to enroll in") &&
+  internDetail.includes("<strong>{faq.q}</strong>")
+) {
+  pass("Analytics Internship Apply Now copy and FAQ summary strong tags are slug-gated without changing Marketing Internship");
+} else fail("Analytics Internship Apply Now copy or FAQ summary gate is missing or leaked");
 if (
   internDetail.includes('source: "internship-apply"') &&
   internDetail.includes("internshipInterest: item.title") &&
@@ -2852,6 +3009,9 @@ if (internCopySrc.includes('introHeading: "A paid 1–3 month Remote/Hybrid Deve
 if (internCopySrc.includes('introHeading: "A paid 1–3 month Remote AI internship with prompt engineering and LLM tools"')) {
   pass("AI Internship intro H2 copy is the approved heading");
 } else fail("AI Internship intro H2 copy is missing or changed");
+if (internCopySrc.includes('introHeading: "A paid 1–3 month Remote/Hybrid Business Analytics internship with SQL, Power BI and Tableau"')) {
+  pass("Analytics Internship intro H2 copy is the approved heading");
+} else fail("Analytics Internship intro H2 copy is missing or changed");
 const developmentInternFaqQuestions = [
   "What is the Development internship?",
   "Do I get a stipend?",
@@ -2910,6 +3070,35 @@ if (
 ) {
   pass("Development, Analytics, and Marketing internship copy remain unchanged after AI Internship work");
 } else fail("Another internship's copy was changed by AI Internship work");
+const analyticsInternFaqQuestions = [
+  "What is the Business Analytics internship?",
+  "What do I pay?",
+  "Does Excel appear in the related courses?",
+  "Is Jira part of the internship listing?",
+  "How is this different from the Analytics bundle?",
+  "How do I apply?",
+];
+const analyticsInternFaqAnswers = [
+  "A 1–3 month Remote / Hybrid KYK programme listed as analysing data with SQL, Python, Power BI, and Tableau and turning insights into dashboards.",
+  "₹3,999/- programme fee plus 18% GST at checkout. It is a fee, not a stipend.",
+  "Excel is on this internship’s skill list. The five related courses are SQL, Python for Analytics, Power BI, Tableau, and Jira. Excel is not a separate KYK course title on that track.",
+  "Jira is a related course on the Analytics track. The internship skill chips are SQL, Python, Power BI, Tableau, and Excel.",
+  "The bundle is five courses at ₹899/- versus ₹995/- bought separately. This internship is a different programme at ₹3,999/- plus GST.",
+  "Apply Now saves name, phone, mail ID, and Business Analytics as the interest. Add to cart takes you to checkout for this internship.",
+];
+if (analyticsInternFaqQuestions.every((q) => internCopySrc.includes(`q: "${q}"`))) {
+  pass("Analytics Internship keeps all six original FAQ questions");
+} else fail("Analytics Internship FAQ questions changed");
+if (analyticsInternFaqAnswers.every((a) => internCopySrc.includes(`a: "${a}"`))) {
+  pass("Analytics Internship keeps all six original FAQ answers");
+} else fail("Analytics Internship FAQ answers changed");
+if (
+  internCopySrc.includes("The Development internship is Knock Your Knowledge") &&
+  internCopySrc.includes("The AI & Prompt Engineering internship is Knock Your Knowledge") &&
+  internCopySrc.includes("The Advanced Digital Marketing internship is Knock Your Knowledge")
+) {
+  pass("Development, AI, and Marketing internship copy remain unchanged after Analytics Internship work");
+} else fail("Another internship's copy was changed by Analytics Internship work");
 
 const app = fs.readFileSync(path.join(root, "src/App.jsx"), "utf8");
 for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug/videos", "/Blog/:slug", "/Bundles/:slug", "/Internships/:slug", "/CourseLearning"]) {
@@ -2991,6 +3180,43 @@ if (
 ) {
   pass("Development Internship JSON-LD programme block remains separate from the AI Internship block");
 } else fail("Development and AI Internship JSON-LD programme blocks were merged or reordered unsafely");
+if (
+  /if \(slug === "analytics"\) \{[\s\S]*?"@type": "EducationalOccupationalProgram"[\s\S]*?name: "Business Analytics Internship"[\s\S]*?price: String\(INTERNSHIP_FEE_AMOUNT\)[\s\S]*?valueAddedTaxIncluded: false[\s\S]*?faqPageNode\(faqs, path\)/.test(
+    jsonLd
+  )
+) {
+  pass("Analytics Internship JSON-LD adds EducationalOccupationalProgram, Offer, and FAQPage on this slug only");
+} else fail("Analytics Internship programme, Offer, or FAQPage is missing or not slug-gated");
+if (jsonLd.includes('slug === "analytics" ? "Business Analytics Internship"')) {
+  pass("Analytics Internship breadcrumb name stays pinned to Business Analytics Internship");
+} else fail("Analytics Internship breadcrumb name is not pinned to the catalog name");
+if (jsonLd.includes("INTERNSHIP_PAGE_COPY.analytics") && jsonLd.includes('educationalProgramMode: "Remote / Hybrid"')) {
+  pass("Analytics Internship programme uses internship copy and Remote / Hybrid mode");
+} else fail("Analytics Internship programme description or Remote / Hybrid mode is missing");
+if (
+  /if \(slug === "analytics"\) \{[\s\S]*?teaches: \["SQL", "Python", "Power BI", "Tableau", "Excel"\]/.test(jsonLd) &&
+  !/if \(slug === "analytics"\) \{[\s\S]*?teaches: \[[^\]]*Jira/.test(jsonLd)
+) {
+  pass("Analytics Internship JSON-LD teaches the verified listing skills only and omits Jira");
+} else fail("Analytics Internship JSON-LD skills are missing, include Jira, or are incorrect");
+if (
+  /if \(slug === "analytics"\) \{[\s\S]*?occupationalCategory/.test(jsonLd) === false
+) {
+  pass("Analytics Internship JSON-LD omits occupationalCategory");
+} else fail("Analytics Internship JSON-LD invented an occupational job title");
+if (
+  !jsonLd.includes("JobPosting") &&
+  !jsonLd.includes("baseSalary") &&
+  !jsonLd.includes('"198"') &&
+  !jsonLd.includes("2026-12-31")
+) {
+  pass("Analytics Internship JSON-LD omits JobPosting, salary, and demo applicant/deadline values");
+} else fail("Analytics Internship JSON-LD includes unsupported job, salary, or demo inventory fields");
+if (
+  /if \(slug === "ai"\) \{[\s\S]*?if \(slug === "analytics"\) \{/.test(jsonLd)
+) {
+  pass("AI Internship JSON-LD programme block remains separate from the Analytics Internship block");
+} else fail("AI and Analytics Internship JSON-LD programme blocks were merged or reordered unsafely");
 
 const spaShell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const injectionServer = http.createServer((req, res) => {
@@ -4600,6 +4826,117 @@ try {
   if (!videosAfterAiInternHtml.includes(aiInternTitleHtml) && !videosAfterAiInternHtml.includes(aiInternDescHtml)) {
     pass("Prompt Engineering /videos HTML was not given AI Internship metadata");
   } else fail("Prompt Engineering /videos HTML contains AI Internship metadata");
+
+  const analyticsInternRes = await fetch(`${injOrigin}${ANALYTICS_INTERNSHIP_PATH}`);
+  const analyticsInternHtml = await analyticsInternRes.text();
+  if (analyticsInternRes.status === 200) pass("Express-like /Internships/analytics returns HTTP 200");
+  else fail(`Analytics Internship HTTP ${analyticsInternRes.status}`);
+  if (analyticsInternHtml.includes(analyticsInternTitleHtml) && analyticsInternHtml.includes(analyticsInternDescHtml)) {
+    pass("Analytics Internship initial HTML has the approved title and description");
+  } else fail("Analytics Internship initial HTML missing title or description");
+  if ((analyticsInternHtml.match(/rel="canonical"/g) || []).length === 1) pass("Analytics Internship injected HTML has one canonical");
+  else fail("Analytics Internship injected HTML canonical count is not 1");
+  if (analyticsInternRes.headers.get("link") === `<${canonicalUrl(ANALYTICS_INTERNSHIP_PATH)}>; rel="canonical"`) {
+    pass("Analytics Internship response Link header is self-canonical");
+  } else fail("Analytics Internship Link header was incorrect");
+  if (analyticsInternHtml.includes('content="index, follow"') && !analyticsInternHtml.includes("noindex")) {
+    pass("Analytics Internship initial HTML is index, follow");
+  } else fail("Analytics Internship initial HTML not indexable");
+  if (
+    analyticsInternHtml.includes('property="og:title"') &&
+    analyticsInternHtml.includes('property="og:image"') &&
+    analyticsInternHtml.includes('name="twitter:card"') &&
+    analyticsInternHtml.includes("summary_large_image") &&
+    analyticsInternHtml.includes(analyticsInternOgImageHtml) &&
+    (analyticsInternHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("Analytics Internship initial HTML has OG, Twitter, and data-rh metadata");
+  } else fail("Analytics Internship initial HTML missing OG, Twitter, or data-rh metadata");
+  if (
+    !analyticsInternHtml.includes(developmentInternTitleHtml) &&
+    !analyticsInternHtml.includes(aiInternTitleHtml) &&
+    !analyticsInternHtml.includes(analyticsBundleTitleHtml) &&
+    !analyticsInternHtml.includes(aiBundleTitleHtml) &&
+    !analyticsInternHtml.includes(devBundleTitleHtml) &&
+    !analyticsInternHtml.includes(marketingBundleTitleHtml) &&
+    !analyticsInternHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
+    !analyticsInternHtml.includes(sqlCourseTitleHtml) &&
+    !analyticsInternHtml.includes(pythonForAnalyticsCourseTitleHtml) &&
+    !analyticsInternHtml.includes(powerBiCourseTitleHtml) &&
+    !analyticsInternHtml.includes(tableauCourseTitleHtml) &&
+    !analyticsInternHtml.includes(dsCourseTitleHtml)
+  ) {
+    pass("Analytics Internship first-byte HTML does not reuse Development Internship, AI Internship, bundle, listing, or Analytics course metadata");
+  } else fail("Analytics Internship first-byte HTML mixed another route's metadata");
+
+  const developmentInternAfterAnalytics = await fetch(`${injOrigin}${DEVELOPMENT_INTERNSHIP_PATH}`);
+  const developmentInternAfterAnalyticsHtml = await developmentInternAfterAnalytics.text();
+  if (developmentInternAfterAnalyticsHtml.includes(developmentInternTitleHtml) && !developmentInternAfterAnalyticsHtml.includes(analyticsInternTitleHtml)) {
+    pass("Development Internship first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Development Internship first-byte SEO changed by Analytics Internship work");
+
+  const aiInternAfterAnalytics = await fetch(`${injOrigin}${AI_INTERNSHIP_PATH}`);
+  const aiInternAfterAnalyticsHtml = await aiInternAfterAnalytics.text();
+  if (aiInternAfterAnalyticsHtml.includes(aiInternTitleHtml) && !aiInternAfterAnalyticsHtml.includes(analyticsInternTitleHtml)) {
+    pass("AI Internship first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("AI Internship first-byte SEO changed by Analytics Internship work");
+
+  const internshipsAfterAnalyticsIntern = await fetch(`${injOrigin}/Internships`);
+  const internshipsAfterAnalyticsInternHtml = await internshipsAfterAnalyticsIntern.text();
+  if (internshipsAfterAnalyticsInternHtml.includes(INTERNSHIPS_LISTING_SEO.title) && !internshipsAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("Internships listing first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Internships listing first-byte SEO changed by Analytics Internship work");
+
+  const internshipMarketingAfterAnalytics = await fetch(`${injOrigin}/Internships/marketing`);
+  const internshipMarketingAfterAnalyticsHtml = await internshipMarketingAfterAnalytics.text();
+  if (!internshipMarketingAfterAnalyticsHtml.includes(analyticsInternTitleHtml) && !internshipMarketingAfterAnalyticsHtml.includes(analyticsInternDescHtml)) {
+    pass("/Internships/marketing first-byte HTML does not inherit Analytics Internship metadata");
+  } else fail("/Internships/marketing first-byte HTML picked up Analytics Internship metadata");
+
+  const analyticsBundleAfterAnalyticsIntern = await fetch(`${injOrigin}${ANALYTICS_BUNDLE_PATH}`);
+  const analyticsBundleAfterAnalyticsInternHtml = await analyticsBundleAfterAnalyticsIntern.text();
+  if (analyticsBundleAfterAnalyticsInternHtml.includes(analyticsBundleTitleHtml) && !analyticsBundleAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("Analytics Bundle first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Analytics Bundle first-byte SEO changed by Analytics Internship work");
+
+  const sqlAfterAnalyticsIntern = await fetch(`${injOrigin}${SQL_COURSE_PATH}`);
+  const sqlAfterAnalyticsInternHtml = await sqlAfterAnalyticsIntern.text();
+  if (sqlAfterAnalyticsInternHtml.includes(sqlCourseTitleHtml) && !sqlAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("SQL for Data Analysis first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("SQL for Data Analysis first-byte SEO changed by Analytics Internship work");
+
+  const pfaAfterAnalyticsIntern = await fetch(`${injOrigin}${PYTHON_FOR_ANALYTICS_COURSE_PATH}`);
+  const pfaAfterAnalyticsInternHtml = await pfaAfterAnalyticsIntern.text();
+  if (pfaAfterAnalyticsInternHtml.includes(pythonForAnalyticsCourseTitleHtml) && !pfaAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("Python for Analytics first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Python for Analytics first-byte SEO changed by Analytics Internship work");
+
+  const powerBiAfterAnalyticsIntern = await fetch(`${injOrigin}${POWER_BI_COURSE_PATH}`);
+  const powerBiAfterAnalyticsInternHtml = await powerBiAfterAnalyticsIntern.text();
+  if (powerBiAfterAnalyticsInternHtml.includes(powerBiCourseTitleHtml) && !powerBiAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("Power BI Dashboarding first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Power BI Dashboarding first-byte SEO changed by Analytics Internship work");
+
+  const tableauAfterAnalyticsIntern = await fetch(`${injOrigin}${TABLEAU_COURSE_PATH}`);
+  const tableauAfterAnalyticsInternHtml = await tableauAfterAnalyticsIntern.text();
+  if (tableauAfterAnalyticsInternHtml.includes(tableauCourseTitleHtml) && !tableauAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml)) {
+    pass("Tableau Visualization first-byte SEO remains unchanged after Analytics Internship work");
+  } else fail("Tableau Visualization first-byte SEO changed by Analytics Internship work");
+
+  const homeAfterAnalyticsIntern = await fetch(`${injOrigin}/`);
+  const homeAfterAnalyticsInternHtml = await homeAfterAnalyticsIntern.text();
+  if (!homeAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml) && !homeAfterAnalyticsInternHtml.includes(analyticsInternDescHtml)) {
+    pass("Homepage first-byte HTML remains unchanged after Analytics Internship work");
+  } else fail("Homepage first-byte HTML picked up Analytics Internship metadata");
+
+  const videosAfterAnalyticsIntern = await fetch(`${injOrigin}/Blog/sql-for-data-analysis/videos`);
+  const videosAfterAnalyticsInternHtml = await videosAfterAnalyticsIntern.text();
+  if (videosAfterAnalyticsIntern.status === 200 && videosAfterAnalyticsIntern.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SQL /videos route still 200 with X-Robots-Tag noindex, nofollow after Analytics Internship work");
+  } else fail("SQL /videos headers changed by Analytics Internship work");
+  if (!videosAfterAnalyticsInternHtml.includes(analyticsInternTitleHtml) && !videosAfterAnalyticsInternHtml.includes(analyticsInternDescHtml)) {
+    pass("SQL /videos HTML was not given Analytics Internship metadata");
+  } else fail("SQL /videos HTML contains Analytics Internship metadata");
 } finally {
   injectionServer.close();
 }

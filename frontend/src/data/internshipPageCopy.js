@@ -113,6 +113,7 @@ export const INTERNSHIP_PAGE_COPY = {
     ],
   },
   analytics: {
+    introHeading: "A paid 1–3 month Remote/Hybrid Business Analytics internship with SQL, Power BI and Tableau",
     overview:
       "The Business Analytics internship is Knock Your Knowledge’s 1–3 month Remote / Hybrid programme for data-to-dashboard work. KYK lists it as analysing business data with SQL, Python, Power BI, and Tableau, then turning insights into dashboards and decisions partners can use. It is separate from SQL for Data Analysis, Python for Analytics, Power BI Dashboarding, Tableau Visualization, and Jira for Project Management, and from the Analytics course bundle.",
     whoCanApply: [

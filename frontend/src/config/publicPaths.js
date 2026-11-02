@@ -331,6 +331,18 @@ export const AI_INTERNSHIP_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const ANALYTICS_INTERNSHIP_PATH = "/Internships/analytics";
+
+/** First-byte + Helmet SEO for the Business Analytics Internship page only. */
+export const ANALYTICS_INTERNSHIP_SEO = {
+  title: "Business Analytics Internship | SQL, Power BI & Tableau | KYK",
+  description:
+    "Paid KYK Business Analytics Internship: 1–3 month Remote/Hybrid programme. Analyse data with SQL, Python, Power BI, Tableau, and Excel. Programme fee ₹3,999/- + 18% GST.",
+  h1: "Business Analytics Internship – SQL, Python, Power BI and Tableau Project Experience",
+  ogImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+  twitterCard: "summary_large_image",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -422,6 +434,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: AI_INTERNSHIP_SEO.ogImage,
       twitterCard: AI_INTERNSHIP_SEO.twitterCard,
+    };
+  }
+  if (path === ANALYTICS_INTERNSHIP_PATH) {
+    return {
+      title: ANALYTICS_INTERNSHIP_SEO.title,
+      description: ANALYTICS_INTERNSHIP_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: ANALYTICS_INTERNSHIP_SEO.ogImage,
+      twitterCard: ANALYTICS_INTERNSHIP_SEO.twitterCard,
     };
   }
   if (path === SMM_COURSE_PATH) {

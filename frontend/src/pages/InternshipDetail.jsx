@@ -94,7 +94,7 @@ export default function InternshipDetail() {
       source: "internship-apply",
       heading: "Apply for internship",
       description:
-        slug === "development" || slug === "ai"
+        slug === "development" || slug === "ai" || slug === "analytics"
           ? "Enter your name, phone, mail ID, and the internship programme you want to apply for. Our team will contact you soon."
           : "Enter your name, phone, mail ID, and the internship course you want to enroll in. Our team will contact you soon.",
     });
@@ -136,7 +136,9 @@ export default function InternshipDetail() {
               ? INTERNSHIP_SEO.development.h1
               : slug === "ai"
                 ? INTERNSHIP_SEO.ai.h1
-                : meta.navTitle}
+                : slug === "analytics"
+                  ? INTERNSHIP_SEO.analytics.h1
+                  : meta.navTitle}
           </h1>
           {copy?.introHeading ? (
             <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -357,7 +359,7 @@ export default function InternshipDetail() {
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                 >
                   <summary className="text-sm font-semibold text-white cursor-pointer">
-                    {slug === "development" || slug === "ai" ? <strong>{faq.q}</strong> : faq.q}
+                    {slug === "development" || slug === "ai" || slug === "analytics" ? <strong>{faq.q}</strong> : faq.q}
                   </summary>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: "#94a3b8" }}>
                     {faq.a}

@@ -27,6 +27,7 @@ import {
   MARKETING_BUNDLE_SEO,
   DEVELOPMENT_INTERNSHIP_SEO,
   AI_INTERNSHIP_SEO,
+  ANALYTICS_INTERNSHIP_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -170,10 +171,7 @@ export const INTERNSHIP_SEO = {
     ...AI_INTERNSHIP_SEO,
   },
   analytics: {
-    title: "Business Analytics Internship | SQL, Power BI & Tableau | KYK",
-    description:
-      "KYK Business Analytics internship: analyse data with SQL, Python, Power BI, and Tableau. Remote/hybrid, 1–3 months. Fee ₹3,999/- + 18% GST.",
-    h1: "Business Analytics Internship",
+    ...ANALYTICS_INTERNSHIP_SEO,
   },
   marketing: {
     title: "Digital Marketing Internship | SEO, SEM & Social | KYK",
