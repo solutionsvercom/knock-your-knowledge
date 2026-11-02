@@ -559,7 +559,7 @@ export function jsonLdForPath(pathname) {
         { name: "Home", path: "/" },
         { name: "Internships", path: "/Internships" },
         {
-          name: slug === "development" ? "Development Internship" : slug === "ai" ? "AI & Prompt Engineering Internship" : slug === "analytics" ? "Business Analytics Internship" : page?.navTitle || INTERNSHIP_SEO[slug].h1,
+          name: slug === "development" ? "Development Internship" : slug === "ai" ? "AI & Prompt Engineering Internship" : slug === "analytics" ? "Business Analytics Internship" : slug === "marketing" ? "Advanced Digital Marketing Internship" : page?.navTitle || INTERNSHIP_SEO[slug].h1,
           path,
         },
       ])
@@ -677,6 +677,44 @@ export function jsonLdForPath(pathname) {
         },
       });
       const faqs = INTERNSHIP_PAGE_COPY.analytics?.faqs || [];
+      if (faqs.length) graph.push(faqPageNode(faqs, path));
+    }
+    if (slug === "marketing") {
+      const url = canonicalUrl(path);
+      const programId = `${url}#program`;
+      const offerId = `${url}#offer`;
+      graph.push({
+        "@type": "EducationalOccupationalProgram",
+        "@id": programId,
+        name: "Advanced Digital Marketing Internship",
+        url,
+        description: INTERNSHIP_PAGE_COPY.marketing?.overview || INTERNSHIP_SEO.marketing.description,
+        provider: {
+          "@type": "EducationalOrganization",
+          name: SITE_NAME,
+          url: `${SITE_ORIGIN}/`,
+        },
+        educationalProgramMode: "Remote",
+        teaches: ["SEO", "Google Ads", "Social Media", "Analytics", "Content"],
+        offers: { "@id": offerId },
+      });
+      graph.push({
+        "@type": "Offer",
+        "@id": offerId,
+        url,
+        price: String(INTERNSHIP_FEE_AMOUNT),
+        priceCurrency: "INR",
+        itemOffered: { "@id": programId },
+        description:
+          "Programme fee ₹3,999/-. 18% GST is charged separately at checkout. This is a fee paid to Knock Your Knowledge, not a stipend or salary.",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: String(INTERNSHIP_FEE_AMOUNT),
+          priceCurrency: "INR",
+          valueAddedTaxIncluded: false,
+        },
+      });
+      const faqs = INTERNSHIP_PAGE_COPY.marketing?.faqs || [];
       if (faqs.length) graph.push(faqPageNode(faqs, path));
     }
     return { "@context": "https://schema.org", "@graph": graph };

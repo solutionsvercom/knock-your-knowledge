@@ -167,6 +167,7 @@ export const INTERNSHIP_PAGE_COPY = {
     ],
   },
   marketing: {
+    introHeading: "A paid 1–3 month Remote Advanced Digital Marketing internship with SEO, SEM and social campaigns",
     overview:
       "The Advanced Digital Marketing internship is Knock Your Knowledge’s 1–3 month Remote programme on search and social campaigns. KYK lists it as running SEO, SEM, social campaigns, and AI-powered marketing experiments, and learning growth tactics used by modern digital teams. It is separate from the six marketing courses (SEO, SEM, SMM, SMO, Google Webmaster & Search Console, AI Tools in Digital Marketing) and from the marketing course bundle.",
     whoCanApply: [

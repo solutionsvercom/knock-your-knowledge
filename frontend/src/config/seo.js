@@ -28,6 +28,7 @@ import {
   DEVELOPMENT_INTERNSHIP_SEO,
   AI_INTERNSHIP_SEO,
   ANALYTICS_INTERNSHIP_SEO,
+  MARKETING_INTERNSHIP_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -174,10 +175,7 @@ export const INTERNSHIP_SEO = {
     ...ANALYTICS_INTERNSHIP_SEO,
   },
   marketing: {
-    title: "Digital Marketing Internship | SEO, SEM & Social | KYK",
-    description:
-      "KYK Advanced Digital Marketing internship: SEO, SEM, social campaigns, and AI-powered marketing. Remote, 1–3 months. Fee ₹3,999/- + 18% GST.",
-    h1: "Advanced Digital Marketing Internship",
+    ...MARKETING_INTERNSHIP_SEO,
   },
 };
 

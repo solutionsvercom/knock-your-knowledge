@@ -343,6 +343,18 @@ export const ANALYTICS_INTERNSHIP_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const MARKETING_INTERNSHIP_PATH = "/Internships/marketing";
+
+/** First-byte + Helmet SEO for the Advanced Digital Marketing Internship page only. */
+export const MARKETING_INTERNSHIP_SEO = {
+  title: "Advanced Digital Marketing Internship | SEO, SEM & Social | KYK",
+  description:
+    "Paid KYK Advanced Digital Marketing Internship: 1–3 month Remote programme. Run SEO, SEM, social campaigns, and AI-powered marketing experiments. Programme fee ₹3,999/- + 18% GST.",
+  h1: "Advanced Digital Marketing Internship – SEO, SEM and Social Campaign Experience",
+  ogImage: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+  twitterCard: "summary_large_image",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -444,6 +456,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: ANALYTICS_INTERNSHIP_SEO.ogImage,
       twitterCard: ANALYTICS_INTERNSHIP_SEO.twitterCard,
+    };
+  }
+  if (path === MARKETING_INTERNSHIP_PATH) {
+    return {
+      title: MARKETING_INTERNSHIP_SEO.title,
+      description: MARKETING_INTERNSHIP_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: MARKETING_INTERNSHIP_SEO.ogImage,
+      twitterCard: MARKETING_INTERNSHIP_SEO.twitterCard,
     };
   }
   if (path === SMM_COURSE_PATH) {
