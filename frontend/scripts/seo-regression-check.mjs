@@ -46,6 +46,8 @@ import {
   SQL_COURSE_PATH,
   POWER_BI_COURSE_SEO,
   POWER_BI_COURSE_PATH,
+  TABLEAU_COURSE_SEO,
+  TABLEAU_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -97,6 +99,8 @@ if (!titles.includes(SQL_COURSE_SEO.title)) titles.push(SQL_COURSE_SEO.title);
 if (!descriptions.includes(SQL_COURSE_SEO.description)) descriptions.push(SQL_COURSE_SEO.description);
 if (!titles.includes(POWER_BI_COURSE_SEO.title)) titles.push(POWER_BI_COURSE_SEO.title);
 if (!descriptions.includes(POWER_BI_COURSE_SEO.description)) descriptions.push(POWER_BI_COURSE_SEO.description);
+if (!titles.includes(TABLEAU_COURSE_SEO.title)) titles.push(TABLEAU_COURSE_SEO.title);
+if (!descriptions.includes(TABLEAU_COURSE_SEO.description)) descriptions.push(TABLEAU_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -1086,6 +1090,9 @@ if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(POWER_
 if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(POWER_BI_COURSE_SEO.title) === false) {
   pass("Power BI Dashboarding course HTML SEO injection does not change SQL for Data Analysis");
 } else fail("Power BI Dashboarding course metadata leaked onto SQL for Data Analysis");
+if (applyInitialHtmlSeo("<title>Home</title>", TABLEAU_COURSE_PATH).includes(POWER_BI_COURSE_SEO.title) === false) {
+  pass("Power BI Dashboarding course HTML SEO injection does not change Tableau Visualization");
+} else fail("Power BI Dashboarding course metadata leaked onto Tableau Visualization");
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(POWER_BI_COURSE_SEO.title) === false) {
   pass("Power BI Dashboarding course HTML SEO injection does not change /Internships");
 } else fail("Power BI Dashboarding course metadata leaked onto /Internships");
@@ -1104,6 +1111,102 @@ if (
 ) {
   pass("Power BI Dashboarding metadata does not call this retail course a mentor-led internship");
 } else fail("Power BI Dashboarding metadata still uses internship or mentor-led wording");
+
+const tableauCourseTitleHtml = TABLEAU_COURSE_SEO.title.replace(/&/g, "&amp;");
+const tableauCourseDescHtml = TABLEAU_COURSE_SEO.description.replace(/&/g, "&amp;");
+const tableauOgImageHtml = TABLEAU_COURSE_SEO.ogImage.replace(/&/g, "&amp;");
+const tableauCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  TABLEAU_COURSE_PATH
+);
+if (tableauCourseShell.includes(tableauCourseTitleHtml)) pass("Initial HTML title for Tableau Visualization course");
+else fail("Initial HTML missing Tableau Visualization course title");
+if (tableauCourseShell.includes(tableauCourseDescHtml)) pass("Initial HTML description for Tableau Visualization course");
+else fail("Initial HTML missing Tableau Visualization course description");
+if ((tableauCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("Tableau Visualization course initial HTML has exactly one canonical");
+else fail("Tableau Visualization course initial HTML canonical count is not 1");
+if (tableauCourseShell.includes(`href="${canonicalUrl(TABLEAU_COURSE_PATH)}"`)) pass("Tableau Visualization course initial HTML canonical is the course URL");
+else fail("Tableau Visualization course initial HTML canonical is not the course URL");
+if (tableauCourseShell.includes('content="index, follow"')) pass("Tableau Visualization course initial HTML robots is index, follow");
+else fail("Tableau Visualization course initial HTML missing index, follow");
+if (tableauCourseShell.includes('property="og:title"') && tableauCourseShell.includes('name="twitter:card"')) {
+  pass("Tableau Visualization course initial HTML includes OG and Twitter tags");
+} else fail("Tableau Visualization course initial HTML missing OG or Twitter tags");
+if (
+  tableauCourseShell.includes(`content="${tableauOgImageHtml}"`) &&
+  tableauCourseShell.includes('content="summary_large_image"')
+) {
+  pass("Tableau Visualization course initial HTML OG image and Twitter card match");
+} else fail("Tableau Visualization course initial HTML missing OG image or Twitter card value");
+if (
+  documentLinkHeader(TABLEAU_COURSE_PATH) ===
+  `<${canonicalUrl(TABLEAU_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Tableau Visualization course Link header is self-canonical");
+} else fail("Tableau Visualization course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change SMM");
+} else fail("Tableau Visualization course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change SEO course");
+} else fail("Tableau Visualization course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change SEM course");
+} else fail("Tableau Visualization course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change SMO course");
+} else fail("Tableau Visualization course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change GSC course");
+} else fail("Tableau Visualization course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change AI marketing course");
+} else fail("Tableau Visualization course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change AI productivity course");
+} else fail("Tableau Visualization course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Prompt Engineering");
+} else fail("Tableau Visualization course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change AI Fundamentals");
+} else fail("Tableau Visualization course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Python Programming");
+} else fail("Tableau Visualization course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Data Science");
+} else fail("Tableau Visualization course metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change MERN Stack Development");
+} else fail("Tableau Visualization course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Jira for Project Management");
+} else fail("Tableau Visualization course metadata leaked onto Jira for Project Management");
+if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change SQL for Data Analysis");
+} else fail("Tableau Visualization course metadata leaked onto SQL for Data Analysis");
+if (applyInitialHtmlSeo("<title>Home</title>", POWER_BI_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Power BI Dashboarding");
+} else fail("Tableau Visualization course metadata leaked onto Power BI Dashboarding");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change /Internships");
+} else fail("Tableau Visualization course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/tableau-visualization/videos") ===
+  `<${canonicalUrl(TABLEAU_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Tableau Visualization course /videos Link header still points at the parent course");
+} else fail("Tableau Visualization course /videos Link header is not the parent course");
+if (TABLEAU_COURSE_SEO.productName === "Tableau Visualization") {
+  pass("Tableau Visualization productName is unchanged for the videos page title");
+} else fail("Tableau Visualization productName changed");
+if (
+  TABLEAU_COURSE_SEO.description.includes("mentor-led") === false &&
+  TABLEAU_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("Tableau Visualization metadata does not call this retail course a mentor-led internship");
+} else fail("Tableau Visualization metadata still uses internship or mentor-led wording");
 
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
@@ -1131,10 +1234,11 @@ if (
   blogPostSrc.includes("jira-for-project-management") &&
   blogPostSrc.includes("sql-for-data-analysis") &&
   blogPostSrc.includes("power-bi-dashboarding") &&
+  blogPostSrc.includes("tableau-visualization") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, and Power BI Dashboarding course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira/SQL/Power BI H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, and Tableau Visualization course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira/SQL/Power BI/Tableau H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -1348,6 +1452,26 @@ if (
 ) {
   pass("Power BI Dashboarding course FAQs retain original answers, related cards, and contextual course links");
 } else fail("Power BI Dashboarding course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "Which tools are listed?"') &&
+  smmCopy.includes('q: "What projects are listed?"') &&
+  smmCopy.includes('q: "What is the level and duration?"') &&
+  smmCopy.includes('q: "Should I take Power BI or Tableau?"') &&
+  smmCopy.includes('q: "Is SQL required first?"') &&
+  smmCopy.includes('a: "Tableau and Tableau Prep."') &&
+  smmCopy.includes('a: "Market Trend Map and Financial Dashboard."') &&
+  smmCopy.includes('a: "Intermediate, 22 hrs."') &&
+  smmCopy.includes('a: "They are separate KYK courses. Many teams use one or the other. The Business Analytics bundle includes both."') &&
+  smmCopy.includes('a: "SQL for Data Analysis is a separate beginner course on the same track. It is useful but not listed as a formal prerequisite on this page."') &&
+  smmCopy.includes('introHeading: "Tableau Training covering Calculated Fields, Data Blending and Storytelling"') &&
+  smmCopy.includes('relatedSlugs: ["power-bi-dashboarding", "sql-for-data-analysis", "python-for-analytics"]') &&
+  smmCopy.includes('to: "/Blog/power-bi-dashboarding"') &&
+  smmCopy.includes('to: "/Blog/sql-for-data-analysis"') &&
+  smmCopy.includes('to: "/Courses"') &&
+  smmCopy.includes('to: "/Bundles/analytics"')
+) {
+  pass("Tableau Visualization course FAQs retain original answers, related cards, and contextual course links");
+} else fail("Tableau Visualization course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -1383,13 +1507,18 @@ if (
   jsonLdSrc.includes('instructor === "Nina Brooks"') &&
   jsonLdSrc.includes("sql-for-data-analysis") &&
   jsonLdSrc.includes('instructor === "Rachel Kim"') &&
-  jsonLdSrc.includes("power-bi-dashboarding")
+  jsonLdSrc.includes("power-bi-dashboarding") &&
+  jsonLdSrc.includes('instructor === "David Lee"') &&
+  jsonLdSrc.includes("tableau-visualization")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, and Power BI Dashboarding courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, and Tableau Visualization courses");
 } else fail("JSON-LD instructor checks missing");
 if ((jsonLdSrc.match(/slug === "power-bi-dashboarding"/g) || []).length === 2) {
   pass("Power BI JSON-LD extras and FAQPage are declared once each");
 } else fail("Power BI JSON-LD slug handling is duplicated or missing");
+if ((jsonLdSrc.match(/slug === "tableau-visualization"/g) || []).length === 2) {
+  pass("Tableau JSON-LD extras and FAQPage are declared once each");
+} else fail("Tableau JSON-LD slug handling is duplicated or missing");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
 if (internPage.includes("Apply Now") && internPage.includes("addInternshipToCart") && internPage.includes("View program")) {
@@ -1745,10 +1874,12 @@ try {
     !homeHtml.includes(sqlCourseTitleHtml) &&
     !bundlesHtml.includes(sqlCourseTitleHtml) &&
     !homeHtml.includes(powerBiCourseTitleHtml) &&
-    !bundlesHtml.includes(powerBiCourseTitleHtml)
+    !bundlesHtml.includes(powerBiCourseTitleHtml) &&
+    !homeHtml.includes(tableauCourseTitleHtml) &&
+    !bundlesHtml.includes(tableauCourseTitleHtml)
   ) {
-    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, or Power BI course metadata");
-  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, or Power BI course metadata leaked onto homepage or Bundles");
+    pass("Homepage and Bundles first-byte HTML were not given SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, Power BI, or Tableau course metadata");
+  } else fail("SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, Power BI, or Tableau course metadata leaked onto homepage or Bundles");
   if (semHtml.includes(semCourseTitleHtml) && semHtml.includes(SEM_COURSE_SEO.description)) {
     pass("SEM course first-byte HTML uses SEM metadata, not the homepage shell");
   } else fail("SEM course first-byte HTML missing SEM metadata");
@@ -2238,9 +2369,10 @@ try {
     !powerBiCourseHtml.includes(mernCourseTitleHtml) &&
     !powerBiCourseHtml.includes(jiraCourseTitleHtml) &&
     !powerBiCourseHtml.includes(sqlCourseTitleHtml) &&
+    !powerBiCourseHtml.includes(tableauCourseTitleHtml) &&
     !powerBiCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
   ) {
-    pass("Power BI Dashboarding course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, or Internships metadata");
+    pass("Power BI Dashboarding course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, Tableau, or Internships metadata");
   } else fail("Power BI Dashboarding course first-byte HTML mixed another route's metadata");
 
   const mernAfterPowerBi = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
@@ -2272,6 +2404,87 @@ try {
   if (!powerBiVidHtml.includes(powerBiCourseTitleHtml) && !powerBiVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("Power BI Dashboarding /videos HTML was not given Power BI listing or SMM metadata");
   } else fail("Power BI Dashboarding /videos HTML contains listing metadata");
+
+  const tableauCourseRes = await fetch(`${injOrigin}${TABLEAU_COURSE_PATH}`);
+  const tableauCourseHtml = await tableauCourseRes.text();
+  if (tableauCourseRes.status === 200) pass("Express-like /Blog/tableau-visualization returns HTTP 200");
+  else fail(`Tableau Visualization course HTTP ${tableauCourseRes.status}`);
+  if (tableauCourseHtml.includes(tableauCourseTitleHtml) && tableauCourseHtml.includes(tableauCourseDescHtml)) {
+    pass("Tableau Visualization course initial HTML has the new title and description");
+  } else fail("Tableau Visualization course initial HTML missing title or description");
+  if ((tableauCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("Tableau Visualization course initial HTML has one canonical");
+  else fail("Tableau Visualization course initial HTML canonical count is not 1");
+  if (tableauCourseRes.headers.get("link") === `<${canonicalUrl(TABLEAU_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Tableau Visualization course response Link header is self-canonical");
+  } else fail("Tableau Visualization course Link header was incorrect");
+  if (tableauCourseHtml.includes('content="index, follow"') && !tableauCourseHtml.includes("noindex")) {
+    pass("Tableau Visualization course initial HTML is index, follow");
+  } else fail("Tableau Visualization course initial HTML not indexable");
+  if (
+    tableauCourseHtml.includes('property="og:title"') &&
+    tableauCourseHtml.includes('property="og:image"') &&
+    tableauCourseHtml.includes('name="twitter:card"') &&
+    tableauCourseHtml.includes("summary_large_image") &&
+    tableauCourseHtml.includes(tableauOgImageHtml)
+  ) {
+    pass("Tableau Visualization course initial HTML has OG and Twitter metadata");
+  } else fail("Tableau Visualization course initial HTML missing OG or Twitter metadata");
+  if (
+    !tableauCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !tableauCourseHtml.includes(seoCourseTitleHtml) &&
+    !tableauCourseHtml.includes(semCourseTitleHtml) &&
+    !tableauCourseHtml.includes(smoCourseTitleHtml) &&
+    !tableauCourseHtml.includes(gscCourseTitleHtml) &&
+    !tableauCourseHtml.includes(aimCourseTitleHtml) &&
+    !tableauCourseHtml.includes(aipCourseTitleHtml) &&
+    !tableauCourseHtml.includes(peCourseTitleHtml) &&
+    !tableauCourseHtml.includes(aifCourseTitleHtml) &&
+    !tableauCourseHtml.includes(pyCourseTitleHtml) &&
+    !tableauCourseHtml.includes(dsCourseTitleHtml) &&
+    !tableauCourseHtml.includes(mernCourseTitleHtml) &&
+    !tableauCourseHtml.includes(jiraCourseTitleHtml) &&
+    !tableauCourseHtml.includes(sqlCourseTitleHtml) &&
+    !tableauCourseHtml.includes(powerBiCourseTitleHtml) &&
+    !tableauCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("Tableau Visualization course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, Power BI, or Internships metadata");
+  } else fail("Tableau Visualization course first-byte HTML mixed another route's metadata");
+
+  const mernAfterTableau = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
+  const mernAfterTableauHtml = await mernAfterTableau.text();
+  if (mernAfterTableauHtml.includes(mernCourseTitleHtml) && !mernAfterTableauHtml.includes(tableauCourseTitleHtml)) {
+    pass("MERN Stack Development course first-byte SEO remains unchanged after Tableau work");
+  } else fail("MERN Stack Development course first-byte SEO changed by Tableau Visualization work");
+
+  const jiraAfterTableau = await fetch(`${injOrigin}${JIRA_COURSE_PATH}`);
+  const jiraAfterTableauHtml = await jiraAfterTableau.text();
+  if (jiraAfterTableauHtml.includes(jiraCourseTitleHtml) && !jiraAfterTableauHtml.includes(tableauCourseTitleHtml)) {
+    pass("Jira for Project Management course first-byte SEO remains unchanged after Tableau work");
+  } else fail("Jira for Project Management course first-byte SEO changed by Tableau Visualization work");
+
+  const sqlAfterTableau = await fetch(`${injOrigin}${SQL_COURSE_PATH}`);
+  const sqlAfterTableauHtml = await sqlAfterTableau.text();
+  if (sqlAfterTableauHtml.includes(sqlCourseTitleHtml) && !sqlAfterTableauHtml.includes(tableauCourseTitleHtml)) {
+    pass("SQL for Data Analysis course first-byte SEO remains unchanged after Tableau work");
+  } else fail("SQL for Data Analysis course first-byte SEO changed by Tableau Visualization work");
+
+  const powerBiAfterTableau = await fetch(`${injOrigin}${POWER_BI_COURSE_PATH}`);
+  const powerBiAfterTableauHtml = await powerBiAfterTableau.text();
+  if (powerBiAfterTableauHtml.includes(powerBiCourseTitleHtml) && !powerBiAfterTableauHtml.includes(tableauCourseTitleHtml)) {
+    pass("Power BI Dashboarding course first-byte SEO remains unchanged after Tableau work");
+  } else fail("Power BI Dashboarding course first-byte SEO changed by Tableau Visualization work");
+
+  const tableauVid = await fetch(`${injOrigin}/Blog/tableau-visualization/videos`);
+  const tableauVidHtml = await tableauVid.text();
+  if (tableauVid.status === 200 && tableauVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Tableau Visualization /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("Tableau Visualization /videos headers changed");
+  if (tableauVid.headers.get("link") === `<${canonicalUrl(TABLEAU_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Tableau Visualization /videos Link header still parent-canonical");
+  } else fail("Tableau Visualization /videos Link header changed");
+  if (!tableauVidHtml.includes(tableauCourseTitleHtml) && !tableauVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("Tableau Visualization /videos HTML was not given Tableau listing or SMM metadata");
+  } else fail("Tableau Visualization /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

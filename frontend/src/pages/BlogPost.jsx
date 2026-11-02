@@ -187,7 +187,8 @@ export default function BlogPost() {
                   slug === "mern-stack-development" ||
                   slug === "jira-for-project-management" ||
                   slug === "sql-for-data-analysis" ||
-                  slug === "power-bi-dashboarding"
+                  slug === "power-bi-dashboarding" ||
+                  slug === "tableau-visualization"
                     ? "p"
                     : "h2"
                 }
@@ -451,7 +452,8 @@ export default function BlogPost() {
                     slug === "mern-stack-development" ||
                     slug === "jira-for-project-management" ||
                     slug === "sql-for-data-analysis" ||
-                    slug === "power-bi-dashboarding" ? (
+                    slug === "power-bi-dashboarding" ||
+                    slug === "tableau-visualization" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

@@ -586,10 +586,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["tableau-visualization", "sql-for-data-analysis", "python-for-analytics"],
   },
   "tableau-visualization": {
+    introHeading: "Tableau Training covering Calculated Fields, Data Blending and Storytelling",
     intro:
-      "Tableau Visualization is an intermediate KYK course on dashboards and data stories. You cover Tableau basics, calculated fields, dashboard design, data blending, and storytelling, using Tableau and Tableau Prep. Catalog projects include a market trend map and a financial dashboard.",
+      "This Tableau Visualization Course is intermediate Tableau Training at Knock Your Knowledge. It is a Tableau Course for dashboards and data stories: 22 hours, five topics, and 20 videos covering Tableau Basics, Calculated Fields, Dashboard Design, Data Blending, and Storytelling. You use Tableau and Tableau Prep. Catalog projects are Market Trend Map and Financial Dashboard. The published course fee is ₹199/- plus 18% GST at checkout. This is Intermediate. It is a Business Analytics-track retail course, not an internship. Tableau is the dashboard and story layer: you connect data, write calculated fields, design dashboards, blend sources with Tableau Prep, and sequence a story. Power BI Dashboarding is a separate Power BI, DAX, and Power Query dashboard course. SQL for Data Analysis is the query layer in MySQL and PostgreSQL. Python for Analytics is cleaning, visualisation, and reporting with Python and Pandas. Jira for Project Management is boards, sprints, and team workflow. This course does not teach Power BI, SQL, Python, or Jira.",
     whyLearn:
-      "Tableau is built for seeing the shape of data quickly. This course moves from basics to calculated fields, blending, and dashboard design so you can tell a story — not only drop a bar chart on a sheet.",
+      "Tableau is built for seeing the shape of data quickly. This Tableau Visualization Course is Tableau Training that moves from basics to calculated fields, blending, and dashboard design so you can tell a story — not only drop a bar chart on a sheet. You work in Tableau with Tableau Prep. It is a Business Analytics-track retail course, not an internship programme and not a Power BI, SQL, Python, or Jira course.",
     whoFor: [
       "Analysts who need Tableau and Tableau Prep for visual work",
       "Intermediate learners who already think in metrics and want stronger dashboards",
@@ -597,18 +598,18 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Tableau Basics":
-        "Connect data and build first worksheets so marks, shelves, and filters feel familiar.",
+        "Tableau Basics is the first topic in this Tableau Visualization Course. Connect data and build first worksheets so marks, shelves, and filters feel familiar.",
       "Calculated Fields":
-        "Create calculated fields when the source table does not already hold the metric you need.",
+        "Calculated Fields is the second topic. Create calculated fields when the source table does not already hold the metric you need.",
       "Dashboard Design":
-        "Arrange views into a dashboard people can scan, not a pile of worksheets.",
+        "Dashboard Design is the third topic. Arrange views into a dashboard people can scan, not a pile of worksheets.",
       "Data Blending":
-        "Blend data from more than one source when a single extract is not enough, including prep work in Tableau Prep.",
+        "Data Blending is the fourth topic. Blend data from more than one source when a single extract is not enough, including prep work in Tableau Prep.",
       Storytelling:
-        "Sequence the dashboard as a story. Catalog projects are Market Trend Map and Financial Dashboard.",
+        "Storytelling is the fifth topic. Sequence the dashboard as a story. Catalog projects are Market Trend Map and Financial Dashboard.",
     },
     outcomes: [
-      "Build worksheets in Tableau from connected data",
+      "Build worksheets in Tableau from connected data after this Tableau Visualization Course",
       "Write calculated fields for missing metrics",
       "Design a dashboard layout with a clear reading order",
       "Blend sources with help from Tableau Prep where needed",
@@ -635,6 +636,17 @@ export const COURSE_PAGE_COPY = {
         q: "Is SQL required first?",
         a: "SQL for Data Analysis is a separate beginner course on the same track. It is useful but not listed as a formal prerequisite on this page.",
       },
+    ],
+    trackLinks: [
+      { text: "Power BI dashboards sit on " },
+      { to: "/Blog/power-bi-dashboarding", text: "Power BI Dashboarding" },
+      { text: ". SQL queries sit on " },
+      { to: "/Blog/sql-for-data-analysis", text: "SQL for Data Analysis" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["power-bi-dashboarding", "sql-for-data-analysis", "python-for-analytics"],
   },

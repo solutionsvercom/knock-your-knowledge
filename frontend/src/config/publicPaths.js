@@ -229,6 +229,19 @@ export const POWER_BI_COURSE_SEO = {
   productName: "Power BI Dashboarding",
 };
 
+export const TABLEAU_COURSE_PATH = "/Blog/tableau-visualization";
+
+/** First-byte + Helmet SEO for the Tableau Visualization course page only. */
+export const TABLEAU_COURSE_SEO = {
+  title: "Tableau Visualization Course & Tableau Training | KYK",
+  description:
+    "Learn Tableau Visualization with KYK's intermediate course: Tableau Basics, Calculated Fields, Dashboard Design, Data Blending. 22 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Tableau Visualization Course – Intermediate Tableau Training",
+  ogImage: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Tableau Visualization",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -428,6 +441,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: POWER_BI_COURSE_SEO.ogImage,
       twitterCard: POWER_BI_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === TABLEAU_COURSE_PATH) {
+    return {
+      title: TABLEAU_COURSE_SEO.title,
+      description: TABLEAU_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: TABLEAU_COURSE_SEO.ogImage,
+      twitterCard: TABLEAU_COURSE_SEO.twitterCard,
     };
   }
   return null;

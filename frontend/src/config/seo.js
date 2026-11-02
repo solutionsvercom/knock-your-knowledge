@@ -19,6 +19,7 @@ import {
   JIRA_COURSE_SEO,
   SQL_COURSE_SEO,
   POWER_BI_COURSE_SEO,
+  TABLEAU_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -102,10 +103,7 @@ export const COURSE_SEO = {
     ...POWER_BI_COURSE_SEO,
   },
   "tableau-visualization": {
-    title: "Tableau Course Online | KYK",
-    description:
-      "Create Tableau dashboards with calculated fields, data blending, and storytelling. KYK visualisation course for business analytics internships.",
-    h1: "Tableau Visualization",
+    ...TABLEAU_COURSE_SEO,
   },
   "jira-for-project-management": {
     ...JIRA_COURSE_SEO,
