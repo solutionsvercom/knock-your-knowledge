@@ -21,6 +21,7 @@ import {
   POWER_BI_COURSE_SEO,
   TABLEAU_COURSE_SEO,
   PYTHON_FOR_ANALYTICS_COURSE_SEO,
+  DEVELOPMENT_BUNDLE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -143,10 +144,7 @@ export const CAREER_SEO = {
 
 export const BUNDLE_SEO = {
   development: {
-    title: "Development Course Bundle | Python, Data Science & MERN | KYK",
-    description:
-      "KYK Development bundle: Python Programming, Data Science, and MERN Stack together for ₹799/- instead of ₹897/-. Three courses in one pack.",
-    h1: "Development Bundle",
+    ...DEVELOPMENT_BUNDLE_SEO,
   },
   ai: {
     title: "AI & Prompt Engineering Course Bundle | KYK",

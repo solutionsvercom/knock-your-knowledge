@@ -4,6 +4,7 @@
  */
 export const BUNDLE_PAGE_COPY = {
   development: {
+    introHeading: "Python, Data Science and MERN Stack in one Development pack",
     intro:
       "The Development bundle is the three-course KYK path from writing Python to analysing data and shipping a MERN app. You get Python Programming, Data Science, and MERN Stack Development together — language, data, and full-stack web — instead of buying each course on its own.",
     whoFor: [

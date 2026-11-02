@@ -255,6 +255,19 @@ export const PYTHON_FOR_ANALYTICS_COURSE_SEO = {
   productName: "Python for Analytics",
 };
 
+export const DEVELOPMENT_BUNDLE_PATH = "/Bundles/development";
+
+/** First-byte + Helmet SEO for the Development Bundle page only. */
+export const DEVELOPMENT_BUNDLE_SEO = {
+  title: "Development Course Bundle | Python, Data Science & MERN | KYK",
+  description:
+    "KYK Development bundle: Python Programming, Data Science, and MERN Stack. 3 courses, 165 listed hours, ₹799/- instead of ₹897/- + 18% GST.",
+  h1: "Development Bundle – Python, Data Science and MERN Training",
+  ogImage: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Development Bundle",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -478,6 +491,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: PYTHON_FOR_ANALYTICS_COURSE_SEO.ogImage,
       twitterCard: PYTHON_FOR_ANALYTICS_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === DEVELOPMENT_BUNDLE_PATH) {
+    return {
+      title: DEVELOPMENT_BUNDLE_SEO.title,
+      description: DEVELOPMENT_BUNDLE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: DEVELOPMENT_BUNDLE_SEO.ogImage,
+      twitterCard: DEVELOPMENT_BUNDLE_SEO.twitterCard,
     };
   }
   return null;

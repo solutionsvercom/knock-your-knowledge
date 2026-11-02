@@ -5,6 +5,7 @@ import { CATEGORIES, catalogCartIdFromTitle } from "@/data/courseCatalog";
 import { slugifyTitle, getBlogBySlug } from "@/data/courseBlogs";
 import { BUNDLE_PAGE_COPY } from "@/data/bundlePageCopy";
 import { formatInr, retailOfferForSlug, retailOfferForTitle, RETAIL_BUNDLES } from "@/config/pricing";
+import { BUNDLE_SEO } from "@/config/seo";
 import { useCart } from "@/lib/CartContext";
 import { useAuth } from "@/lib/AuthContext";
 
@@ -88,8 +89,13 @@ export default function BundleDetail() {
             Bundle · {offer.titles.length} courses
           </p>
           <h1 className="text-3xl sm:text-5xl font-black text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
-            {offer.pageTitle}
+            {slug === "development" ? BUNDLE_SEO.development.h1 : offer.pageTitle}
           </h1>
+          {copy?.introHeading ? (
+            <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
+              {copy.introHeading}
+            </h2>
+          ) : null}
           <p className="text-sm max-w-2xl mb-6" style={{ color: "#94a3b8" }}>
             {copy?.intro || `${offer.names}. Buy the pack for ${formatInr(offer.fee)} instead of ${formatInr(solo)}.`}
           </p>
@@ -232,7 +238,18 @@ export default function BundleDetail() {
                   className="rounded-xl px-4 py-3"
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                 >
-                  <summary className="text-sm font-semibold text-white cursor-pointer">{faq.q}</summary>
+                  <summary className="text-sm font-semibold text-white cursor-pointer">
+                    {slug === "development" ? (
+                      <strong
+                        className="text-sm font-semibold text-white"
+                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                      >
+                        {faq.q}
+                      </strong>
+                    ) : (
+                      faq.q
+                    )}
+                  </summary>
                   <p className="text-sm leading-relaxed mt-2" style={{ color: "#94a3b8" }}>
                     {faq.a}
                   </p>

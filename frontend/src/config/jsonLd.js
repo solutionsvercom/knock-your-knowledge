@@ -1,6 +1,7 @@
 import { CATEGORIES } from "@/data/courseCatalog";
 import { getBlogBySlug, slugifyTitle } from "@/data/courseBlogs";
 import { INTERNSHIP_PAGES, RETAIL_BUNDLES, retailOfferForTitle } from "@/config/pricing";
+import { BUNDLE_PAGE_COPY } from "@/data/bundlePageCopy";
 import { CONTACT_EMAIL, CONTACT_PHONE_TEL, SOCIAL_FACEBOOK_URL, SOCIAL_INSTAGRAM_URL } from "@/config/contact";
 import {
   BUNDLE_SEO,
@@ -384,19 +385,21 @@ export function jsonLdForPath(pathname) {
 
   const bundleMatch = path.match(/^\/Bundles\/([^/]+)$/);
   if (bundleMatch && BUNDLE_SEO[bundleMatch[1]]) {
-    const offer = RETAIL_BUNDLES.find((b) => b.slug === bundleMatch[1]);
+    const slug = bundleMatch[1];
+    const offer = RETAIL_BUNDLES.find((b) => b.slug === slug);
     const included = catalogCourses().filter((c) => offer?.titles?.includes(c.title));
+    const bundleName = slug === "development" ? offer?.pageTitle || "Development Bundle" : BUNDLE_SEO[slug].h1;
     graph.push(
       breadcrumb([
         { name: "Home", path: "/" },
         { name: "Bundles", path: "/Bundles" },
-        { name: BUNDLE_SEO[bundleMatch[1]].h1, path },
+        { name: bundleName, path },
       ])
     );
     if (included.length) {
       graph.push({
         "@type": "ItemList",
-        name: BUNDLE_SEO[bundleMatch[1]].h1,
+        name: bundleName,
         numberOfItems: included.length,
         itemListElement: included.map((course, i) => ({
           "@type": "ListItem",
@@ -405,6 +408,38 @@ export function jsonLdForPath(pathname) {
           name: course.title,
         })),
       });
+    }
+    if (slug === "development" && offer) {
+      const url = canonicalUrl(path);
+      const product = {
+        "@type": "Product",
+        "@id": `${url}#product`,
+        name: "Development Bundle",
+        description: BUNDLE_SEO.development.description,
+        url,
+        image: included[0]?.image,
+        brand: {
+          "@type": "Organization",
+          name: SITE_NAME,
+          sameAs: `${SITE_ORIGIN}/`,
+        },
+        offers: {
+          "@type": "Offer",
+          category: "Paid",
+          price: String(offer.fee),
+          priceCurrency: "INR",
+          url,
+          priceSpecification: {
+            "@type": "UnitPriceSpecification",
+            price: String(offer.fee),
+            priceCurrency: "INR",
+            valueAddedTaxIncluded: false,
+          },
+        },
+      };
+      graph.push(product);
+      const faqs = BUNDLE_PAGE_COPY.development?.faqs || [];
+      if (faqs.length) graph.push(faqPageNode(faqs, path));
     }
     return { "@context": "https://schema.org", "@graph": graph };
   }
