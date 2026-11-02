@@ -265,6 +265,7 @@ export function jsonLdForPath(pathname) {
         extras.image = course.image;
         extras.description = post?.intro || COURSE_SEO[slug].description;
         extras.vatExcluded = true;
+        extras.educationalLevel = "Beginner";
         if (course.instructor === "Dr. Meera Singh") {
           extras.instructor = course.instructor;
         }

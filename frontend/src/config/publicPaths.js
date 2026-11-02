@@ -398,6 +398,8 @@ export function initialHtmlSeoForPath(pathname) {
       description: AI_FUNDAMENTALS_COURSE_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
+      ogImage: AI_FUNDAMENTALS_COURSE_SEO.ogImage,
+      twitterCard: AI_FUNDAMENTALS_COURSE_SEO.twitterCard,
     };
   }
   if (path === PYTHON_PROGRAMMING_COURSE_PATH) {
