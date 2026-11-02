@@ -93,7 +93,9 @@ export default function BundleDetail() {
               ? BUNDLE_SEO.development.h1
               : slug === "ai"
                 ? BUNDLE_SEO.ai.h1
-                : offer.pageTitle}
+                : slug === "analytics"
+                  ? BUNDLE_SEO.analytics.h1
+                  : offer.pageTitle}
           </h1>
           {copy?.introHeading ? (
             <h2 className="text-lg font-bold text-white mb-3" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -243,7 +245,7 @@ export default function BundleDetail() {
                   style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
                 >
                   <summary className="text-sm font-semibold text-white cursor-pointer">
-                    {slug === "development" || slug === "ai" ? (
+                    {slug === "development" || slug === "ai" || slug === "analytics" ? (
                       <strong
                         className="text-sm font-semibold text-white"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

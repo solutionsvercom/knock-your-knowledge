@@ -23,6 +23,7 @@ import {
   PYTHON_FOR_ANALYTICS_COURSE_SEO,
   DEVELOPMENT_BUNDLE_SEO,
   AI_BUNDLE_SEO,
+  ANALYTICS_BUNDLE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -151,10 +152,7 @@ export const BUNDLE_SEO = {
     ...AI_BUNDLE_SEO,
   },
   analytics: {
-    title: "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK",
-    description:
-      "KYK Analytics pack: SQL, Python for Analytics, Power BI, Tableau, and Jira for ₹899/- instead of ₹995/-. Five business analytics courses in one bundle.",
-    h1: "Business Analytics Bundle",
+    ...ANALYTICS_BUNDLE_SEO,
   },
   marketing: {
     title: "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK",

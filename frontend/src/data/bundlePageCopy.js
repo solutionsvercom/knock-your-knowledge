@@ -110,6 +110,7 @@ export const BUNDLE_PAGE_COPY = {
     ],
   },
   analytics: {
+    introHeading: "SQL, Python for Analytics, Power BI, Tableau and Jira in one Analytics pack",
     intro:
       "The Business Analytics bundle is five KYK courses for people who need to query data, analyse it in Python, present it in Power BI and Tableau, and track the work in Jira. It is the analytics track pack — SQL, Python for Analytics, Power BI, Tableau, and Jira — not a single dashboard tutorial.",
     whoFor: [

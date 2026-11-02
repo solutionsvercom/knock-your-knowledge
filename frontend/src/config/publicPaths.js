@@ -281,6 +281,19 @@ export const AI_BUNDLE_SEO = {
   productName: "AI & Prompt Engineering Bundle",
 };
 
+export const ANALYTICS_BUNDLE_PATH = "/Bundles/analytics";
+
+/** First-byte + Helmet SEO for the Business Analytics Bundle page only. */
+export const ANALYTICS_BUNDLE_SEO = {
+  title: "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK",
+  description:
+    "KYK Analytics bundle: SQL, Python for Analytics, Power BI, Tableau, and Jira. 5 courses, 115 listed hours, ₹899/- instead of ₹995/- + 18% GST.",
+  h1: "Business Analytics Bundle – SQL, Python Analytics, Power BI, Tableau and Jira Training",
+  ogImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Business Analytics Bundle",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -524,6 +537,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: AI_BUNDLE_SEO.ogImage,
       twitterCard: AI_BUNDLE_SEO.twitterCard,
+    };
+  }
+  if (path === ANALYTICS_BUNDLE_PATH) {
+    return {
+      title: ANALYTICS_BUNDLE_SEO.title,
+      description: ANALYTICS_BUNDLE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: ANALYTICS_BUNDLE_SEO.ogImage,
+      twitterCard: ANALYTICS_BUNDLE_SEO.twitterCard,
     };
   }
   return null;
