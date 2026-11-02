@@ -212,6 +212,25 @@ export function jsonLdForPath(pathname) {
     return { "@context": "https://schema.org", "@graph": graph };
   }
 
+  if (path === "/About") {
+    const url = canonicalUrl(path);
+    graph.push(
+      breadcrumb([
+        { name: "Home", path: "/" },
+        { name: "About Us", path: "/About" },
+      ]),
+      {
+        "@type": "AboutPage",
+        "@id": `${url}#about`,
+        name: seo.h1 || "About Knock Your Knowledge",
+        url,
+        description: seo.description,
+        about: { "@id": ORG_ID },
+      }
+    );
+    return { "@context": "https://schema.org", "@graph": graph };
+  }
+
   const courseMatch = path.match(/^\/Blog\/([^/]+)$/);
   if (courseMatch && COURSE_SEO[courseMatch[1]]) {
     const course = catalogCourses().find((c) => c.slug === courseMatch[1]);
@@ -767,10 +786,6 @@ export function jsonLdForPath(pathname) {
     "/LiveClasses": [
       { name: "Home", path: "/" },
       { name: "Live Classes", path: "/LiveClasses" },
-    ],
-    "/About": [
-      { name: "Home", path: "/" },
-      { name: "About", path: "/About" },
     ],
   };
   if (listingCrumbs[path]) {

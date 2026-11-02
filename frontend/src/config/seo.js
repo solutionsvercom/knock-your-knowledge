@@ -3,6 +3,7 @@ import {
   INDEXABLE_PATHS,
   INTERNSHIPS_LISTING_SEO,
   CAREER_GUIDE_SEO,
+  ABOUT_SEO,
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
@@ -71,10 +72,7 @@ const STATIC_SEO = {
     h1: "Interactive Live Sessions",
   },
   "/About": {
-    title: "About Knock Your Knowledge | Internship Courses & Career Support",
-    description:
-      "Knock Your Knowledge helps learners turn ambition into experience through internship courses, real programs, and career support across four practical tracks.",
-    h1: "Knock Your Knowledge",
+    ...ABOUT_SEO,
   },
 };
 

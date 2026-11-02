@@ -46,6 +46,18 @@ export const CAREER_GUIDE_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const ABOUT_PATH = "/About";
+
+/** First-byte + Helmet SEO for the About Us page only. */
+export const ABOUT_SEO = {
+  title: "About Knock Your Knowledge | Paid Internship Programmes | KYK",
+  description:
+    "Knock Your Knowledge (KYK) offers paid, real-time internships in Development, AI, Analytics and Digital Marketing. Courses and bundles are separate products. About KYK, contact, and how to apply.",
+  h1: "About Knock Your Knowledge",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
 export const SMM_COURSE_PATH = "/Blog/smm-social-media-marketing";
 
 /** First-byte + Helmet SEO for the SMM course page only. */
@@ -448,6 +460,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: CAREER_GUIDE_SEO.ogImage,
       twitterCard: CAREER_GUIDE_SEO.twitterCard,
+    };
+  }
+  if (path === ABOUT_PATH) {
+    return {
+      title: ABOUT_SEO.title,
+      description: ABOUT_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: ABOUT_SEO.ogImage,
+      twitterCard: ABOUT_SEO.twitterCard,
     };
   }
   if (path === DEVELOPMENT_INTERNSHIP_PATH) {

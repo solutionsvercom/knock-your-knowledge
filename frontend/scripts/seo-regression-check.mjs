@@ -18,6 +18,8 @@ import {
   INTERNSHIPS_LISTING_SEO,
   CAREER_GUIDE_PATH,
   CAREER_GUIDE_SEO,
+  ABOUT_PATH,
+  ABOUT_SEO,
   SMM_COURSE_SEO,
   SMM_COURSE_PATH,
   SEO_COURSE_SEO,
@@ -141,6 +143,8 @@ if (!titles.includes(MARKETING_INTERNSHIP_SEO.title)) titles.push(MARKETING_INTE
 if (!descriptions.includes(MARKETING_INTERNSHIP_SEO.description)) descriptions.push(MARKETING_INTERNSHIP_SEO.description);
 if (!titles.includes(CAREER_GUIDE_SEO.title)) titles.push(CAREER_GUIDE_SEO.title);
 if (!descriptions.includes(CAREER_GUIDE_SEO.description)) descriptions.push(CAREER_GUIDE_SEO.description);
+if (!titles.includes(ABOUT_SEO.title)) titles.push(ABOUT_SEO.title);
+if (!descriptions.includes(ABOUT_SEO.description)) descriptions.push(ABOUT_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -308,6 +312,78 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/python-programming/videos"
 if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(INTERNSHIPS_LISTING_SEO.title) === false) {
   pass("Internships listing metadata does not overwrite /Blog Career Guide first-byte HTML");
 } else fail("Internships listing metadata leaked onto /Blog");
+
+const aboutShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  ABOUT_PATH
+);
+const aboutTitleHtml = ABOUT_SEO.title.replace(/&/g, "&amp;");
+const aboutDescHtml = ABOUT_SEO.description.replace(/&/g, "&amp;");
+if (aboutShell.includes(aboutTitleHtml)) pass("Initial HTML title for /About");
+else fail("Initial HTML missing About title");
+if (aboutShell.includes(ABOUT_SEO.description)) pass("Initial HTML description for /About");
+else fail("Initial HTML missing About description");
+if ((aboutShell.match(/rel="canonical"/g) || []).length === 1) pass("About initial HTML has exactly one canonical");
+else fail("About initial HTML canonical count is not 1");
+if (aboutShell.includes('href="https://knockyourknowledge.com/About"')) pass("About canonical is /About");
+else fail("About canonical is not /About");
+if (aboutShell.includes('content="index, follow"')) pass("About initial HTML robots is index, follow");
+else fail("About initial HTML missing index, follow");
+if (
+  aboutShell.includes('property="og:title"') &&
+  aboutShell.includes('property="og:image"') &&
+  aboutShell.includes(ABOUT_SEO.ogImage) &&
+  aboutShell.includes('name="twitter:card"') &&
+  aboutShell.includes("summary_large_image") &&
+  aboutShell.includes('name="twitter:image"') &&
+  (aboutShell.match(/data-rh="true"/g) || []).length === 12
+) {
+  pass("About initial HTML has OG, Twitter, data-rh, and twitter:image metadata");
+} else fail("About initial HTML missing OG, Twitter, data-rh, or twitter:image metadata");
+if (documentLinkHeader(ABOUT_PATH) === "<https://knockyourknowledge.com/About>; rel=\"canonical\"") {
+  pass("About Link header is self-canonical");
+} else fail("About Link header incorrect");
+if (documentLinkHeader("/About/") === "<https://knockyourknowledge.com/About>; rel=\"canonical\"") {
+  pass("About trailing-slash request still emits the /About Link canonical");
+} else fail("About trailing-slash Link header is not the /About canonical");
+if (!/startsWith\(["']\/About["']\)/.test(fs.readFileSync(path.join(root, "src/config/publicPaths.js"), "utf8"))) {
+  pass("publicPaths.js does not use startsWith(\"/About\") for About SEO");
+} else fail("publicPaths.js uses startsWith(\"/About\") which would leak About SEO");
+if (statusForFrontendPath(ABOUT_PATH) === 200) pass("About matcher is HTTP 200");
+else fail("About matcher is not HTTP 200");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(aboutTitleHtml) === false) {
+  pass("About HTML SEO injection does not leak onto homepage");
+} else fail("About metadata leaked onto homepage");
+if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(aboutTitleHtml) === false) {
+  pass("About HTML SEO injection does not leak onto /Blog");
+} else fail("About metadata leaked onto /Blog");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(aboutTitleHtml) === false) {
+  pass("About HTML SEO injection does not leak onto /Internships");
+} else fail("About metadata leaked onto /Internships");
+if (COURSE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(aboutTitleHtml) === false)) {
+  pass("About first-byte SEO does not leak onto 17 course /Blog/:slug routes");
+} else fail("About metadata leaked onto a course /Blog/:slug route");
+if (CAREER_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(aboutTitleHtml) === false)) {
+  pass("About first-byte SEO does not leak onto career article routes");
+} else fail("About metadata leaked onto a career article route");
+if (INTERNSHIP_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Internships/${slug}`).includes(aboutTitleHtml) === false)) {
+  pass("About first-byte SEO does not leak onto internship detail routes");
+} else fail("About metadata leaked onto an internship detail route");
+if (BUNDLE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Bundles/${slug}`).includes(aboutTitleHtml) === false)) {
+  pass("About first-byte SEO does not leak onto bundle detail routes");
+} else fail("About metadata leaked onto a bundle detail route");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/python-programming/videos").includes(aboutTitleHtml) === false) {
+  pass("About first-byte SEO does not leak onto course /videos routes");
+} else fail("About metadata leaked onto a course /videos route");
+if (applyInitialHtmlSeo("<title>Home</title>", "/AboutUs").includes(aboutTitleHtml) === false) {
+  pass("About first-byte SEO does not attach to /AboutUs");
+} else fail("About metadata leaked onto /AboutUs");
+if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(careerGuideTitleHtml) === false) {
+  pass("Career Guide listing metadata does not overwrite /About first-byte HTML");
+} else fail("Career Guide listing metadata leaked onto /About");
+if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(INTERNSHIPS_LISTING_SEO.title) === false) {
+  pass("Internships listing metadata does not overwrite /About first-byte HTML");
+} else fail("Internships listing metadata leaked onto /About");
 
 const smmShell = applyInitialHtmlSeo(
   `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
@@ -3358,7 +3434,7 @@ for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug/videos", 
 }
 
 const jsonLd = fs.readFileSync(path.join(root, "src/config/jsonLd.js"), "utf8");
-for (const t of ["EducationalOrganization", "WebSite", "BreadcrumbList", "Course", "ItemList", "CourseInstance", "Offer", "FAQPage", "Product"]) {
+for (const t of ["EducationalOrganization", "WebSite", "BreadcrumbList", "Course", "ItemList", "CourseInstance", "Offer", "FAQPage", "Product", "AboutPage"]) {
   if (jsonLd.includes(`"${t}"`) || jsonLd.includes(`@type": "${t}"`) || jsonLd.includes(`"@type": "${t}"`)) {
     pass(`JSON-LD builder includes ${t}`);
   } else fail(`JSON-LD builder missing ${t}`);
@@ -3596,6 +3672,146 @@ if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_INTERNSHIP_PATH).includ
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(INTERNSHIPS_LISTING_SEO.title)) {
   pass("Internships listing first-byte mapping remains after Career Guide listing work");
 } else fail("Internships listing first-byte mapping was broken by Career Guide listing work");
+
+if (
+  /if \(path === "\/About"\) \{/.test(jsonLd) &&
+  /if \(path === "\/About"\) \{[\s\S]*?"@type": "AboutPage"/.test(jsonLd) &&
+  /if \(path === "\/About"\) \{[\s\S]*?name: "About Us", path: "\/About"/.test(jsonLd) &&
+  /if \(path === "\/About"\) \{[\s\S]*?about: \{ "@id": ORG_ID \}/.test(jsonLd)
+) {
+  pass("About JSON-LD is gated to path === \"/About\" with BreadcrumbList About Us and AboutPage Organization @id");
+} else fail("About JSON-LD missing AboutPage, About Us breadcrumb, Organization @id, or exact /About gate");
+const aboutJsonLdBlock =
+  jsonLd.match(/if \(path === "\/About"\) \{[\s\S]*?return \{ "@context": "https:\/\/schema.org", "@graph": graph \};/)?.[0] || "";
+if (aboutJsonLdBlock.includes("AboutPage") && aboutJsonLdBlock.includes("About Us") && aboutJsonLdBlock.includes("ORG_ID")) {
+  pass("About JSON-LD block is self-contained through its return");
+} else fail("About JSON-LD block could not be isolated");
+try {
+  const aboutGraph = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: "https://knockyourknowledge.com/" },
+          { "@type": "ListItem", position: 2, name: "About Us", item: "https://knockyourknowledge.com/About" },
+        ],
+      },
+      {
+        "@type": "AboutPage",
+        "@id": "https://knockyourknowledge.com/About#about",
+        name: ABOUT_SEO.h1,
+        url: "https://knockyourknowledge.com/About",
+        description: ABOUT_SEO.description,
+        about: { "@id": "https://knockyourknowledge.com/#organization" },
+      },
+    ],
+  };
+  JSON.parse(JSON.stringify(aboutGraph));
+  if (aboutJsonLdBlock.includes('"@type": "AboutPage"') && aboutJsonLdBlock.includes('name: "About Us"')) {
+    pass("About JSON-LD AboutPage + BreadcrumbList shape parses and uses verified fields only");
+  } else fail("About JSON-LD shape is missing AboutPage or About Us breadcrumb after parse check");
+} catch (err) {
+  fail(`About JSON-LD parse check failed: ${err.message}`);
+}
+if (!aboutJsonLdBlock.includes("JobPosting")) {
+  pass("About JSON-LD does not add JobPosting");
+} else fail("About JSON-LD includes JobPosting");
+if (!aboutJsonLdBlock.includes("AggregateRating") && !aboutJsonLdBlock.includes("aggregateRating")) {
+  pass("About JSON-LD does not add AggregateRating");
+} else fail("About JSON-LD includes AggregateRating");
+if (!aboutJsonLdBlock.includes('"@type": "Review"')) {
+  pass("About JSON-LD does not add Review");
+} else fail("About JSON-LD includes Review");
+if (!aboutJsonLdBlock.includes("Award") && !aboutJsonLdBlock.includes("EducationalOccupationalProgram")) {
+  pass("About JSON-LD does not add Award or EducationalOccupationalProgram");
+} else fail("About JSON-LD includes Award or EducationalOccupationalProgram");
+if (!aboutJsonLdBlock.includes("organizationNode(")) {
+  pass("About JSON-LD references Organization @id and does not redefine the homepage entity");
+} else fail("About JSON-LD duplicates organizationNode()");
+if (/if \(courseMatch && COURSE_SEO[\s\S]*?if \(path === "\/About"\) \{/.test(jsonLd) === false) {
+  pass("About JSON-LD is not nested inside course detail JSON-LD");
+} else fail("About JSON-LD appears inside the course-detail branch");
+if (/if \(path === "\/Blog"\) \{[\s\S]*?if \(path === "\/About"\) \{/.test(jsonLd) && /if \(path === "\/About"\) \{[\s\S]*?if \(path === "\/Blog"\) \{/.test(jsonLd) === false) {
+  pass("About JSON-LD is a sibling of Career Guide listing JSON-LD, not nested inside it");
+} else fail("About JSON-LD is nested inside or before the Career Guide listing branch unsafely");
+
+const aboutSrc = fs.readFileSync(path.join(root, "src/pages/About.jsx"), "utf8");
+if ((aboutSrc.match(/<h1\b/g) || []).length === 1 && aboutSrc.includes("pageSeo.h1")) {
+  pass("About page renders exactly one H1 from SEO configuration");
+} else fail("About page H1 is missing, duplicated, or not sourced from seoForPath(\"/About\")");
+if (aboutSrc.includes("A paid internship platform for Development, AI, Analytics and Digital Marketing")) {
+  pass("About page renders the approved intro H2");
+} else fail("About page missing approved intro H2");
+if (
+  aboutSrc.includes("paid, real-time") &&
+  aboutSrc.includes("₹3,999") &&
+  aboutSrc.includes("18%") &&
+  aboutSrc.includes("₹4,719") &&
+  aboutSrc.includes("stipend") &&
+  aboutSrc.includes("17 courses") &&
+  aboutSrc.includes("Four course bundles")
+) {
+  pass("About page distinguishes paid internships, 17 courses, and four bundles with the verified fee");
+} else fail("About page missing internship/course/bundle distinction or verified fee");
+if (
+  aboutSrc.includes("Development Internship") &&
+  aboutSrc.includes("AI & Prompt Engineering Internship") &&
+  aboutSrc.includes("Business Analytics Internship") &&
+  aboutSrc.includes("Advanced Digital Marketing Internship")
+) {
+  pass("About page names the four internship tracks");
+} else fail("About page missing an internship track name");
+if (
+  !aboutSrc.includes("19+") &&
+  !aboutSrc.includes("25+") &&
+  !aboutSrc.includes("10+") &&
+  !aboutSrc.includes("100% Placement") &&
+  !aboutSrc.includes("50+ interns") &&
+  !aboutSrc.includes("Placement Assistance") &&
+  !aboutSrc.includes("Partner Companies") &&
+  !aboutSrc.includes("guaranteed") &&
+  !aboutSrc.includes("mentor-led")
+) {
+  pass("About page omits unverified statistics, placement, partner, and mentor-led claims");
+} else fail("About page still contains an unverified statistic or placement/partner/mentor claim");
+if (
+  aboutSrc.includes('to="/Internships"') &&
+  aboutSrc.includes('to: "/Internships/development"') &&
+  aboutSrc.includes('to: "/Internships/ai"') &&
+  aboutSrc.includes('to: "/Internships/analytics"') &&
+  aboutSrc.includes('to: "/Internships/marketing"') &&
+  aboutSrc.includes('to="/Courses"') &&
+  aboutSrc.includes('to="/Bundles"') &&
+  aboutSrc.includes('to: "/Bundles/development"') &&
+  aboutSrc.includes('to: "/Bundles/ai"') &&
+  aboutSrc.includes('to: "/Bundles/analytics"') &&
+  aboutSrc.includes('to: "/Bundles/marketing"') &&
+  aboutSrc.includes('to="/Blog"')
+) {
+  pass("About internal links point at existing internship, course, bundle, and Career Guide routes");
+} else fail("About page is missing an approved internal link destination");
+if (!aboutSrc.includes("/videos") && !aboutSrc.includes('to="/Contact"') && !aboutSrc.includes('to: "/Contact"')) {
+  pass("About page does not link noindex /videos routes or a /Contact route");
+} else fail("About page links a /videos or /Contact route");
+if (aboutSrc.includes("GetStartedLink")) {
+  pass("About page keeps GetStartedLink contact-modal behavior");
+} else fail("About page no longer uses GetStartedLink");
+if (seoSrc.includes("...ABOUT_SEO") && seoSrc.includes('"/About":')) {
+  pass("STATIC_SEO[\"/About\"] spreads ABOUT_SEO so Helmet matches first-byte metadata");
+} else fail("STATIC_SEO[\"/About\"] is not mapped from ABOUT_SEO");
+if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(careerGuideTitleHtml)) {
+  pass("Career Guide first-byte mapping remains after About work");
+} else fail("Career Guide first-byte mapping was broken by About work");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(INTERNSHIPS_LISTING_SEO.title)) {
+  pass("Internships listing first-byte mapping remains after About work");
+} else fail("Internships listing first-byte mapping was broken by About work");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(developmentInternTitleHtml)) {
+  pass("Development Internship first-byte mapping remains after About work");
+} else fail("Development Internship first-byte mapping was broken by About work");
+if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_INTERNSHIP_PATH).includes(marketingInternTitleHtml)) {
+  pass("Marketing Internship first-byte mapping remains after About work");
+} else fail("Marketing Internship first-byte mapping was broken by About work");
 
 const spaShell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const injectionServer = http.createServer((req, res) => {
@@ -5554,6 +5770,118 @@ try {
   if (!videosAfterCareerGuideHtml.includes(careerGuideTitleHtml) && !videosAfterCareerGuideHtml.includes(CAREER_GUIDE_SEO.description)) {
     pass("SEO /videos HTML was not given Career Guide listing metadata");
   } else fail("SEO /videos HTML contains Career Guide listing metadata");
+
+  const aboutRes = await fetch(`${injOrigin}${ABOUT_PATH}`);
+  const aboutHtml = await aboutRes.text();
+  if (aboutRes.status === 200) pass("Express-like /About returns HTTP 200");
+  else fail(`About HTTP ${aboutRes.status}`);
+  if (aboutHtml.includes(aboutTitleHtml) && aboutHtml.includes(ABOUT_SEO.description)) {
+    pass("About initial HTML has the approved title and description");
+  } else fail("About initial HTML missing title or description");
+  if ((aboutHtml.match(/rel="canonical"/g) || []).length === 1) pass("About injected HTML has one canonical");
+  else fail("About injected HTML canonical count is not 1");
+  if (aboutRes.headers.get("link") === `<${canonicalUrl(ABOUT_PATH)}>; rel="canonical"`) {
+    pass("About response Link header is self-canonical");
+  } else fail("About Link header was incorrect");
+  if (aboutHtml.includes('content="index, follow"') && !aboutHtml.includes("noindex")) {
+    pass("About initial HTML is index, follow");
+  } else fail("About initial HTML not indexable");
+  if (
+    aboutHtml.includes('property="og:title"') &&
+    aboutHtml.includes('property="og:image"') &&
+    aboutHtml.includes(ABOUT_SEO.ogImage) &&
+    aboutHtml.includes('name="twitter:card"') &&
+    aboutHtml.includes("summary_large_image") &&
+    aboutHtml.includes('name="twitter:image"') &&
+    (aboutHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("About initial HTML has OG, Twitter image, and data-rh metadata");
+  } else fail("About initial HTML missing OG, Twitter, or data-rh metadata");
+  if (
+    !aboutHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
+    !aboutHtml.includes(careerGuideTitleHtml) &&
+    !aboutHtml.includes(developmentInternTitleHtml) &&
+    !aboutHtml.includes(aiInternTitleHtml) &&
+    !aboutHtml.includes(analyticsInternTitleHtml) &&
+    !aboutHtml.includes(marketingInternTitleHtml) &&
+    !aboutHtml.includes(marketingBundleTitleHtml) &&
+    !aboutHtml.includes(analyticsBundleTitleHtml) &&
+    !aboutHtml.includes(seoCourseTitleHtml)
+  ) {
+    pass("About first-byte HTML does not reuse internship, Career Guide, bundle, or course metadata");
+  } else fail("About first-byte HTML mixed another route's metadata");
+
+  const aboutSlashRes = await fetch(`${injOrigin}/About/`);
+  const aboutSlashHtml = await aboutSlashRes.text();
+  if (aboutSlashRes.status === 200 && aboutSlashHtml.includes(aboutTitleHtml)) {
+    pass("Normalized /About/ still receives About first-byte SEO (Express 301 is verified separately)");
+  } else fail("Normalized /About/ did not receive About first-byte SEO");
+
+  const internshipsAfterAbout = await fetch(`${injOrigin}/Internships`);
+  const internshipsAfterAboutHtml = await internshipsAfterAbout.text();
+  if (internshipsAfterAboutHtml.includes(INTERNSHIPS_LISTING_SEO.title) && !internshipsAfterAboutHtml.includes(aboutTitleHtml)) {
+    pass("Internships listing first-byte SEO remains unchanged after About work");
+  } else fail("Internships listing first-byte SEO changed by About work");
+
+  const careerGuideAfterAbout = await fetch(`${injOrigin}${CAREER_GUIDE_PATH}`);
+  const careerGuideAfterAboutHtml = await careerGuideAfterAbout.text();
+  if (careerGuideAfterAboutHtml.includes(careerGuideTitleHtml) && !careerGuideAfterAboutHtml.includes(aboutTitleHtml)) {
+    pass("Career Guide listing first-byte SEO remains unchanged after About work");
+  } else fail("Career Guide listing first-byte SEO changed by About work");
+
+  const homeAfterAbout = await fetch(`${injOrigin}/`);
+  const homeAfterAboutHtml = await homeAfterAbout.text();
+  if (!homeAfterAboutHtml.includes(aboutTitleHtml) && !homeAfterAboutHtml.includes(ABOUT_SEO.description)) {
+    pass("Homepage first-byte HTML remains unchanged after About work");
+  } else fail("Homepage first-byte HTML picked up About metadata");
+
+  let aboutCourseLeak = false;
+  for (const slug of COURSE_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes(aboutTitleHtml) || html.includes(ABOUT_SEO.description)) aboutCourseLeak = true;
+  }
+  if (!aboutCourseLeak) pass("All 17 course /Blog/:slug first-byte pages omit About metadata");
+  else fail("A course /Blog/:slug first-byte page contains About metadata");
+
+  let aboutArticleLeak = false;
+  for (const slug of CAREER_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes(aboutTitleHtml) || html.includes(ABOUT_SEO.description)) aboutArticleLeak = true;
+  }
+  if (!aboutArticleLeak) pass("Both career article first-byte pages omit About metadata");
+  else fail("A career article first-byte page contains About metadata");
+
+  let aboutInternDetailOk = true;
+  for (let i = 0; i < internDetailPaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${internDetailPaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(internDetailTitles[i]) || html.includes(aboutTitleHtml)) aboutInternDetailOk = false;
+  }
+  if (aboutInternDetailOk) pass("All four internship detail first-byte pages remain unchanged after About work");
+  else fail("An internship detail first-byte page changed or picked up About metadata");
+
+  let aboutBundleOk = true;
+  for (let i = 0; i < bundlePaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${bundlePaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(bundleTitles[i]) || html.includes(aboutTitleHtml)) aboutBundleOk = false;
+  }
+  if (aboutBundleOk) pass("All four bundle detail first-byte pages remain unchanged after About work");
+  else fail("A bundle detail first-byte page changed or picked up About metadata");
+
+  const videosAfterAbout = await fetch(`${injOrigin}/Blog/seo-search-engine-optimization/videos`);
+  const videosAfterAboutHtml = await videosAfterAbout.text();
+  if (videosAfterAbout.status === 200 && videosAfterAbout.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SEO /videos route still 200 with X-Robots-Tag noindex, nofollow after About work");
+  } else fail("SEO /videos headers changed by About work");
+  if (videosAfterAbout.headers.get("link") === `<${canonicalUrl(SEO_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SEO /videos Link header remains the parent course canonical after About work");
+  } else fail("SEO /videos Link header changed by About work");
+  if (!videosAfterAboutHtml.includes(aboutTitleHtml) && !videosAfterAboutHtml.includes(ABOUT_SEO.description)) {
+    pass("SEO /videos HTML was not given About metadata");
+  } else fail("SEO /videos HTML contains About metadata");
 } finally {
   injectionServer.close();
 }
