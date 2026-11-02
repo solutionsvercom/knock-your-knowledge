@@ -307,6 +307,18 @@ export const MARKETING_BUNDLE_SEO = {
   productName: "Advanced Digital Marketing Bundle",
 };
 
+export const DEVELOPMENT_INTERNSHIP_PATH = "/Internships/development";
+
+/** First-byte + Helmet SEO for the Development Internship page only. */
+export const DEVELOPMENT_INTERNSHIP_SEO = {
+  title: "Development Internship Program | Python & MERN | KYK",
+  description:
+    "Paid KYK Development Internship: 1–3 month Remote/Hybrid programme. Build with Python, MERN, React, Node.js, MongoDB and Git. Programme fee ₹3,999/- + 18% GST.",
+  h1: "Development Internship – Python, MERN and Full-Stack Project Experience",
+  ogImage: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
+  twitterCard: "summary_large_image",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -378,6 +390,16 @@ export function initialHtmlSeoForPath(pathname) {
       description: INTERNSHIPS_LISTING_SEO.description,
       canonical: canonicalUrl(path),
       robots: "index, follow",
+    };
+  }
+  if (path === DEVELOPMENT_INTERNSHIP_PATH) {
+    return {
+      title: DEVELOPMENT_INTERNSHIP_SEO.title,
+      description: DEVELOPMENT_INTERNSHIP_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: DEVELOPMENT_INTERNSHIP_SEO.ogImage,
+      twitterCard: DEVELOPMENT_INTERNSHIP_SEO.twitterCard,
     };
   }
   if (path === SMM_COURSE_PATH) {

@@ -1,7 +1,8 @@
 import { CATEGORIES } from "@/data/courseCatalog";
 import { getBlogBySlug, slugifyTitle } from "@/data/courseBlogs";
-import { INTERNSHIP_PAGES, RETAIL_BUNDLES, retailOfferForTitle } from "@/config/pricing";
+import { INTERNSHIP_FEE_AMOUNT, INTERNSHIP_PAGES, RETAIL_BUNDLES, retailOfferForTitle } from "@/config/pricing";
 import { BUNDLE_PAGE_COPY } from "@/data/bundlePageCopy";
+import { INTERNSHIP_PAGE_COPY } from "@/data/internshipPageCopy";
 import { CONTACT_EMAIL, CONTACT_PHONE_TEL, SOCIAL_FACEBOOK_URL, SOCIAL_INSTAGRAM_URL } from "@/config/contact";
 import {
   BUNDLE_SEO,
@@ -551,14 +552,54 @@ export function jsonLdForPath(pathname) {
 
   const internMatch = path.match(/^\/Internships\/([^/]+)$/);
   if (internMatch && INTERNSHIP_SEO[internMatch[1]]) {
-    const page = INTERNSHIP_PAGES.find((p) => p.slug === internMatch[1]);
+    const slug = internMatch[1];
+    const page = INTERNSHIP_PAGES.find((p) => p.slug === slug);
     graph.push(
       breadcrumb([
         { name: "Home", path: "/" },
         { name: "Internships", path: "/Internships" },
-        { name: page?.navTitle || INTERNSHIP_SEO[internMatch[1]].h1, path },
+        { name: slug === "development" ? "Development Internship" : page?.navTitle || INTERNSHIP_SEO[slug].h1, path },
       ])
     );
+    if (slug === "development") {
+      const url = canonicalUrl(path);
+      const programId = `${url}#program`;
+      const offerId = `${url}#offer`;
+      graph.push({
+        "@type": "EducationalOccupationalProgram",
+        "@id": programId,
+        name: "Development Internship",
+        url,
+        description: INTERNSHIP_PAGE_COPY.development?.overview || INTERNSHIP_SEO.development.description,
+        provider: {
+          "@type": "EducationalOrganization",
+          name: SITE_NAME,
+          url: `${SITE_ORIGIN}/`,
+        },
+        occupationalCategory: "Full-Stack Developer",
+        educationalProgramMode: "Remote / Hybrid",
+        teaches: ["Python", "MERN", "React", "Node.js", "MongoDB", "Git"],
+        offers: { "@id": offerId },
+      });
+      graph.push({
+        "@type": "Offer",
+        "@id": offerId,
+        url,
+        price: String(INTERNSHIP_FEE_AMOUNT),
+        priceCurrency: "INR",
+        itemOffered: { "@id": programId },
+        description:
+          "Programme fee ₹3,999/-. 18% GST is charged separately at checkout. This is a fee paid to Knock Your Knowledge, not a stipend or salary.",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: String(INTERNSHIP_FEE_AMOUNT),
+          priceCurrency: "INR",
+          valueAddedTaxIncluded: false,
+        },
+      });
+      const faqs = INTERNSHIP_PAGE_COPY.development?.faqs || [];
+      if (faqs.length) graph.push(faqPageNode(faqs, path));
+    }
     return { "@context": "https://schema.org", "@graph": graph };
   }
 

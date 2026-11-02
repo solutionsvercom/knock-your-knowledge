@@ -5,6 +5,7 @@
  */
 export const INTERNSHIP_PAGE_COPY = {
   development: {
+    introHeading: "A paid 1–3 month Remote/Hybrid Development internship with Python and MERN",
     overview:
       "The Development internship is Knock Your Knowledge’s 1–3 month Remote / Hybrid programme on the Python and MERN track. KYK lists it as building products with Python, MERN, and modern web stacks, shipping features with mentors, and growing toward a full-stack developer role. It is a separate product from the Python Programming, Data Science, and MERN Stack Development courses, and from the Development course bundle.",
     whoCanApply: [

@@ -25,6 +25,7 @@ import {
   AI_BUNDLE_SEO,
   ANALYTICS_BUNDLE_SEO,
   MARKETING_BUNDLE_SEO,
+  DEVELOPMENT_INTERNSHIP_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -162,10 +163,7 @@ export const BUNDLE_SEO = {
 
 export const INTERNSHIP_SEO = {
   development: {
-    title: "Development Internship Program | Python & MERN | KYK",
-    description:
-      "KYK Development internship: build with Python, MERN, and modern web stacks over 1–3 months. Remote/hybrid. Internship fee ₹3,999/- + 18% GST.",
-    h1: "Development Internship",
+    ...DEVELOPMENT_INTERNSHIP_SEO,
   },
   ai: {
     title: "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK",
