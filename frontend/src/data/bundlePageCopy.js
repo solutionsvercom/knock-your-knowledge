@@ -163,6 +163,7 @@ export const BUNDLE_PAGE_COPY = {
     ],
   },
   marketing: {
+    introHeading: "SEO, SEM, SMM, SMO, Search Console and AI marketing tools in one Marketing pack",
     intro:
       "The Advanced Digital Marketing bundle is six KYK courses covering organic search, paid search, social, Search Console, and AI for marketing. You get SEO, SEM, SMM, SMO, Google Webmaster & Search Console, and AI Tools in Digital Marketing in one pack — the full marketing track, not a single-channel course.",
     whoFor: [

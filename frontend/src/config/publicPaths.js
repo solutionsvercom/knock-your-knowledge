@@ -294,6 +294,19 @@ export const ANALYTICS_BUNDLE_SEO = {
   productName: "Business Analytics Bundle",
 };
 
+export const MARKETING_BUNDLE_PATH = "/Bundles/marketing";
+
+/** First-byte + Helmet SEO for the Advanced Digital Marketing Bundle page only. */
+export const MARKETING_BUNDLE_SEO = {
+  title: "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK",
+  description:
+    "KYK Marketing bundle: SEO, SEM, SMM, SMO, Search Console, and AI Tools in Digital Marketing. 6 courses, 126 listed hours, ₹799/- instead of ₹894/- + 18% GST.",
+  h1: "Advanced Digital Marketing Bundle – SEO, SEM, SMM, SMO, Search Console and AI Marketing Training",
+  ogImage: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Advanced Digital Marketing Bundle",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -547,6 +560,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: ANALYTICS_BUNDLE_SEO.ogImage,
       twitterCard: ANALYTICS_BUNDLE_SEO.twitterCard,
+    };
+  }
+  if (path === MARKETING_BUNDLE_PATH) {
+    return {
+      title: MARKETING_BUNDLE_SEO.title,
+      description: MARKETING_BUNDLE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: MARKETING_BUNDLE_SEO.ogImage,
+      twitterCard: MARKETING_BUNDLE_SEO.twitterCard,
     };
   }
   return null;

@@ -24,6 +24,7 @@ import {
   DEVELOPMENT_BUNDLE_SEO,
   AI_BUNDLE_SEO,
   ANALYTICS_BUNDLE_SEO,
+  MARKETING_BUNDLE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -155,10 +156,7 @@ export const BUNDLE_SEO = {
     ...ANALYTICS_BUNDLE_SEO,
   },
   marketing: {
-    title: "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK",
-    description:
-      "KYK Marketing pack: SEO, SEM, SMM, SMO, Search Console, and AI Marketing for ₹799/- instead of ₹894/-. Six digital marketing courses in one bundle.",
-    h1: "Advanced Digital Marketing Bundle",
+    ...MARKETING_BUNDLE_SEO,
   },
 };
 
