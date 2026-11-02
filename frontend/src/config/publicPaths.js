@@ -216,6 +216,19 @@ export const SQL_COURSE_SEO = {
   productName: "SQL for Data Analysis",
 };
 
+export const POWER_BI_COURSE_PATH = "/Blog/power-bi-dashboarding";
+
+/** First-byte + Helmet SEO for the Power BI Dashboarding course page only. */
+export const POWER_BI_COURSE_SEO = {
+  title: "Power BI Dashboarding Course & Power BI Training | KYK",
+  description:
+    "Learn Power BI Dashboarding with KYK's intermediate course: Power BI Basics, DAX Formulas, Data Modelling, Visuals & Filters. 28 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Power BI Dashboarding Course – Intermediate Power BI Training",
+  ogImage: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Power BI Dashboarding",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -405,6 +418,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: SQL_COURSE_SEO.ogImage,
       twitterCard: SQL_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === POWER_BI_COURSE_PATH) {
+    return {
+      title: POWER_BI_COURSE_SEO.title,
+      description: POWER_BI_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: POWER_BI_COURSE_SEO.ogImage,
+      twitterCard: POWER_BI_COURSE_SEO.twitterCard,
     };
   }
   return null;

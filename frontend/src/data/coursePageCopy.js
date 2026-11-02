@@ -521,10 +521,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["sql-for-data-analysis", "data-science", "power-bi-dashboarding"],
   },
   "power-bi-dashboarding": {
+    introHeading: "Power BI Training covering DAX, Data Modelling and Live Dashboards",
     intro:
-      "Power BI Dashboarding is an intermediate KYK course on building interactive reports. You cover Power BI basics, DAX formulas, data modelling, visuals and filters, and a live dashboard, using Power BI, DAX, and Power Query. Catalog projects include a sales report and HR analytics.",
+      "This Power BI Dashboarding Course is intermediate Power BI Training at Knock Your Knowledge. It is a Power BI Course for interactive dashboards: 28 hours, five topics, and 20 videos covering Power BI Basics, DAX Formulas, Data Modelling, Visuals & Filters, and a Live Dashboard. You use Power BI, DAX, and Power Query. Catalog projects are Sales Report and HR Analytics. The published course fee is ₹199/- plus 18% GST at checkout. This is Intermediate. It is a Business Analytics-track retail course, not an internship. Power BI is the dashboard layer: you load data, write DAX, model tables, add visuals and filters, and publish a live dashboard. SQL for Data Analysis is the query layer in MySQL and PostgreSQL. Python for Analytics is cleaning, visualisation, and reporting with Python and Pandas. Tableau Visualization is a separate Tableau dashboard course. Jira for Project Management is boards, sprints, and team workflow. This course does not teach SQL, Python, Tableau, or Jira.",
     whyLearn:
-      "A dump of charts is not a dashboard. This course ties modelling, DAX, and filters together so people can slice a live report instead of asking you for a new screenshot.",
+      "A dump of charts is not a dashboard. This Power BI Dashboarding Course is Power BI Training that ties modelling, DAX, and filters together so people can slice a live report instead of asking you for a new screenshot. You work in Power BI with DAX and Power Query. It is a Business Analytics-track retail course, not an internship programme and not a SQL, Python, Tableau, or Jira course.",
     whoFor: [
       "Analysts who need Power BI, DAX, and Power Query for work",
       "Intermediate learners who already understand tables and want interactive reports",
@@ -532,18 +533,18 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Power BI Basics":
-        "Load data and learn the Power BI workspace so you are not lost in ribbons before you write DAX.",
+        "Power BI Basics is the first topic in this Power BI Dashboarding Course. Load data and learn the Power BI workspace so you are not lost in ribbons before you write DAX.",
       "DAX Formulas":
-        "Write DAX measures that respond to filters, instead of only dropping raw columns on a chart.",
+        "DAX Formulas is the second topic. Write DAX measures that respond to filters, instead of only dropping raw columns on a chart.",
       "Data Modelling":
-        "Relate tables in a model Power BI can use, including work you start in Power Query.",
+        "Data Modelling is the third topic. Relate tables in a model Power BI can use, including work you start in Power Query.",
       "Visuals & Filters":
-        "Choose visuals and slicers so users can ask the next question without a new file.",
+        "Visuals & Filters is the fourth topic. Choose visuals and slicers so users can ask the next question without a new file.",
       "Live Dashboard":
-        "Publish a live dashboard. Catalog projects named for this course are Sales Report and HR Analytics.",
+        "Live Dashboard is the fifth topic. Publish a live dashboard. Catalog projects named for this course are Sales Report and HR Analytics.",
     },
     outcomes: [
-      "Build a Power BI report from loaded data",
+      "Build a Power BI report from loaded data after this Power BI Dashboarding Course",
       "Write DAX formulas for filtered metrics",
       "Model tables with Power Query in the mix",
       "Add visuals and filters users can actually use",
@@ -570,6 +571,17 @@ export const COURSE_PAGE_COPY = {
         q: "Are there videos?",
         a: "The enrol card lists five topics and twenty videos.",
       },
+    ],
+    trackLinks: [
+      { text: "SQL queries sit on " },
+      { to: "/Blog/sql-for-data-analysis", text: "SQL for Data Analysis" },
+      { text: ". Dashboards in Tableau sit on " },
+      { to: "/Blog/tableau-visualization", text: "Tableau Visualization" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["tableau-visualization", "sql-for-data-analysis", "python-for-analytics"],
   },

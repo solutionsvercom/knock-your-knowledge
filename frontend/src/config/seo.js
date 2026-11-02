@@ -18,6 +18,7 @@ import {
   MERN_STACK_COURSE_SEO,
   JIRA_COURSE_SEO,
   SQL_COURSE_SEO,
+  POWER_BI_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -98,10 +99,7 @@ export const COURSE_SEO = {
     h1: "Python for Analytics",
   },
   "power-bi-dashboarding": {
-    title: "Power BI Course Online | KYK",
-    description:
-      "Design interactive Power BI dashboards with DAX, data modelling, and reporting. KYK internship course covering visuals, filters, and a live dashboard.",
-    h1: "Power BI Dashboarding",
+    ...POWER_BI_COURSE_SEO,
   },
   "tableau-visualization": {
     title: "Tableau Course Online | KYK",
