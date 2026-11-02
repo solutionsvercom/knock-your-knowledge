@@ -242,6 +242,19 @@ export const TABLEAU_COURSE_SEO = {
   productName: "Tableau Visualization",
 };
 
+export const PYTHON_FOR_ANALYTICS_COURSE_PATH = "/Blog/python-for-analytics";
+
+/** First-byte + Helmet SEO for the Python for Analytics course page only. */
+export const PYTHON_FOR_ANALYTICS_COURSE_SEO = {
+  title: "Python for Analytics Course & Pandas Training | KYK",
+  description:
+    "Learn Python for Analytics with KYK's intermediate course: Data Cleaning, Exploratory Analysis, Visualisation, Reporting Automation. 30 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+  h1: "Python for Analytics Course – Intermediate Python Analytics Training",
+  ogImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
+  twitterCard: "summary_large_image",
+  productName: "Python for Analytics",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -451,6 +464,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: TABLEAU_COURSE_SEO.ogImage,
       twitterCard: TABLEAU_COURSE_SEO.twitterCard,
+    };
+  }
+  if (path === PYTHON_FOR_ANALYTICS_COURSE_PATH) {
+    return {
+      title: PYTHON_FOR_ANALYTICS_COURSE_SEO.title,
+      description: PYTHON_FOR_ANALYTICS_COURSE_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: PYTHON_FOR_ANALYTICS_COURSE_SEO.ogImage,
+      twitterCard: PYTHON_FOR_ANALYTICS_COURSE_SEO.twitterCard,
     };
   }
   return null;

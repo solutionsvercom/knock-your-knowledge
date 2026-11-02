@@ -468,10 +468,11 @@ export const COURSE_PAGE_COPY = {
     relatedSlugs: ["python-for-analytics", "power-bi-dashboarding", "tableau-visualization"],
   },
   "python-for-analytics": {
+    introHeading: "Python Analytics Training covering Pandas, Seaborn and Reporting Automation",
     intro:
-      "Python for Analytics is an intermediate KYK course on business analysis with Python and Pandas. You work through data cleaning, exploratory analysis, visualisation with Seaborn, reporting automation, and a business project. Catalog projects include revenue analysis and a KPI dashboard.",
+      "This Python for Analytics Course is intermediate Python Analytics Training at Knock Your Knowledge. It is a Python Analytics course for business analysis with Python, Pandas, and Seaborn: 30 hours, five topics, and 20 videos covering Data Cleaning, Exploratory Analysis, Visualisation, Reporting Automation, and a Business Project. Catalog projects are Revenue Analysis and KPI Dashboard. The published course fee is ₹199/- plus 18% GST at checkout. This is Intermediate. It is a Business Analytics-track retail course, not an internship. Python for Analytics is the cleaning, visualisation, and reporting layer: you clean datasets, explore them, plot with Seaborn, automate reports, and finish a business project. SQL for Data Analysis is the query layer. Power BI Dashboarding and Tableau Visualization are dashboard courses. Jira for Project Management is boards, sprints, and team workflow. Python Programming is the Python language on the Development track. Data Science is wrangling, EDA, and ML on the Development track. This course does not teach SQL, Power BI, Tableau, Jira, machine learning, or beginner Python language syntax as a first course.",
     whyLearn:
-      "SQL gets the rows; Python helps you clean, plot, and repeat the report. This course is for analysts who need Pandas, Seaborn, and automated reporting — not a full machine-learning syllabus.",
+      "SQL gets the rows; Python helps you clean, plot, and repeat the report. This Python for Analytics Course is Python Analytics Training for that Business Analytics layer — Data Cleaning, Exploratory Analysis, Visualisation with Seaborn, Reporting Automation, and a Business Project with Python and Pandas — so you can turn tables into a repeating report. It is a Business Analytics-track retail course, not an internship programme and not a SQL, Power BI, Tableau, Jira, machine-learning, or beginner Python language course.",
     whoFor: [
       "Analysts who know some SQL or Excel and want Python for cleaning and charts",
       "Intermediate learners ready for Pandas and Seaborn on business data",
@@ -479,15 +480,15 @@ export const COURSE_PAGE_COPY = {
     ],
     topicDetails: {
       "Data Cleaning":
-        "Fix types, missing values, and messy columns in Pandas so the rest of the analysis is not built on broken inputs.",
+        "Data Cleaning is the first topic in this Python for Analytics Course. Fix types, missing values, and messy columns in Pandas so the rest of the analysis is not built on broken inputs.",
       "Exploratory Analysis":
-        "Slice business data to see trends and outliers before you present a number as a fact.",
+        "Exploratory Analysis is the second topic. Slice business data to see trends and outliers before you present a number as a fact.",
       Visualisation:
-        "Plot with Seaborn (and Python) so stakeholders can see the pattern, not only a table.",
+        "Visualisation is the third topic. Plot with Seaborn (and Python) so stakeholders can see the pattern, not only a table.",
       "Reporting Automation":
-        "Repeat the same report with code instead of rebuilding it by hand every week.",
+        "Reporting Automation is the fourth topic. Repeat the same report with code instead of rebuilding it by hand every week.",
       "Business Project":
-        "Bring cleaning, EDA, charts, and automation into a business project. Catalog projects are Revenue Analysis and KPI Dashboard.",
+        "Business Project is the fifth topic. Bring cleaning, EDA, charts, and automation into a business project. Catalog projects are Revenue Analysis and KPI Dashboard.",
     },
     outcomes: [
       "Clean business datasets with Python and Pandas",
@@ -517,6 +518,17 @@ export const COURSE_PAGE_COPY = {
         q: "Can I take it with SQL and Power BI?",
         a: "Yes. All three are in the Business Analytics bundle, along with Tableau and Jira.",
       },
+    ],
+    trackLinks: [
+      { text: "SQL queries sit on " },
+      { to: "/Blog/sql-for-data-analysis", text: "SQL for Data Analysis" },
+      { text: ". Python as a language sits on " },
+      { to: "/Blog/python-programming", text: "Python Programming" },
+      { text: ". Browse all " },
+      { to: "/Courses", text: "internship courses" },
+      { text: " or the " },
+      { to: "/Bundles/analytics", text: "Business Analytics Bundle" },
+      { text: "." },
     ],
     relatedSlugs: ["sql-for-data-analysis", "data-science", "power-bi-dashboarding"],
   },

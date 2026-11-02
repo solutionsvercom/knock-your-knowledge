@@ -48,6 +48,8 @@ import {
   POWER_BI_COURSE_PATH,
   TABLEAU_COURSE_SEO,
   TABLEAU_COURSE_PATH,
+  PYTHON_FOR_ANALYTICS_COURSE_SEO,
+  PYTHON_FOR_ANALYTICS_COURSE_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -101,6 +103,8 @@ if (!titles.includes(POWER_BI_COURSE_SEO.title)) titles.push(POWER_BI_COURSE_SEO
 if (!descriptions.includes(POWER_BI_COURSE_SEO.description)) descriptions.push(POWER_BI_COURSE_SEO.description);
 if (!titles.includes(TABLEAU_COURSE_SEO.title)) titles.push(TABLEAU_COURSE_SEO.title);
 if (!descriptions.includes(TABLEAU_COURSE_SEO.description)) descriptions.push(TABLEAU_COURSE_SEO.description);
+if (!titles.includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title)) titles.push(PYTHON_FOR_ANALYTICS_COURSE_SEO.title);
+if (!descriptions.includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.description)) descriptions.push(PYTHON_FOR_ANALYTICS_COURSE_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -1189,6 +1193,9 @@ if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(TABLEAU
 if (applyInitialHtmlSeo("<title>Home</title>", POWER_BI_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
   pass("Tableau Visualization course HTML SEO injection does not change Power BI Dashboarding");
 } else fail("Tableau Visualization course metadata leaked onto Power BI Dashboarding");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_FOR_ANALYTICS_COURSE_PATH).includes(TABLEAU_COURSE_SEO.title) === false) {
+  pass("Tableau Visualization course HTML SEO injection does not change Python for Analytics");
+} else fail("Tableau Visualization course metadata leaked onto Python for Analytics");
 if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(TABLEAU_COURSE_SEO.title) === false) {
   pass("Tableau Visualization course HTML SEO injection does not change /Internships");
 } else fail("Tableau Visualization course metadata leaked onto /Internships");
@@ -1207,6 +1214,123 @@ if (
 ) {
   pass("Tableau Visualization metadata does not call this retail course a mentor-led internship");
 } else fail("Tableau Visualization metadata still uses internship or mentor-led wording");
+
+const pythonForAnalyticsCourseTitleHtml = PYTHON_FOR_ANALYTICS_COURSE_SEO.title.replace(/&/g, "&amp;");
+const pythonForAnalyticsCourseDescHtml = PYTHON_FOR_ANALYTICS_COURSE_SEO.description.replace(/&/g, "&amp;");
+const pythonForAnalyticsOgImageHtml = PYTHON_FOR_ANALYTICS_COURSE_SEO.ogImage.replace(/&/g, "&amp;");
+const pythonForAnalyticsCourseShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  PYTHON_FOR_ANALYTICS_COURSE_PATH
+);
+if (pythonForAnalyticsCourseShell.includes(pythonForAnalyticsCourseTitleHtml)) pass("Initial HTML title for Python for Analytics course");
+else fail("Initial HTML missing Python for Analytics course title");
+if (pythonForAnalyticsCourseShell.includes(pythonForAnalyticsCourseDescHtml)) pass("Initial HTML description for Python for Analytics course");
+else fail("Initial HTML missing Python for Analytics course description");
+if ((pythonForAnalyticsCourseShell.match(/rel="canonical"/g) || []).length === 1) pass("Python for Analytics course initial HTML has exactly one canonical");
+else fail("Python for Analytics course initial HTML canonical count is not 1");
+if (pythonForAnalyticsCourseShell.includes(`href="${canonicalUrl(PYTHON_FOR_ANALYTICS_COURSE_PATH)}"`)) pass("Python for Analytics course initial HTML canonical is the course URL");
+else fail("Python for Analytics course initial HTML canonical is not the course URL");
+if (pythonForAnalyticsCourseShell.includes('content="index, follow"')) pass("Python for Analytics course initial HTML robots is index, follow");
+else fail("Python for Analytics course initial HTML missing index, follow");
+if (pythonForAnalyticsCourseShell.includes('property="og:title"') && pythonForAnalyticsCourseShell.includes('name="twitter:card"')) {
+  pass("Python for Analytics course initial HTML includes OG and Twitter tags");
+} else fail("Python for Analytics course initial HTML missing OG or Twitter tags");
+if (
+  pythonForAnalyticsCourseShell.includes(`content="${pythonForAnalyticsOgImageHtml}"`) &&
+  pythonForAnalyticsCourseShell.includes('content="summary_large_image"')
+) {
+  pass("Python for Analytics course initial HTML OG image and Twitter card match");
+} else fail("Python for Analytics course initial HTML missing OG image or Twitter card value");
+if (
+  documentLinkHeader(PYTHON_FOR_ANALYTICS_COURSE_PATH) ===
+  `<${canonicalUrl(PYTHON_FOR_ANALYTICS_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Python for Analytics course Link header is self-canonical");
+} else fail("Python for Analytics course Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", SMM_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change SMM");
+} else fail("Python for Analytics course metadata leaked onto SMM");
+if (applyInitialHtmlSeo("<title>Home</title>", SEO_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change SEO course");
+} else fail("Python for Analytics course metadata leaked onto SEO course");
+if (applyInitialHtmlSeo("<title>Home</title>", SEM_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change SEM course");
+} else fail("Python for Analytics course metadata leaked onto SEM course");
+if (applyInitialHtmlSeo("<title>Home</title>", SMO_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change SMO course");
+} else fail("Python for Analytics course metadata leaked onto SMO course");
+if (applyInitialHtmlSeo("<title>Home</title>", GSC_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change GSC course");
+} else fail("Python for Analytics course metadata leaked onto GSC course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_MARKETING_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change AI marketing course");
+} else fail("Python for Analytics course metadata leaked onto AI marketing course");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change AI productivity course");
+} else fail("Python for Analytics course metadata leaked onto AI productivity course");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Prompt Engineering");
+} else fail("Python for Analytics course metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change AI Fundamentals");
+} else fail("Python for Analytics course metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PYTHON_PROGRAMMING_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Python Programming");
+} else fail("Python for Analytics course metadata leaked onto Python Programming");
+if (applyInitialHtmlSeo("<title>Home</title>", DATA_SCIENCE_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Data Science");
+} else fail("Python for Analytics course metadata leaked onto Data Science");
+if (applyInitialHtmlSeo("<title>Home</title>", MERN_STACK_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change MERN Stack Development");
+} else fail("Python for Analytics course metadata leaked onto MERN Stack Development");
+if (applyInitialHtmlSeo("<title>Home</title>", JIRA_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Jira for Project Management");
+} else fail("Python for Analytics course metadata leaked onto Jira for Project Management");
+if (applyInitialHtmlSeo("<title>Home</title>", SQL_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change SQL for Data Analysis");
+} else fail("Python for Analytics course metadata leaked onto SQL for Data Analysis");
+if (applyInitialHtmlSeo("<title>Home</title>", POWER_BI_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Power BI Dashboarding");
+} else fail("Python for Analytics course metadata leaked onto Power BI Dashboarding");
+if (applyInitialHtmlSeo("<title>Home</title>", TABLEAU_COURSE_PATH).includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change Tableau Visualization");
+} else fail("Python for Analytics course metadata leaked onto Tableau Visualization");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(PYTHON_FOR_ANALYTICS_COURSE_SEO.title) === false) {
+  pass("Python for Analytics course HTML SEO injection does not change /Internships");
+} else fail("Python for Analytics course metadata leaked onto /Internships");
+if (
+  documentLinkHeader("/Blog/python-for-analytics/videos") ===
+  `<${canonicalUrl(PYTHON_FOR_ANALYTICS_COURSE_PATH)}>; rel="canonical"`
+) {
+  pass("Python for Analytics course /videos Link header still points at the parent course");
+} else fail("Python for Analytics course /videos Link header is not the parent course");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.productName === "Python for Analytics") {
+  pass("Python for Analytics productName is unchanged for the videos page title");
+} else fail("Python for Analytics productName changed");
+if (
+  PYTHON_FOR_ANALYTICS_COURSE_SEO.description.includes("mentor-led") === false &&
+  PYTHON_FOR_ANALYTICS_COURSE_SEO.description.includes("internship course") === false
+) {
+  pass("Python for Analytics metadata does not call this retail course a mentor-led internship");
+} else fail("Python for Analytics metadata still uses internship or mentor-led wording");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.title.includes("Python for Data Analysis") === false) {
+  pass("Python for Analytics title uses the catalog course name, not Python for Data Analysis");
+} else fail("Python for Analytics title still says Python for Data Analysis");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.title !== PYTHON_PROGRAMMING_COURSE_SEO.title) {
+  pass("Python for Analytics title is isolated from Python Programming");
+} else fail("Python for Analytics title collided with Python Programming");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.description !== PYTHON_PROGRAMMING_COURSE_SEO.description) {
+  pass("Python for Analytics description is isolated from Python Programming");
+} else fail("Python for Analytics description collided with Python Programming");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.h1 !== PYTHON_PROGRAMMING_COURSE_SEO.h1) {
+  pass("Python for Analytics H1 is isolated from Python Programming");
+} else fail("Python for Analytics H1 collided with Python Programming");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.ogImage !== PYTHON_PROGRAMMING_COURSE_SEO.ogImage) {
+  pass("Python for Analytics OG image is isolated from Python Programming");
+} else fail("Python for Analytics OG image collided with Python Programming");
+if (PYTHON_FOR_ANALYTICS_COURSE_SEO.productName !== PYTHON_PROGRAMMING_COURSE_SEO.productName) {
+  pass("Python for Analytics productName is isolated from Python Programming");
+} else fail("Python for Analytics productName collided with Python Programming");
 
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
@@ -1235,10 +1359,11 @@ if (
   blogPostSrc.includes("sql-for-data-analysis") &&
   blogPostSrc.includes("power-bi-dashboarding") &&
   blogPostSrc.includes("tableau-visualization") &&
+  blogPostSrc.includes("python-for-analytics") &&
   blogPostSrc.includes('titleAs=')
 ) {
-  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, and Tableau Visualization course pages use SEO H1 and demote the enroll card heading");
-} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira/SQL/Power BI/Tableau H1/hero heading wiring missing");
+  pass("SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, Tableau Visualization, and Python for Analytics course pages use SEO H1 and demote the enroll card heading");
+} else fail("SMM/SEO/SEM/SMO/GSC/AI marketing/AI productivity/Prompt Engineering/AI Fundamentals/Python Programming/Data Science/MERN/Jira/SQL/Power BI/Tableau/Python for Analytics H1/hero heading wiring missing");
 if (
   smmCopy.includes('q: "Is this the same as Google Ads?"') &&
   smmCopy.includes('q: "How long is the SEO course?"') &&
@@ -1472,6 +1597,26 @@ if (
 ) {
   pass("Tableau Visualization course FAQs retain original answers, related cards, and contextual course links");
 } else fail("Tableau Visualization course FAQ set, related cards, or track links missing");
+if (
+  smmCopy.includes('q: "How is this different from Data Science?"') &&
+  smmCopy.includes('q: "Which tools are listed?"') &&
+  smmCopy.includes('q: "What projects are listed?"') &&
+  smmCopy.includes('q: "What is the level and duration?"') &&
+  smmCopy.includes('q: "Can I take it with SQL and Power BI?"') &&
+  smmCopy.includes('a: "Python for Analytics is on the Business Analytics track (cleaning, visualisation, reporting, business project). Data Science is on the Development track and includes ML models, feature engineering, and deployment."') &&
+  smmCopy.includes('a: "Python, Pandas, and Seaborn."') &&
+  smmCopy.includes('a: "Revenue Analysis and KPI Dashboard."') &&
+  smmCopy.includes('a: "Intermediate, 30 hrs."') &&
+  smmCopy.includes('a: "Yes. All three are in the Business Analytics bundle, along with Tableau and Jira."') &&
+  smmCopy.includes('introHeading: "Python Analytics Training covering Pandas, Seaborn and Reporting Automation"') &&
+  smmCopy.includes('relatedSlugs: ["sql-for-data-analysis", "data-science", "power-bi-dashboarding"]') &&
+  smmCopy.includes('to: "/Blog/sql-for-data-analysis"') &&
+  smmCopy.includes('to: "/Blog/python-programming"') &&
+  smmCopy.includes('to: "/Courses"') &&
+  smmCopy.includes('to: "/Bundles/analytics"')
+) {
+  pass("Python for Analytics course FAQs retain original answers, related cards, and contextual course links");
+} else fail("Python for Analytics course FAQ set, related cards, or track links missing");
 if (blogPostSrc.includes("payWithCashfree") === false && blogPostSrc.includes("enrollThisCourse") && blogPostSrc.includes("addGuideToCart")) {
   pass("BlogPost enroll and internship cart handlers still present");
 } else fail("BlogPost enrollment handlers changed unexpectedly");
@@ -1509,9 +1654,10 @@ if (
   jsonLdSrc.includes('instructor === "Rachel Kim"') &&
   jsonLdSrc.includes("power-bi-dashboarding") &&
   jsonLdSrc.includes('instructor === "David Lee"') &&
-  jsonLdSrc.includes("tableau-visualization")
+  jsonLdSrc.includes("tableau-visualization") &&
+  jsonLdSrc.includes("python-for-analytics")
 ) {
-  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, and Tableau Visualization courses");
+  pass("JSON-LD instructor extras remain catalog-gated for SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN Stack Development, Jira for Project Management, SQL for Data Analysis, Power BI Dashboarding, Tableau Visualization, and Python for Analytics courses");
 } else fail("JSON-LD instructor checks missing");
 if ((jsonLdSrc.match(/slug === "power-bi-dashboarding"/g) || []).length === 2) {
   pass("Power BI JSON-LD extras and FAQPage are declared once each");
@@ -1519,6 +1665,12 @@ if ((jsonLdSrc.match(/slug === "power-bi-dashboarding"/g) || []).length === 2) {
 if ((jsonLdSrc.match(/slug === "tableau-visualization"/g) || []).length === 2) {
   pass("Tableau JSON-LD extras and FAQPage are declared once each");
 } else fail("Tableau JSON-LD slug handling is duplicated or missing");
+if ((jsonLdSrc.match(/slug === "python-for-analytics"/g) || []).length === 2) {
+  pass("Python for Analytics JSON-LD extras and FAQPage are declared once each");
+} else fail("Python for Analytics JSON-LD slug handling is duplicated or missing");
+if ((jsonLdSrc.match(/slug === "python-programming"/g) || []).length === 2) {
+  pass("Python Programming JSON-LD extras and FAQPage remain declared once each");
+} else fail("Python Programming JSON-LD slug handling changed");
 
 const internPage = fs.readFileSync(path.join(root, "src/pages/Internships.jsx"), "utf8");
 if (internPage.includes("Apply Now") && internPage.includes("addInternshipToCart") && internPage.includes("View program")) {
@@ -2485,6 +2637,100 @@ try {
   if (!tableauVidHtml.includes(tableauCourseTitleHtml) && !tableauVidHtml.includes(SMM_COURSE_SEO.title)) {
     pass("Tableau Visualization /videos HTML was not given Tableau listing or SMM metadata");
   } else fail("Tableau Visualization /videos HTML contains listing metadata");
+
+  const pythonForAnalyticsCourseRes = await fetch(`${injOrigin}${PYTHON_FOR_ANALYTICS_COURSE_PATH}`);
+  const pythonForAnalyticsCourseHtml = await pythonForAnalyticsCourseRes.text();
+  if (pythonForAnalyticsCourseRes.status === 200) pass("Express-like /Blog/python-for-analytics returns HTTP 200");
+  else fail(`Python for Analytics course HTTP ${pythonForAnalyticsCourseRes.status}`);
+  if (pythonForAnalyticsCourseHtml.includes(pythonForAnalyticsCourseTitleHtml) && pythonForAnalyticsCourseHtml.includes(pythonForAnalyticsCourseDescHtml)) {
+    pass("Python for Analytics course initial HTML has the new title and description");
+  } else fail("Python for Analytics course initial HTML missing title or description");
+  if ((pythonForAnalyticsCourseHtml.match(/rel="canonical"/g) || []).length === 1) pass("Python for Analytics course initial HTML has one canonical");
+  else fail("Python for Analytics course initial HTML canonical count is not 1");
+  if (pythonForAnalyticsCourseRes.headers.get("link") === `<${canonicalUrl(PYTHON_FOR_ANALYTICS_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Python for Analytics course response Link header is self-canonical");
+  } else fail("Python for Analytics course Link header was incorrect");
+  if (pythonForAnalyticsCourseHtml.includes('content="index, follow"') && !pythonForAnalyticsCourseHtml.includes("noindex")) {
+    pass("Python for Analytics course initial HTML is index, follow");
+  } else fail("Python for Analytics course initial HTML not indexable");
+  if (
+    pythonForAnalyticsCourseHtml.includes('property="og:title"') &&
+    pythonForAnalyticsCourseHtml.includes('property="og:image"') &&
+    pythonForAnalyticsCourseHtml.includes('name="twitter:card"') &&
+    pythonForAnalyticsCourseHtml.includes("summary_large_image") &&
+    pythonForAnalyticsCourseHtml.includes(pythonForAnalyticsOgImageHtml)
+  ) {
+    pass("Python for Analytics course initial HTML has OG and Twitter metadata");
+  } else fail("Python for Analytics course initial HTML missing OG or Twitter metadata");
+  if (
+    !pythonForAnalyticsCourseHtml.includes(SMM_COURSE_SEO.title) &&
+    !pythonForAnalyticsCourseHtml.includes(seoCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(semCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(smoCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(gscCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(aimCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(aipCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(peCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(aifCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(pyCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(dsCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(mernCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(jiraCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(sqlCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(powerBiCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(tableauCourseTitleHtml) &&
+    !pythonForAnalyticsCourseHtml.includes(INTERNSHIPS_LISTING_SEO.title)
+  ) {
+    pass("Python for Analytics course first-byte HTML does not reuse SMM, SEO, SEM, SMO, GSC, AI marketing, AI productivity, Prompt Engineering, AI Fundamentals, Python Programming, Data Science, MERN, Jira, SQL, Power BI, Tableau, or Internships metadata");
+  } else fail("Python for Analytics course first-byte HTML mixed another route's metadata");
+
+  const pythonProgrammingAfterPfa = await fetch(`${injOrigin}${PYTHON_PROGRAMMING_COURSE_PATH}`);
+  const pythonProgrammingAfterPfaHtml = await pythonProgrammingAfterPfa.text();
+  if (pythonProgrammingAfterPfaHtml.includes(pyCourseTitleHtml) && !pythonProgrammingAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("Python Programming course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("Python Programming course first-byte SEO changed by Python for Analytics work");
+
+  const mernAfterPfa = await fetch(`${injOrigin}${MERN_STACK_COURSE_PATH}`);
+  const mernAfterPfaHtml = await mernAfterPfa.text();
+  if (mernAfterPfaHtml.includes(mernCourseTitleHtml) && !mernAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("MERN Stack Development course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("MERN Stack Development course first-byte SEO changed by Python for Analytics work");
+
+  const jiraAfterPfa = await fetch(`${injOrigin}${JIRA_COURSE_PATH}`);
+  const jiraAfterPfaHtml = await jiraAfterPfa.text();
+  if (jiraAfterPfaHtml.includes(jiraCourseTitleHtml) && !jiraAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("Jira for Project Management course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("Jira for Project Management course first-byte SEO changed by Python for Analytics work");
+
+  const sqlAfterPfa = await fetch(`${injOrigin}${SQL_COURSE_PATH}`);
+  const sqlAfterPfaHtml = await sqlAfterPfa.text();
+  if (sqlAfterPfaHtml.includes(sqlCourseTitleHtml) && !sqlAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("SQL for Data Analysis course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("SQL for Data Analysis course first-byte SEO changed by Python for Analytics work");
+
+  const powerBiAfterPfa = await fetch(`${injOrigin}${POWER_BI_COURSE_PATH}`);
+  const powerBiAfterPfaHtml = await powerBiAfterPfa.text();
+  if (powerBiAfterPfaHtml.includes(powerBiCourseTitleHtml) && !powerBiAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("Power BI Dashboarding course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("Power BI Dashboarding course first-byte SEO changed by Python for Analytics work");
+
+  const tableauAfterPfa = await fetch(`${injOrigin}${TABLEAU_COURSE_PATH}`);
+  const tableauAfterPfaHtml = await tableauAfterPfa.text();
+  if (tableauAfterPfaHtml.includes(tableauCourseTitleHtml) && !tableauAfterPfaHtml.includes(pythonForAnalyticsCourseTitleHtml)) {
+    pass("Tableau Visualization course first-byte SEO remains unchanged after Python for Analytics work");
+  } else fail("Tableau Visualization course first-byte SEO changed by Python for Analytics work");
+
+  const pythonForAnalyticsVid = await fetch(`${injOrigin}/Blog/python-for-analytics/videos`);
+  const pythonForAnalyticsVidHtml = await pythonForAnalyticsVid.text();
+  if (pythonForAnalyticsVid.status === 200 && pythonForAnalyticsVid.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Python for Analytics /videos still 200 with X-Robots-Tag noindex, nofollow");
+  } else fail("Python for Analytics /videos headers changed");
+  if (pythonForAnalyticsVid.headers.get("link") === `<${canonicalUrl(PYTHON_FOR_ANALYTICS_COURSE_PATH)}>; rel="canonical"`) {
+    pass("Python for Analytics /videos Link header still parent-canonical");
+  } else fail("Python for Analytics /videos Link header changed");
+  if (!pythonForAnalyticsVidHtml.includes(pythonForAnalyticsCourseTitleHtml) && !pythonForAnalyticsVidHtml.includes(SMM_COURSE_SEO.title)) {
+    pass("Python for Analytics /videos HTML was not given Python for Analytics listing or SMM metadata");
+  } else fail("Python for Analytics /videos HTML contains listing metadata");
 } finally {
   injectionServer.close();
 }

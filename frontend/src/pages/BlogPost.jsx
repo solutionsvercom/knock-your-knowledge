@@ -188,7 +188,8 @@ export default function BlogPost() {
                   slug === "jira-for-project-management" ||
                   slug === "sql-for-data-analysis" ||
                   slug === "power-bi-dashboarding" ||
-                  slug === "tableau-visualization"
+                  slug === "tableau-visualization" ||
+                  slug === "python-for-analytics"
                     ? "p"
                     : "h2"
                 }
@@ -453,7 +454,8 @@ export default function BlogPost() {
                     slug === "jira-for-project-management" ||
                     slug === "sql-for-data-analysis" ||
                     slug === "power-bi-dashboarding" ||
-                    slug === "tableau-visualization" ? (
+                    slug === "tableau-visualization" ||
+                    slug === "python-for-analytics" ? (
                       <h3
                         className="text-sm font-semibold text-white inline"
                         style={{ fontFamily: "'Poppins', sans-serif" }}

@@ -20,6 +20,7 @@ import {
   SQL_COURSE_SEO,
   POWER_BI_COURSE_SEO,
   TABLEAU_COURSE_SEO,
+  PYTHON_FOR_ANALYTICS_COURSE_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -94,10 +95,7 @@ export const COURSE_SEO = {
     ...SQL_COURSE_SEO,
   },
   "python-for-analytics": {
-    title: "Python for Data Analysis Course | KYK",
-    description:
-      "Use Python and Pandas for business analysis, reporting, and automated insights. KYK course on data cleaning, exploratory analysis, visualisation, and a business project.",
-    h1: "Python for Analytics",
+    ...PYTHON_FOR_ANALYTICS_COURSE_SEO,
   },
   "power-bi-dashboarding": {
     ...POWER_BI_COURSE_SEO,
