@@ -558,7 +558,10 @@ export function jsonLdForPath(pathname) {
       breadcrumb([
         { name: "Home", path: "/" },
         { name: "Internships", path: "/Internships" },
-        { name: slug === "development" ? "Development Internship" : page?.navTitle || INTERNSHIP_SEO[slug].h1, path },
+        {
+          name: slug === "development" ? "Development Internship" : slug === "ai" ? "AI & Prompt Engineering Internship" : page?.navTitle || INTERNSHIP_SEO[slug].h1,
+          path,
+        },
       ])
     );
     if (slug === "development") {
@@ -598,6 +601,44 @@ export function jsonLdForPath(pathname) {
         },
       });
       const faqs = INTERNSHIP_PAGE_COPY.development?.faqs || [];
+      if (faqs.length) graph.push(faqPageNode(faqs, path));
+    }
+    if (slug === "ai") {
+      const url = canonicalUrl(path);
+      const programId = `${url}#program`;
+      const offerId = `${url}#offer`;
+      graph.push({
+        "@type": "EducationalOccupationalProgram",
+        "@id": programId,
+        name: "AI & Prompt Engineering Internship",
+        url,
+        description: INTERNSHIP_PAGE_COPY.ai?.overview || INTERNSHIP_SEO.ai.description,
+        provider: {
+          "@type": "EducationalOrganization",
+          name: SITE_NAME,
+          url: `${SITE_ORIGIN}/`,
+        },
+        educationalProgramMode: "Remote",
+        teaches: ["Prompt Engineering", "ChatGPT", "Claude", "AI Tools", "NLP"],
+        offers: { "@id": offerId },
+      });
+      graph.push({
+        "@type": "Offer",
+        "@id": offerId,
+        url,
+        price: String(INTERNSHIP_FEE_AMOUNT),
+        priceCurrency: "INR",
+        itemOffered: { "@id": programId },
+        description:
+          "Programme fee ₹3,999/-. 18% GST is charged separately at checkout. This is a fee paid to Knock Your Knowledge, not a stipend or salary.",
+        priceSpecification: {
+          "@type": "UnitPriceSpecification",
+          price: String(INTERNSHIP_FEE_AMOUNT),
+          priceCurrency: "INR",
+          valueAddedTaxIncluded: false,
+        },
+      });
+      const faqs = INTERNSHIP_PAGE_COPY.ai?.faqs || [];
       if (faqs.length) graph.push(faqPageNode(faqs, path));
     }
     return { "@context": "https://schema.org", "@graph": graph };

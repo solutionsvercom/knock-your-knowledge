@@ -26,6 +26,7 @@ import {
   ANALYTICS_BUNDLE_SEO,
   MARKETING_BUNDLE_SEO,
   DEVELOPMENT_INTERNSHIP_SEO,
+  AI_INTERNSHIP_SEO,
 } from "@/config/publicPaths";
 
 export { canonicalUrl, SITE_ORIGIN } from "@/config/publicPaths";
@@ -166,10 +167,7 @@ export const INTERNSHIP_SEO = {
     ...DEVELOPMENT_INTERNSHIP_SEO,
   },
   ai: {
-    title: "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK",
-    description:
-      "KYK AI & Prompt Engineering internship: design prompts, work with LLMs, and build AI-assisted workflows. Remote, 1–3 months. Fee ₹3,999/- + 18% GST.",
-    h1: "AI & Prompt Engineering Internship",
+    ...AI_INTERNSHIP_SEO,
   },
   analytics: {
     title: "Business Analytics Internship | SQL, Power BI & Tableau | KYK",

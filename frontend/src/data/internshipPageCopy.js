@@ -59,6 +59,7 @@ export const INTERNSHIP_PAGE_COPY = {
     ],
   },
   ai: {
+    introHeading: "A paid 1–3 month Remote AI internship with prompt engineering and LLM tools",
     overview:
       "The AI & Prompt Engineering internship is Knock Your Knowledge’s 1–3 month Remote programme on prompts and LLM tools. KYK lists it as designing prompts, working with LLMs, and building AI-assisted workflows for use cases across ChatGPT, Claude, and productivity tools. It is separate from Artificial Intelligence Fundamentals, Prompt Engineering, and 8 Best AI Tools for Productivity, and from the AI course bundle.",
     whoCanApply: [

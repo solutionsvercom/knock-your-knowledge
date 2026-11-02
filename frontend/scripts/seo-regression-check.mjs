@@ -60,6 +60,8 @@ import {
   MARKETING_BUNDLE_PATH,
   DEVELOPMENT_INTERNSHIP_SEO,
   DEVELOPMENT_INTERNSHIP_PATH,
+  AI_INTERNSHIP_SEO,
+  AI_INTERNSHIP_PATH,
 } from "../src/config/publicPaths.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -125,6 +127,8 @@ if (!titles.includes(MARKETING_BUNDLE_SEO.title)) titles.push(MARKETING_BUNDLE_S
 if (!descriptions.includes(MARKETING_BUNDLE_SEO.description)) descriptions.push(MARKETING_BUNDLE_SEO.description);
 if (!titles.includes(DEVELOPMENT_INTERNSHIP_SEO.title)) titles.push(DEVELOPMENT_INTERNSHIP_SEO.title);
 if (!descriptions.includes(DEVELOPMENT_INTERNSHIP_SEO.description)) descriptions.push(DEVELOPMENT_INTERNSHIP_SEO.description);
+if (!titles.includes(AI_INTERNSHIP_SEO.title)) titles.push(AI_INTERNSHIP_SEO.title);
+if (!descriptions.includes(AI_INTERNSHIP_SEO.description)) descriptions.push(AI_INTERNSHIP_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -1977,6 +1981,127 @@ if (
   pass("Development Internship title and description are isolated from Development Bundle, MERN, and Python");
 } else fail("Development Internship metadata collided with a course or bundle");
 
+const aiInternTitleHtml = AI_INTERNSHIP_SEO.title.replace(/&/g, "&amp;");
+const aiInternDescHtml = AI_INTERNSHIP_SEO.description.replace(/&/g, "&amp;");
+const aiInternOgImageHtml = AI_INTERNSHIP_SEO.ogImage.replace(/&/g, "&amp;");
+const aiInternShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  AI_INTERNSHIP_PATH
+);
+if (aiInternShell.includes(aiInternTitleHtml)) pass("Initial HTML title for AI Internship");
+else fail("Initial HTML missing AI Internship title");
+if (aiInternShell.includes(aiInternDescHtml)) pass("Initial HTML description for AI Internship");
+else fail("Initial HTML missing AI Internship description");
+if ((aiInternShell.match(/rel="canonical"/g) || []).length === 1) pass("AI Internship initial HTML has exactly one canonical");
+else fail("AI Internship initial HTML canonical count is not 1");
+if (aiInternShell.includes(`href="${canonicalUrl(AI_INTERNSHIP_PATH)}"`)) {
+  pass("AI Internship initial HTML canonical is the internship URL");
+} else fail("AI Internship initial HTML canonical is not the internship URL");
+if (aiInternShell.includes('content="index, follow"')) pass("AI Internship initial HTML robots is index, follow");
+else fail("AI Internship initial HTML missing index, follow");
+if (aiInternShell.includes('property="og:title"') && aiInternShell.includes('name="twitter:card"')) {
+  pass("AI Internship initial HTML includes OG and Twitter tags");
+} else fail("AI Internship initial HTML missing OG or Twitter tags");
+if (
+  aiInternShell.includes(`property="og:title"`) &&
+  aiInternShell.includes(`content="${aiInternTitleHtml}"`) &&
+  aiInternShell.includes(`property="og:description"`) &&
+  aiInternShell.includes(`content="${aiInternDescHtml}"`) &&
+  aiInternShell.includes(`property="og:url"`) &&
+  aiInternShell.includes(`content="${canonicalUrl(AI_INTERNSHIP_PATH)}"`)
+) {
+  pass("AI Internship initial HTML OG title, description, and URL match Helmet");
+} else fail("AI Internship initial HTML missing OG title, description, or URL");
+if (
+  aiInternShell.includes(`content="${aiInternOgImageHtml}"`) &&
+  aiInternShell.includes('content="summary_large_image"')
+) {
+  pass("AI Internship initial HTML OG image and Twitter card match");
+} else fail("AI Internship initial HTML missing OG image or Twitter card value");
+if (
+  aiInternShell.includes('name="twitter:image"') &&
+  (aiInternShell.match(/content="summary_large_image"/g) || []).length === 1 &&
+  (aiInternShell.match(/property="og:image"/g) || []).length === 1
+) {
+  pass("AI Internship initial HTML has one OG image, Twitter card, and Twitter image");
+} else fail("AI Internship initial HTML OG/Twitter tags are missing or duplicated");
+if ((aiInternShell.match(/data-rh="true"/g) || []).length === 12) {
+  pass("AI Internship initial HTML uses data-rh on first-byte SEO tags");
+} else fail("AI Internship initial HTML data-rh count is not 12");
+if (
+  documentLinkHeader(AI_INTERNSHIP_PATH) ===
+  `<${canonicalUrl(AI_INTERNSHIP_PATH)}>; rel="canonical"`
+) {
+  pass("AI Internship Link header is self-canonical");
+} else fail("AI Internship Link header incorrect");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change /Internships/development");
+} else fail("AI Internship metadata leaked onto /Internships/development");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships/analytics").includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change /Internships/analytics");
+} else fail("AI Internship metadata leaked onto /Internships/analytics");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships/marketing").includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change /Internships/marketing");
+} else fail("AI Internship metadata leaked onto /Internships/marketing");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change /Internships");
+} else fail("AI Internship metadata leaked onto /Internships");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_BUNDLE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change AI Bundle");
+} else fail("AI Internship metadata leaked onto AI Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_BUNDLE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change Development Bundle");
+} else fail("AI Internship metadata leaked onto Development Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", ANALYTICS_BUNDLE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change Analytics Bundle");
+} else fail("AI Internship metadata leaked onto Analytics Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_BUNDLE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change Marketing Bundle");
+} else fail("AI Internship metadata leaked onto Marketing Bundle");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_FUNDAMENTALS_COURSE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change AI Fundamentals");
+} else fail("AI Internship metadata leaked onto AI Fundamentals");
+if (applyInitialHtmlSeo("<title>Home</title>", PROMPT_ENGINEERING_COURSE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change Prompt Engineering");
+} else fail("AI Internship metadata leaked onto Prompt Engineering");
+if (applyInitialHtmlSeo("<title>Home</title>", AI_PRODUCTIVITY_COURSE_PATH).includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change AI Tools for Productivity");
+} else fail("AI Internship metadata leaked onto AI Tools for Productivity");
+if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change the homepage");
+} else fail("AI Internship metadata leaked onto the homepage");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/prompt-engineering/videos").includes(AI_INTERNSHIP_SEO.title) === false) {
+  pass("AI Internship HTML SEO injection does not change Prompt Engineering /videos");
+} else fail("AI Internship metadata leaked onto Prompt Engineering /videos");
+if (AI_INTERNSHIP_SEO.title === "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK") {
+  pass("AI Internship title remains the approved Helmet title");
+} else fail("AI Internship title changed");
+if (
+  AI_INTERNSHIP_SEO.h1 ===
+  "AI & Prompt Engineering Internship – ChatGPT, Claude and LLM Workflow Experience"
+) {
+  pass("AI Internship H1 is the approved internship heading");
+} else fail("AI Internship H1 is not the approved heading");
+if (
+  AI_INTERNSHIP_SEO.ogImage ===
+  "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80"
+) {
+  pass("AI Internship OG image is the existing listing cover image");
+} else fail("AI Internship OG image is not the verified listing cover");
+if (
+  AI_INTERNSHIP_SEO.title !== DEVELOPMENT_INTERNSHIP_SEO.title &&
+  AI_INTERNSHIP_SEO.description !== DEVELOPMENT_INTERNSHIP_SEO.description &&
+  AI_INTERNSHIP_SEO.title !== AI_BUNDLE_SEO.title &&
+  AI_INTERNSHIP_SEO.description !== AI_BUNDLE_SEO.description &&
+  AI_INTERNSHIP_SEO.title !== PROMPT_ENGINEERING_COURSE_SEO.title &&
+  AI_INTERNSHIP_SEO.title !== AI_FUNDAMENTALS_COURSE_SEO.title
+) {
+  pass("AI Internship title and description are isolated from Development Internship, AI Bundle, and AI courses");
+} else fail("AI Internship metadata collided with another internship, bundle, or course");
+if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).includes(developmentInternTitleHtml)) {
+  pass("Development Internship first-byte mapping remains after AI Internship work");
+} else fail("Development Internship first-byte mapping was broken by AI Internship work");
+
 const smmCopy = fs.readFileSync(path.join(root, "src/data/coursePageCopy.js"), "utf8");
 if (smmCopy.includes('q: "Which platforms are named?"') && smmCopy.includes('q: "What do students learn in the Social Media Marketing Course?"')) {
   pass("SMM FAQs retain original questions and add the course-learning FAQ");
@@ -2691,6 +2816,13 @@ if (
   pass("Development Internship page uses the approved H1 and intro H2 on this slug only");
 } else fail("Development Internship H1 or intro H2 is not slug-gated");
 if (
+  internDetail.includes('slug === "ai"') &&
+  internDetail.includes("INTERNSHIP_SEO.ai.h1") &&
+  internDetail.includes("copy?.introHeading")
+) {
+  pass("AI Internship page uses the approved H1 and intro H2 on this slug only");
+} else fail("AI Internship H1 or intro H2 is not slug-gated");
+if (
   internDetail.includes("the internship programme you want to apply for") &&
   internDetail.includes("the internship course you want to enroll in")
 ) {
@@ -2717,6 +2849,9 @@ const internCopySrc = fs.readFileSync(path.join(root, "src/data/internshipPageCo
 if (internCopySrc.includes('introHeading: "A paid 1–3 month Remote/Hybrid Development internship with Python and MERN"')) {
   pass("Development Internship intro H2 copy is the approved heading");
 } else fail("Development Internship intro H2 copy is missing or changed");
+if (internCopySrc.includes('introHeading: "A paid 1–3 month Remote AI internship with prompt engineering and LLM tools"')) {
+  pass("AI Internship intro H2 copy is the approved heading");
+} else fail("AI Internship intro H2 copy is missing or changed");
 const developmentInternFaqQuestions = [
   "What is the Development internship?",
   "Do I get a stipend?",
@@ -2746,6 +2881,35 @@ if (
 ) {
   pass("AI, Analytics, and Marketing internship copy remain unchanged");
 } else fail("Another internship's copy was changed by Development Internship work");
+const aiInternFaqQuestions = [
+  "What does the AI internship cover?",
+  "Is ₹3,999/- a stipend?",
+  "Is this the same as the AI course bundle?",
+  "Which AI products are named on the internship listing?",
+  "How do I apply?",
+  "Will I train my own model?",
+];
+const aiInternFaqAnswers = [
+  "The listing: design prompts, work with LLMs, and build AI-assisted workflows across ChatGPT, Claude, and productivity tools. Duration is 1–3 months, Remote.",
+  "No. It is the programme fee. Checkout adds 18% GST. Nothing on this listing says KYK pays you.",
+  "No. The bundle is three courses at ₹499/- versus buying them separately. This internship is a different product at ₹3,999/- plus GST.",
+  "ChatGPT, Claude, and productivity tools. Gemini, Notion AI, Midjourney, Runway, and Perplexity appear on the related course pages, not on this internship record.",
+  "Apply Now (name, phone, mail ID, internship interest — KYK contacts you) or Add to cart (login if needed, then checkout).",
+  "The internship listing does not say that. Related Fundamentals covers AI, ML, neural networks, and NLP; Prompt Engineering and the tools course are about using existing products.",
+];
+if (aiInternFaqQuestions.every((q) => internCopySrc.includes(`q: "${q}"`))) {
+  pass("AI Internship keeps all six original FAQ questions");
+} else fail("AI Internship FAQ questions changed");
+if (aiInternFaqAnswers.every((a) => internCopySrc.includes(`a: "${a}"`))) {
+  pass("AI Internship keeps all six original FAQ answers");
+} else fail("AI Internship FAQ answers changed");
+if (
+  internCopySrc.includes("The Development internship is Knock Your Knowledge") &&
+  internCopySrc.includes("The Business Analytics internship is Knock Your Knowledge") &&
+  internCopySrc.includes("The Advanced Digital Marketing internship is Knock Your Knowledge")
+) {
+  pass("Development, Analytics, and Marketing internship copy remain unchanged after AI Internship work");
+} else fail("Another internship's copy was changed by AI Internship work");
 
 const app = fs.readFileSync(path.join(root, "src/App.jsx"), "utf8");
 for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug/videos", "/Blog/:slug", "/Bundles/:slug", "/Internships/:slug", "/CourseLearning"]) {
@@ -2792,6 +2956,41 @@ if (
 if (!jsonLd.includes("timeToComplete")) {
   pass("Development Internship JSON-LD omits timeToComplete rather than inventing a single duration");
 } else fail("Development Internship JSON-LD invented an exact timeToComplete");
+if (
+  /if \(slug === "ai"\) \{[\s\S]*?"@type": "EducationalOccupationalProgram"[\s\S]*?name: "AI & Prompt Engineering Internship"[\s\S]*?price: String\(INTERNSHIP_FEE_AMOUNT\)[\s\S]*?valueAddedTaxIncluded: false[\s\S]*?faqPageNode\(faqs, path\)/.test(
+    jsonLd
+  )
+) {
+  pass("AI Internship JSON-LD adds EducationalOccupationalProgram, Offer, and FAQPage on this slug only");
+} else fail("AI Internship programme, Offer, or FAQPage is missing or not slug-gated");
+if (jsonLd.includes('slug === "ai"') && jsonLd.includes('"AI & Prompt Engineering Internship"')) {
+  pass("AI Internship breadcrumb name stays pinned to AI & Prompt Engineering Internship");
+} else fail("AI Internship breadcrumb name is not pinned to the catalog name");
+if (jsonLd.includes("INTERNSHIP_PAGE_COPY.ai") && jsonLd.includes('educationalProgramMode: "Remote"')) {
+  pass("AI Internship programme uses internship copy and Remote mode");
+} else fail("AI Internship programme description or Remote mode is missing");
+if (
+  jsonLd.includes('"Prompt Engineering"') &&
+  jsonLd.includes('"ChatGPT"') &&
+  jsonLd.includes('"Claude"') &&
+  jsonLd.includes('"AI Tools"') &&
+  jsonLd.includes('"NLP"')
+) {
+  pass("AI Internship JSON-LD teaches the verified listing skills only");
+} else fail("AI Internship JSON-LD skills are missing or incorrect");
+if (
+  !jsonLd.includes("JobPosting") &&
+  !jsonLd.includes("baseSalary") &&
+  !jsonLd.includes("312") &&
+  !jsonLd.includes("2026-12-31")
+) {
+  pass("AI Internship JSON-LD omits JobPosting, salary, and demo applicant/deadline values");
+} else fail("AI Internship JSON-LD includes unsupported job, salary, or demo inventory fields");
+if (
+  /if \(slug === "development"\) \{[\s\S]*?if \(slug === "ai"\) \{/.test(jsonLd)
+) {
+  pass("Development Internship JSON-LD programme block remains separate from the AI Internship block");
+} else fail("Development and AI Internship JSON-LD programme blocks were merged or reordered unsafely");
 
 const spaShell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const injectionServer = http.createServer((req, res) => {
@@ -4300,6 +4499,107 @@ try {
   if (!videosAfterDevelopmentInternHtml.includes(developmentInternTitleHtml) && !videosAfterDevelopmentInternHtml.includes(developmentInternDescHtml)) {
     pass("Python /videos HTML was not given Development Internship metadata");
   } else fail("Python /videos HTML contains Development Internship metadata");
+
+  const aiInternRes = await fetch(`${injOrigin}${AI_INTERNSHIP_PATH}`);
+  const aiInternHtml = await aiInternRes.text();
+  if (aiInternRes.status === 200) pass("Express-like /Internships/ai returns HTTP 200");
+  else fail(`AI Internship HTTP ${aiInternRes.status}`);
+  if (aiInternHtml.includes(aiInternTitleHtml) && aiInternHtml.includes(aiInternDescHtml)) {
+    pass("AI Internship initial HTML has the approved title and description");
+  } else fail("AI Internship initial HTML missing title or description");
+  if ((aiInternHtml.match(/rel="canonical"/g) || []).length === 1) pass("AI Internship injected HTML has one canonical");
+  else fail("AI Internship injected HTML canonical count is not 1");
+  if (aiInternRes.headers.get("link") === `<${canonicalUrl(AI_INTERNSHIP_PATH)}>; rel="canonical"`) {
+    pass("AI Internship response Link header is self-canonical");
+  } else fail("AI Internship Link header was incorrect");
+  if (aiInternHtml.includes('content="index, follow"') && !aiInternHtml.includes("noindex")) {
+    pass("AI Internship initial HTML is index, follow");
+  } else fail("AI Internship initial HTML not indexable");
+  if (
+    aiInternHtml.includes('property="og:title"') &&
+    aiInternHtml.includes('property="og:image"') &&
+    aiInternHtml.includes('name="twitter:card"') &&
+    aiInternHtml.includes("summary_large_image") &&
+    aiInternHtml.includes(aiInternOgImageHtml) &&
+    (aiInternHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("AI Internship initial HTML has OG, Twitter, and data-rh metadata");
+  } else fail("AI Internship initial HTML missing OG, Twitter, or data-rh metadata");
+  if (
+    !aiInternHtml.includes(developmentInternTitleHtml) &&
+    !aiInternHtml.includes(aiBundleTitleHtml) &&
+    !aiInternHtml.includes(devBundleTitleHtml) &&
+    !aiInternHtml.includes(analyticsBundleTitleHtml) &&
+    !aiInternHtml.includes(marketingBundleTitleHtml) &&
+    !aiInternHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
+    !aiInternHtml.includes(aifCourseTitleHtml) &&
+    !aiInternHtml.includes(peCourseTitleHtml)
+  ) {
+    pass("AI Internship first-byte HTML does not reuse Development Internship, bundle, listing, or AI course metadata");
+  } else fail("AI Internship first-byte HTML mixed another route's metadata");
+
+  const developmentInternAfterAi = await fetch(`${injOrigin}${DEVELOPMENT_INTERNSHIP_PATH}`);
+  const developmentInternAfterAiHtml = await developmentInternAfterAi.text();
+  if (developmentInternAfterAiHtml.includes(developmentInternTitleHtml) && !developmentInternAfterAiHtml.includes(aiInternTitleHtml)) {
+    pass("Development Internship first-byte SEO remains unchanged after AI Internship work");
+  } else fail("Development Internship first-byte SEO changed by AI Internship work");
+
+  const internshipsAfterAiIntern = await fetch(`${injOrigin}/Internships`);
+  const internshipsAfterAiInternHtml = await internshipsAfterAiIntern.text();
+  if (internshipsAfterAiInternHtml.includes(INTERNSHIPS_LISTING_SEO.title) && !internshipsAfterAiInternHtml.includes(aiInternTitleHtml)) {
+    pass("Internships listing first-byte SEO remains unchanged after AI Internship work");
+  } else fail("Internships listing first-byte SEO changed by AI Internship work");
+
+  const internshipAnalyticsAfterAi = await fetch(`${injOrigin}/Internships/analytics`);
+  const internshipAnalyticsAfterAiHtml = await internshipAnalyticsAfterAi.text();
+  if (!internshipAnalyticsAfterAiHtml.includes(aiInternTitleHtml) && !internshipAnalyticsAfterAiHtml.includes(aiInternDescHtml)) {
+    pass("/Internships/analytics first-byte HTML does not inherit AI Internship metadata");
+  } else fail("/Internships/analytics first-byte HTML picked up AI Internship metadata");
+
+  const internshipMarketingAfterAi = await fetch(`${injOrigin}/Internships/marketing`);
+  const internshipMarketingAfterAiHtml = await internshipMarketingAfterAi.text();
+  if (!internshipMarketingAfterAiHtml.includes(aiInternTitleHtml) && !internshipMarketingAfterAiHtml.includes(aiInternDescHtml)) {
+    pass("/Internships/marketing first-byte HTML does not inherit AI Internship metadata");
+  } else fail("/Internships/marketing first-byte HTML picked up AI Internship metadata");
+
+  const aiBundleAfterAiIntern = await fetch(`${injOrigin}${AI_BUNDLE_PATH}`);
+  const aiBundleAfterAiInternHtml = await aiBundleAfterAiIntern.text();
+  if (aiBundleAfterAiInternHtml.includes(aiBundleTitleHtml) && !aiBundleAfterAiInternHtml.includes(aiInternTitleHtml)) {
+    pass("AI Bundle first-byte SEO remains unchanged after AI Internship work");
+  } else fail("AI Bundle first-byte SEO changed by AI Internship work");
+
+  const aifAfterAiIntern = await fetch(`${injOrigin}${AI_FUNDAMENTALS_COURSE_PATH}`);
+  const aifAfterAiInternHtml = await aifAfterAiIntern.text();
+  if (aifAfterAiInternHtml.includes(aifCourseTitleHtml) && !aifAfterAiInternHtml.includes(aiInternTitleHtml)) {
+    pass("AI Fundamentals first-byte SEO remains unchanged after AI Internship work");
+  } else fail("AI Fundamentals first-byte SEO changed by AI Internship work");
+
+  const peAfterAiIntern = await fetch(`${injOrigin}${PROMPT_ENGINEERING_COURSE_PATH}`);
+  const peAfterAiInternHtml = await peAfterAiIntern.text();
+  if (peAfterAiInternHtml.includes(peCourseTitleHtml) && !peAfterAiInternHtml.includes(aiInternTitleHtml)) {
+    pass("Prompt Engineering first-byte SEO remains unchanged after AI Internship work");
+  } else fail("Prompt Engineering first-byte SEO changed by AI Internship work");
+
+  const aipAfterAiIntern = await fetch(`${injOrigin}${AI_PRODUCTIVITY_COURSE_PATH}`);
+  const aipAfterAiInternHtml = await aipAfterAiIntern.text();
+  if (aipAfterAiInternHtml.includes(aipCourseTitleHtml) && !aipAfterAiInternHtml.includes(aiInternTitleHtml)) {
+    pass("AI Tools for Productivity first-byte SEO remains unchanged after AI Internship work");
+  } else fail("AI Tools for Productivity first-byte SEO changed by AI Internship work");
+
+  const homeAfterAiIntern = await fetch(`${injOrigin}/`);
+  const homeAfterAiInternHtml = await homeAfterAiIntern.text();
+  if (!homeAfterAiInternHtml.includes(aiInternTitleHtml) && !homeAfterAiInternHtml.includes(aiInternDescHtml)) {
+    pass("Homepage first-byte HTML remains unchanged after AI Internship work");
+  } else fail("Homepage first-byte HTML picked up AI Internship metadata");
+
+  const videosAfterAiIntern = await fetch(`${injOrigin}/Blog/prompt-engineering/videos`);
+  const videosAfterAiInternHtml = await videosAfterAiIntern.text();
+  if (videosAfterAiIntern.status === 200 && videosAfterAiIntern.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("Prompt Engineering /videos route still 200 with X-Robots-Tag noindex, nofollow after AI Internship work");
+  } else fail("Prompt Engineering /videos headers changed by AI Internship work");
+  if (!videosAfterAiInternHtml.includes(aiInternTitleHtml) && !videosAfterAiInternHtml.includes(aiInternDescHtml)) {
+    pass("Prompt Engineering /videos HTML was not given AI Internship metadata");
+  } else fail("Prompt Engineering /videos HTML contains AI Internship metadata");
 } finally {
   injectionServer.close();
 }

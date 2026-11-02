@@ -319,6 +319,18 @@ export const DEVELOPMENT_INTERNSHIP_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const AI_INTERNSHIP_PATH = "/Internships/ai";
+
+/** First-byte + Helmet SEO for the AI & Prompt Engineering Internship page only. */
+export const AI_INTERNSHIP_SEO = {
+  title: "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK",
+  description:
+    "Paid KYK AI & Prompt Engineering Internship: 1–3 month Remote programme. Design prompts and AI-assisted workflows with ChatGPT, Claude, and productivity tools. Programme fee ₹3,999/- + 18% GST.",
+  h1: "AI & Prompt Engineering Internship – ChatGPT, Claude and LLM Workflow Experience",
+  ogImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
+  twitterCard: "summary_large_image",
+};
+
 export const STATIC_INDEXABLE_PATHS = [
   "/",
   "/Courses",
@@ -400,6 +412,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: DEVELOPMENT_INTERNSHIP_SEO.ogImage,
       twitterCard: DEVELOPMENT_INTERNSHIP_SEO.twitterCard,
+    };
+  }
+  if (path === AI_INTERNSHIP_PATH) {
+    return {
+      title: AI_INTERNSHIP_SEO.title,
+      description: AI_INTERNSHIP_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: AI_INTERNSHIP_SEO.ogImage,
+      twitterCard: AI_INTERNSHIP_SEO.twitterCard,
     };
   }
   if (path === SMM_COURSE_PATH) {
