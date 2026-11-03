@@ -120,7 +120,7 @@ app.use((req, res, next) => {
 });
 
 if (fs.existsSync(publicDir)) {
-  app.use(express.static(publicDir));
+  app.use(express.static(publicDir, { index: false }));
 }
 
 app.get("*", (req, res, next) => {

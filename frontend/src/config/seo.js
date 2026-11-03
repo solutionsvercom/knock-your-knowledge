@@ -4,6 +4,7 @@ import {
   INTERNSHIPS_LISTING_SEO,
   CAREER_GUIDE_SEO,
   ABOUT_SEO,
+  HOME_SEO,
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
@@ -40,10 +41,7 @@ export const DEFAULT_OG_IMAGE = `${SITE_ORIGIN}/kyk-logo.png`;
 
 const STATIC_SEO = {
   "/": {
-    title: "Knock Your Knowledge | Internship Courses in Development, AI, Analytics & Marketing",
-    description:
-      "Learn internship-ready skills at Knock Your Knowledge. Explore Development, AI & Prompt Engineering, Business Analytics, and Digital Marketing courses, bundles, and programs.",
-    h1: "Learn Faster with AI Powered Learning",
+    ...HOME_SEO,
   },
   "/Courses": {
     title: "Internship Courses Online | Development, AI, Analytics & Marketing | KYK",

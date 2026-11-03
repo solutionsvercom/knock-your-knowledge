@@ -3,8 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/apiClient";
 import HeroSection from "../components/home/HeroSection";
 import InternshipsPreview from "../components/home/InternshipsPreview";
-import TestimonialsSection from "../components/home/TestimonialsSection";
-import CompaniesSection from "../components/home/CompaniesSection";
 import CTASection from "../components/home/CTASection";
 import FeaturesSection from "../components/home/FeaturesSection";
 import LearningJourneySection from "../components/home/LearningJourneySection";
@@ -20,10 +18,7 @@ export default function Home() {
     refetch: refetchInternships,
   } = useQuery({
     queryKey: ["internships-preview"],
-    queryFn: async () => {
-      const rows = asArray(await api.internships.list());
-      return rows.slice(0, 3);
-    },
+    queryFn: async () => asArray(await api.internships.list()),
   });
 
   const internships = asArray(internshipsRaw);
@@ -40,8 +35,6 @@ export default function Home() {
         error={internshipsErr}
         onRetry={() => refetchInternships()}
       />
-      <TestimonialsSection />
-      <CompaniesSection />
       <CTASection />
       <HomeApplyPopup />
     </div>

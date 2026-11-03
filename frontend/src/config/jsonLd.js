@@ -152,7 +152,20 @@ export function jsonLdForPath(pathname) {
   const graph = [];
 
   if (path === "/" || path === "/Home") {
-    graph.push(organizationNode(), websiteNode());
+    const url = canonicalUrl("/");
+    graph.push(
+      organizationNode(),
+      websiteNode(),
+      {
+        "@type": "WebPage",
+        "@id": `${url}#webpage`,
+        name: seo.h1 || "Knock Your Knowledge",
+        url,
+        description: seo.description,
+        isPartOf: { "@id": WEBSITE_ID },
+        about: { "@id": ORG_ID },
+      }
+    );
     return { "@context": "https://schema.org", "@graph": graph };
   }
 

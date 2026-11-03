@@ -20,6 +20,8 @@ import {
   CAREER_GUIDE_SEO,
   ABOUT_PATH,
   ABOUT_SEO,
+  HOME_PATH,
+  HOME_SEO,
   SMM_COURSE_SEO,
   SMM_COURSE_PATH,
   SEO_COURSE_SEO,
@@ -145,6 +147,8 @@ if (!titles.includes(CAREER_GUIDE_SEO.title)) titles.push(CAREER_GUIDE_SEO.title
 if (!descriptions.includes(CAREER_GUIDE_SEO.description)) descriptions.push(CAREER_GUIDE_SEO.description);
 if (!titles.includes(ABOUT_SEO.title)) titles.push(ABOUT_SEO.title);
 if (!descriptions.includes(ABOUT_SEO.description)) descriptions.push(ABOUT_SEO.description);
+if (!titles.includes(HOME_SEO.title)) titles.push(HOME_SEO.title);
+if (!descriptions.includes(HOME_SEO.description)) descriptions.push(HOME_SEO.description);
 const titleSet = new Set(titles);
 const descSet = new Set(descriptions);
 if (titles.length && titles.length === titleSet.size) pass(`Unique titles in seo.js (${titles.length})`);
@@ -384,6 +388,83 @@ if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(careerGuideT
 if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(INTERNSHIPS_LISTING_SEO.title) === false) {
   pass("Internships listing metadata does not overwrite /About first-byte HTML");
 } else fail("Internships listing metadata leaked onto /About");
+
+const homeShell = applyInitialHtmlSeo(
+  `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
+  HOME_PATH
+);
+const homeTitleHtml = HOME_SEO.title.replace(/&/g, "&amp;");
+if (homeShell.includes(homeTitleHtml)) pass("Initial HTML title for /");
+else fail("Initial HTML missing homepage title");
+if (homeShell.includes(HOME_SEO.description)) pass("Initial HTML description for /");
+else fail("Initial HTML missing homepage description");
+if ((homeShell.match(/rel="canonical"/g) || []).length === 1) pass("Homepage initial HTML has exactly one canonical");
+else fail("Homepage initial HTML canonical count is not 1");
+if (homeShell.includes('href="https://knockyourknowledge.com/"')) pass("Homepage canonical is https://knockyourknowledge.com/");
+else fail("Homepage canonical is not the homepage URL");
+if (homeShell.includes('content="index, follow"')) pass("Homepage initial HTML robots is index, follow");
+else fail("Homepage initial HTML missing index, follow");
+if (
+  homeShell.includes('property="og:title"') &&
+  homeShell.includes('property="og:image"') &&
+  homeShell.includes(HOME_SEO.ogImage) &&
+  homeShell.includes('name="twitter:card"') &&
+  homeShell.includes("summary_large_image") &&
+  homeShell.includes('name="twitter:image"') &&
+  (homeShell.match(/data-rh="true"/g) || []).length === 12
+) {
+  pass("Homepage initial HTML has OG, Twitter, data-rh, and twitter:image metadata");
+} else fail("Homepage initial HTML missing OG, Twitter, data-rh, or twitter:image metadata");
+if (documentLinkHeader(HOME_PATH) === "<https://knockyourknowledge.com/>; rel=\"canonical\"") {
+  pass("Homepage Link header is self-canonical");
+} else fail("Homepage Link header incorrect");
+if (documentLinkHeader("/Home") == null) {
+  pass("/Home does not emit a homepage Link canonical (Express 301s /Home to /)");
+} else fail("/Home incorrectly received a homepage Link canonical");
+const expressServerSrc = fs.readFileSync(path.join(root, "../backend/src/server.js"), "utf8");
+if (expressServerSrc.includes("express.static(publicDir, { index: false })")) {
+  pass("Express static serving disables directory index so / reaches first-byte SEO");
+} else fail("Express static directory index would bypass homepage first-byte SEO");
+if (frontendRedirect("/Home") === "/") pass("/Home still redirects to /");
+else fail("/Home redirect mapping changed");
+if (!/if \(path\.startsWith\(["']\/["']\)\)/.test(fs.readFileSync(path.join(root, "src/config/publicPaths.js"), "utf8"))) {
+  pass("publicPaths.js does not use path.startsWith(\"/\") for homepage SEO");
+} else fail("publicPaths.js uses path.startsWith(\"/\") which would leak homepage SEO");
+if (statusForFrontendPath(HOME_PATH) === 200) pass("Homepage matcher is HTTP 200");
+else fail("Homepage matcher is not HTTP 200");
+if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(homeTitleHtml) === false) {
+  pass("Homepage HTML SEO injection does not leak onto /About");
+} else fail("Homepage metadata leaked onto /About");
+if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(homeTitleHtml) === false) {
+  pass("Homepage HTML SEO injection does not leak onto /Blog");
+} else fail("Homepage metadata leaked onto /Blog");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(homeTitleHtml) === false) {
+  pass("Homepage HTML SEO injection does not leak onto /Internships");
+} else fail("Homepage metadata leaked onto /Internships");
+if (COURSE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(homeTitleHtml) === false)) {
+  pass("Homepage first-byte SEO does not leak onto 17 course /Blog/:slug routes");
+} else fail("Homepage metadata leaked onto a course /Blog/:slug route");
+if (CAREER_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Blog/${slug}`).includes(homeTitleHtml) === false)) {
+  pass("Homepage first-byte SEO does not leak onto career article routes");
+} else fail("Homepage metadata leaked onto a career article route");
+if (INTERNSHIP_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Internships/${slug}`).includes(homeTitleHtml) === false)) {
+  pass("Homepage first-byte SEO does not leak onto internship detail routes");
+} else fail("Homepage metadata leaked onto an internship detail route");
+if (BUNDLE_SLUGS.every((slug) => applyInitialHtmlSeo("<title>Home</title>", `/Bundles/${slug}`).includes(homeTitleHtml) === false)) {
+  pass("Homepage first-byte SEO does not leak onto bundle detail routes");
+} else fail("Homepage metadata leaked onto a bundle detail route");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/python-programming/videos").includes(homeTitleHtml) === false) {
+  pass("Homepage first-byte SEO does not leak onto course /videos routes");
+} else fail("Homepage metadata leaked onto a course /videos route");
+if (applyInitialHtmlSeo("<title>Home</title>", HOME_PATH).includes(aboutTitleHtml) === false) {
+  pass("About metadata does not overwrite homepage first-byte HTML");
+} else fail("About metadata leaked onto /");
+if (applyInitialHtmlSeo("<title>Home</title>", HOME_PATH).includes(careerGuideTitleHtml) === false) {
+  pass("Career Guide listing metadata does not overwrite homepage first-byte HTML");
+} else fail("Career Guide listing metadata leaked onto /");
+if (applyInitialHtmlSeo("<title>Home</title>", HOME_PATH).includes(INTERNSHIPS_LISTING_SEO.title) === false) {
+  pass("Internships listing metadata does not overwrite homepage first-byte HTML");
+} else fail("Internships listing metadata leaked onto /");
 
 const smmShell = applyInitialHtmlSeo(
   `<!doctype html><html><head><title>Home</title><meta name="description" content="Home desc" /></head><body></body></html>`,
@@ -3434,7 +3515,7 @@ for (const route of ["/Checkout", "/Dashboard", "/login", "/Blog/:slug/videos", 
 }
 
 const jsonLd = fs.readFileSync(path.join(root, "src/config/jsonLd.js"), "utf8");
-for (const t of ["EducationalOrganization", "WebSite", "BreadcrumbList", "Course", "ItemList", "CourseInstance", "Offer", "FAQPage", "Product", "AboutPage"]) {
+for (const t of ["EducationalOrganization", "WebSite", "BreadcrumbList", "Course", "ItemList", "CourseInstance", "Offer", "FAQPage", "Product", "AboutPage", "WebPage"]) {
   if (jsonLd.includes(`"${t}"`) || jsonLd.includes(`@type": "${t}"`) || jsonLd.includes(`"@type": "${t}"`)) {
     pass(`JSON-LD builder includes ${t}`);
   } else fail(`JSON-LD builder missing ${t}`);
@@ -3812,6 +3893,124 @@ if (applyInitialHtmlSeo("<title>Home</title>", DEVELOPMENT_INTERNSHIP_PATH).incl
 if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_INTERNSHIP_PATH).includes(marketingInternTitleHtml)) {
   pass("Marketing Internship first-byte mapping remains after About work");
 } else fail("Marketing Internship first-byte mapping was broken by About work");
+
+if (
+  /if \(path === "\/" \|\| path === "\/Home"\) \{/.test(jsonLd) &&
+  /if \(path === "\/" \|\| path === "\/Home"\) \{[\s\S]*?organizationNode\(\)/.test(jsonLd) &&
+  /if \(path === "\/" \|\| path === "\/Home"\) \{[\s\S]*?websiteNode\(\)/.test(jsonLd) &&
+  /if \(path === "\/" \|\| path === "\/Home"\) \{[\s\S]*?"@type": "WebPage"/.test(jsonLd) &&
+  /if \(path === "\/" \|\| path === "\/Home"\) \{[\s\S]*?about: \{ "@id": ORG_ID \}/.test(jsonLd)
+) {
+  pass("Homepage JSON-LD is gated to / and /Home with EducationalOrganization, WebSite, and WebPage");
+} else fail("Homepage JSON-LD missing Organization, WebSite, WebPage, or exact homepage gate");
+const homeJsonLdBlock =
+  jsonLd.match(/if \(path === "\/" \|\| path === "\/Home"\) \{[\s\S]*?return \{ "@context": "https:\/\/schema.org", "@graph": graph \};/)?.[0] || "";
+try {
+  const homeGraph = {
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "EducationalOrganization", "@id": "https://knockyourknowledge.com/#organization" },
+      { "@type": "WebSite", "@id": "https://knockyourknowledge.com/#website" },
+      {
+        "@type": "WebPage",
+        "@id": "https://knockyourknowledge.com/#webpage",
+        name: HOME_SEO.h1,
+        url: "https://knockyourknowledge.com/",
+        about: { "@id": "https://knockyourknowledge.com/#organization" },
+      },
+    ],
+  };
+  JSON.parse(JSON.stringify(homeGraph));
+  if (homeJsonLdBlock.includes("organizationNode") && homeJsonLdBlock.includes("WebPage")) {
+    pass("Homepage JSON-LD Organization, WebSite, and WebPage shape parses");
+  } else fail("Homepage JSON-LD block could not be isolated");
+} catch (err) {
+  fail(`Homepage JSON-LD parse check failed: ${err.message}`);
+}
+if (!homeJsonLdBlock.includes("JobPosting") && !homeJsonLdBlock.includes("AggregateRating") && !homeJsonLdBlock.includes('"@type": "Review"')) {
+  pass("Homepage JSON-LD does not add JobPosting, AggregateRating, or Review");
+} else fail("Homepage JSON-LD includes JobPosting, AggregateRating, or Review");
+
+const homePageSrc = fs.readFileSync(path.join(root, "src/pages/Home.jsx"), "utf8");
+const homeHeroSrc = fs.readFileSync(path.join(root, "src/components/home/HeroSection.jsx"), "utf8");
+const homeFeaturesSrc = fs.readFileSync(path.join(root, "src/components/home/FeaturesSection.jsx"), "utf8");
+const homeJourneySrc = fs.readFileSync(path.join(root, "src/components/home/LearningJourneySection.jsx"), "utf8");
+const homeInternSrc = fs.readFileSync(path.join(root, "src/components/home/InternshipsPreview.jsx"), "utf8");
+const homeCtaSrc = fs.readFileSync(path.join(root, "src/components/home/CTASection.jsx"), "utf8");
+const homeRenderedSrc = [homePageSrc, homeHeroSrc, homeFeaturesSrc, homeJourneySrc, homeInternSrc, homeCtaSrc].join("\n");
+if ((homeHeroSrc.match(/<h1\b/g) || []).length === 1 && homeHeroSrc.includes("pageSeo.h1") && !homeHeroSrc.includes("TypingWord")) {
+  pass("Homepage renders exactly one stable H1 from SEO configuration");
+} else fail("Homepage H1 is missing, duplicated, rotating, or not sourced from seoForPath(\"/\")");
+if (homeHeroSrc.includes("Paid, real-time internships in Development, AI, Analytics and Digital Marketing")) {
+  pass("Homepage renders the approved intro H2");
+} else fail("Homepage missing approved intro H2");
+if (!homePageSrc.includes("TestimonialsSection") && !homePageSrc.includes("CompaniesSection") && !homePageSrc.includes("slice(0, 3)")) {
+  pass("Homepage no longer renders testimonials, partner workplaces, or a 3-internship slice");
+} else fail("Homepage still renders testimonials, workplaces, or slice(0, 3)");
+if (
+  !homeRenderedSrc.includes("19+") &&
+  !homeRenderedSrc.includes("25+") &&
+  !homeRenderedSrc.includes("10+") &&
+  !homeRenderedSrc.includes("100% Placement") &&
+  !homeRenderedSrc.includes("50+ interns") &&
+  !homeRenderedSrc.includes("Placement Assistance") &&
+  !homeRenderedSrc.includes("Partner Companies") &&
+  !homeRenderedSrc.includes("Free forever") &&
+  !homeRenderedSrc.includes("Infosys") &&
+  !homeRenderedSrc.includes("Our Students Work At")
+) {
+  pass("Rendered homepage components omit unverified statistics, placement, partner, and testimonial claims");
+} else fail("A rendered homepage component still contains an unverified claim");
+if (
+  homeRenderedSrc.includes('to="/Internships"') &&
+  homeRenderedSrc.includes('to: "/Internships/development"') &&
+  homeRenderedSrc.includes('to: "/Internships/ai"') &&
+  homeRenderedSrc.includes('to: "/Internships/analytics"') &&
+  homeRenderedSrc.includes('to: "/Internships/marketing"') &&
+  homeRenderedSrc.includes('to="/Courses"') &&
+  homeRenderedSrc.includes('to="/Bundles"') &&
+  homeRenderedSrc.includes('to: "/Bundles/development"') &&
+  homeRenderedSrc.includes('to: "/Bundles/ai"') &&
+  homeRenderedSrc.includes('to: "/Bundles/analytics"') &&
+  homeRenderedSrc.includes('to: "/Bundles/marketing"') &&
+  homeRenderedSrc.includes('to="/Blog"') &&
+  homeRenderedSrc.includes('to="/About"')
+) {
+  pass("Homepage internal links point at internships, courses, bundles, Career Guide, and About");
+} else fail("Homepage is missing an approved internal link destination");
+if (!homeRenderedSrc.includes("/videos") && !homeRenderedSrc.includes('href="#"') && !homeRenderedSrc.includes('to="/Contact"')) {
+  pass("Homepage does not link noindex /videos routes, href=\"#\", or /Contact");
+} else fail("Homepage links a /videos, href=\"#\", or /Contact route");
+if (homeHeroSrc.includes("GetStartedLink") && homeCtaSrc.includes("GetStartedLink") && homeInternSrc.includes("openContactForm")) {
+  pass("Homepage keeps Get Started and Apply Now contact-modal behavior");
+} else fail("Homepage no longer uses GetStartedLink or Apply Now modal");
+if (seoSrc.includes("...HOME_SEO") && seoSrc.includes('"/":')) {
+  pass("STATIC_SEO[\"/\"] spreads HOME_SEO so Helmet matches first-byte metadata");
+} else fail("STATIC_SEO[\"/\"] is not mapped from HOME_SEO");
+const seoHeadSrc = fs.readFileSync(path.join(root, "src/components/SeoHead.jsx"), "utf8");
+if (
+  seoHeadSrc.includes('name="googlebot"') &&
+  seoHeadSrc.includes('property="og:type"') &&
+  seoHeadSrc.includes('seo.ogType || "website"')
+) {
+  pass("Hydrated Helmet still emits googlebot and og:type=website for the homepage");
+} else fail("SeoHead no longer emits googlebot or og:type=website");
+const indexHtmlSrc = fs.readFileSync(path.join(root, "index.html"), "utf8");
+if (indexHtmlSrc.includes(homeTitleHtml) && indexHtmlSrc.includes(HOME_SEO.description) && indexHtmlSrc.includes("G-G69EZM4RBE")) {
+  pass("frontend/index.html shell title and description match homepage SEO and keep Analytics");
+} else fail("frontend/index.html shell metadata does not match homepage SEO");
+if (applyInitialHtmlSeo("<title>Home</title>", ABOUT_PATH).includes(aboutTitleHtml)) {
+  pass("About first-byte mapping remains after homepage work");
+} else fail("About first-byte mapping was broken by homepage work");
+if (applyInitialHtmlSeo("<title>Home</title>", CAREER_GUIDE_PATH).includes(careerGuideTitleHtml)) {
+  pass("Career Guide first-byte mapping remains after homepage work");
+} else fail("Career Guide first-byte mapping was broken by homepage work");
+if (applyInitialHtmlSeo("<title>Home</title>", "/Internships").includes(INTERNSHIPS_LISTING_SEO.title)) {
+  pass("Internships listing first-byte mapping remains after homepage work");
+} else fail("Internships listing first-byte mapping was broken by homepage work");
+if (applyInitialHtmlSeo("<title>Home</title>", MARKETING_INTERNSHIP_PATH).includes(marketingInternTitleHtml)) {
+  pass("Marketing Internship first-byte mapping remains after homepage work");
+} else fail("Marketing Internship first-byte mapping was broken by homepage work");
 
 const spaShell = fs.readFileSync(path.join(root, "index.html"), "utf8");
 const injectionServer = http.createServer((req, res) => {
@@ -5882,6 +6081,135 @@ try {
   if (!videosAfterAboutHtml.includes(aboutTitleHtml) && !videosAfterAboutHtml.includes(ABOUT_SEO.description)) {
     pass("SEO /videos HTML was not given About metadata");
   } else fail("SEO /videos HTML contains About metadata");
+
+  const homePageRes = await fetch(`${injOrigin}/`);
+  const homePageHtml = await homePageRes.text();
+  if (homePageRes.status === 200) pass("Express-like / returns HTTP 200");
+  else fail(`Homepage HTTP ${homePageRes.status}`);
+  if (homePageHtml.includes(homeTitleHtml) && homePageHtml.includes(HOME_SEO.description)) {
+    pass("Homepage initial HTML has the approved title and description");
+  } else fail("Homepage initial HTML missing title or description");
+  if ((homePageHtml.match(/rel="canonical"/g) || []).length === 1) pass("Homepage injected HTML has one canonical");
+  else fail("Homepage injected HTML canonical count is not 1");
+  if (homePageRes.headers.get("link") === `<${canonicalUrl(HOME_PATH)}>; rel="canonical"`) {
+    pass("Homepage response Link header is self-canonical");
+  } else fail("Homepage Link header was incorrect");
+  if (homePageHtml.includes('content="index, follow"') && !homePageHtml.includes("noindex")) {
+    pass("Homepage initial HTML is index, follow");
+  } else fail("Homepage initial HTML not indexable");
+  if (
+    homePageHtml.includes('property="og:title"') &&
+    homePageHtml.includes('property="og:image"') &&
+    homePageHtml.includes(HOME_SEO.ogImage) &&
+    homePageHtml.includes('name="twitter:card"') &&
+    homePageHtml.includes("summary_large_image") &&
+    homePageHtml.includes('name="twitter:image"') &&
+    (homePageHtml.match(/data-rh="true"/g) || []).length === 12
+  ) {
+    pass("Homepage initial HTML has OG, Twitter image, and data-rh metadata");
+  } else fail("Homepage initial HTML missing OG, Twitter, or data-rh metadata");
+  if (
+    !homePageHtml.includes(aboutTitleHtml) &&
+    !homePageHtml.includes(careerGuideTitleHtml) &&
+    !homePageHtml.includes(INTERNSHIPS_LISTING_SEO.title) &&
+    !homePageHtml.includes(developmentInternTitleHtml) &&
+    !homePageHtml.includes(marketingInternTitleHtml) &&
+    !homePageHtml.includes(seoCourseTitleHtml)
+  ) {
+    pass("Homepage first-byte HTML does not reuse About, Career Guide, internship, or course metadata");
+  } else fail("Homepage first-byte HTML mixed another route's metadata");
+
+  const aboutAfterHome = await fetch(`${injOrigin}${ABOUT_PATH}`);
+  const aboutAfterHomeHtml = await aboutAfterHome.text();
+  if (aboutAfterHomeHtml.includes(aboutTitleHtml) && !aboutAfterHomeHtml.includes(homeTitleHtml)) {
+    pass("About first-byte SEO remains unchanged after homepage work");
+  } else fail("About first-byte SEO changed by homepage work");
+
+  const careerGuideAfterHome = await fetch(`${injOrigin}${CAREER_GUIDE_PATH}`);
+  const careerGuideAfterHomeHtml = await careerGuideAfterHome.text();
+  if (careerGuideAfterHomeHtml.includes(careerGuideTitleHtml) && !careerGuideAfterHomeHtml.includes(homeTitleHtml)) {
+    pass("Career Guide listing first-byte SEO remains unchanged after homepage work");
+  } else fail("Career Guide listing first-byte SEO changed by homepage work");
+
+  const internshipsAfterHome = await fetch(`${injOrigin}/Internships`);
+  const internshipsAfterHomeHtml = await internshipsAfterHome.text();
+  if (internshipsAfterHomeHtml.includes(INTERNSHIPS_LISTING_SEO.title) && !internshipsAfterHomeHtml.includes(homeTitleHtml)) {
+    pass("Internships listing first-byte SEO remains unchanged after homepage work");
+  } else fail("Internships listing first-byte SEO changed by homepage work");
+
+  const bundlesAfterHome = await fetch(`${injOrigin}/Bundles`);
+  const bundlesAfterHomeHtml = await bundlesAfterHome.text();
+  if (
+    !bundlesAfterHomeHtml.includes('property="og:title"') &&
+    !bundlesAfterHomeHtml.includes('rel="canonical"') &&
+    !bundlesAfterHome.headers.get("link")
+  ) {
+    pass("/Bundles listing first-byte HTML was not given homepage OG, canonical, or Link injection");
+  } else fail("/Bundles listing first-byte HTML received homepage OG, canonical, or Link injection");
+
+  const coursesAfterHome = await fetch(`${injOrigin}/Courses`);
+  const coursesAfterHomeHtml = await coursesAfterHome.text();
+  if (
+    !coursesAfterHomeHtml.includes('property="og:title"') &&
+    !coursesAfterHomeHtml.includes('rel="canonical"') &&
+    !coursesAfterHome.headers.get("link")
+  ) {
+    pass("/Courses listing first-byte HTML was not given homepage OG, canonical, or Link injection");
+  } else fail("/Courses listing first-byte HTML received homepage OG, canonical, or Link injection");
+
+  let homeCourseLeak = false;
+  for (const slug of COURSE_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes(homeTitleHtml) || html.includes(HOME_SEO.description)) homeCourseLeak = true;
+  }
+  if (!homeCourseLeak) pass("All 17 course /Blog/:slug first-byte pages omit homepage metadata");
+  else fail("A course /Blog/:slug first-byte page contains homepage metadata");
+
+  let homeArticleLeak = false;
+  for (const slug of CAREER_SLUGS) {
+    const res = await fetch(`${injOrigin}/Blog/${slug}`);
+    const html = await res.text();
+    if (html.includes('property="og:title"') || html.includes('rel="canonical"') || res.headers.get("link")) {
+      homeArticleLeak = true;
+    }
+  }
+  if (!homeArticleLeak) pass("Both career article first-byte pages omit homepage OG, canonical, and Link injection");
+  else fail("A career article first-byte page received homepage OG, canonical, or Link injection");
+
+  let homeInternDetailOk = true;
+  for (let i = 0; i < internDetailPaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${internDetailPaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(internDetailTitles[i]) || html.includes(homeTitleHtml)) homeInternDetailOk = false;
+  }
+  if (homeInternDetailOk) pass("All four internship detail first-byte pages remain unchanged after homepage work");
+  else fail("An internship detail first-byte page changed or picked up homepage metadata");
+
+  let homeBundleOk = true;
+  for (let i = 0; i < bundlePaths.length; i += 1) {
+    const res = await fetch(`${injOrigin}${bundlePaths[i]}`);
+    const html = await res.text();
+    if (!html.includes(bundleTitles[i]) || html.includes(homeTitleHtml)) homeBundleOk = false;
+  }
+  if (homeBundleOk) pass("All four bundle detail first-byte pages remain unchanged after homepage work");
+  else fail("A bundle detail first-byte page changed or picked up homepage metadata");
+
+  const videosAfterHome = await fetch(`${injOrigin}/Blog/seo-search-engine-optimization/videos`);
+  const videosAfterHomeHtml = await videosAfterHome.text();
+  if (videosAfterHome.status === 200 && videosAfterHome.headers.get("x-robots-tag") === "noindex, nofollow") {
+    pass("SEO /videos route still 200 with X-Robots-Tag noindex, nofollow after homepage work");
+  } else fail("SEO /videos headers changed by homepage work");
+  if (videosAfterHome.headers.get("link") === `<${canonicalUrl(SEO_COURSE_PATH)}>; rel="canonical"`) {
+    pass("SEO /videos Link header remains the parent course canonical after homepage work");
+  } else fail("SEO /videos Link header changed by homepage work");
+  if (
+    !videosAfterHomeHtml.includes('property="og:title"') &&
+    !videosAfterHomeHtml.includes('content="index, follow"') &&
+    videosAfterHome.headers.get("link") === `<${canonicalUrl(SEO_COURSE_PATH)}>; rel="canonical"`
+  ) {
+    pass("SEO /videos HTML was not given homepage OG or index,follow robots injection");
+  } else fail("SEO /videos HTML received homepage first-byte OG or robots injection");
 } finally {
   injectionServer.close();
 }

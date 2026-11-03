@@ -58,6 +58,18 @@ export const ABOUT_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const HOME_PATH = "/";
+
+/** First-byte + Helmet SEO for the homepage only. */
+export const HOME_SEO = {
+  title: "Knock Your Knowledge | Paid Internships in Development, AI, Analytics & Marketing",
+  description:
+    "KYK offers four paid, real-time internships in Development, AI, Analytics and Digital Marketing. Courses and bundles are separate. Explore programmes, fees, and how to apply.",
+  h1: "Knock Your Knowledge",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
 export const SMM_COURSE_PATH = "/Blog/smm-social-media-marketing";
 
 /** First-byte + Helmet SEO for the SMM course page only. */
@@ -444,6 +456,16 @@ export function frontendRedirect(pathname) {
 
 export function initialHtmlSeoForPath(pathname) {
   const path = normalizePath(pathname);
+  if (path === HOME_PATH) {
+    return {
+      title: HOME_SEO.title,
+      description: HOME_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: HOME_SEO.ogImage,
+      twitterCard: HOME_SEO.twitterCard,
+    };
+  }
   if (path === "/Internships") {
     return {
       title: INTERNSHIPS_LISTING_SEO.title,
