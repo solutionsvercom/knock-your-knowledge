@@ -6,7 +6,7 @@ Live site: **https://knockyourknowledge.com**
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 20+
 - MongoDB Atlas (or local MongoDB)
 
 ### Local development
