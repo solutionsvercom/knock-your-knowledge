@@ -89,7 +89,7 @@ export default function LiveClasses() {
             </span>
           </h1>
           <p style={{ color: "#475569" }}>
-            Today&apos;s sessions for Development, AI & Prompt Engineering, Business Analytics, and Advanced Digital Marketing — updated from the KYK admin panel
+            Online live classes and interactive sessions for Development, AI & Prompt Engineering, Business Analytics, and Advanced Digital Marketing — lectures, doubt sessions, workshops, webinars, and mock interviews when scheduled in the KYK admin panel
           </p>
         </div>
       </div>

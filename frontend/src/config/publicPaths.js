@@ -38,9 +38,9 @@ export const CAREER_GUIDE_PATH = "/Blog";
 
 /** First-byte + Helmet SEO for the Career Guide listing page only. */
 export const CAREER_GUIDE_SEO = {
-  title: "Career Guide | Internship Tips & Interview Prep | KYK",
+  title: "Career Guide for Students | Internship Tips & Interview Prep | KYK",
   description:
-    "KYK Career Guide: two articles on landing a first internship and internship interview prep. Then explore KYK’s paid internship programmes. Separate from courses and bundles.",
+    "Read KYK's practical career guides on finding your first internship and preparing for internship interviews, including application tips, interview questions and preparation advice.",
   h1: "Career Guide – Internship Tips and Interview Prep",
   ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
   twitterCard: "summary_large_image",
@@ -50,9 +50,9 @@ export const ABOUT_PATH = "/About";
 
 /** First-byte + Helmet SEO for the About Us page only. */
 export const ABOUT_SEO = {
-  title: "About Knock Your Knowledge | Paid Internship Programmes | KYK",
+  title: "About Knock Your Knowledge | Paid Internship & Learning Platform",
   description:
-    "Knock Your Knowledge (KYK) offers paid, real-time internships in Development, AI, Analytics and Digital Marketing. Courses and bundles are separate products. About KYK, contact, and how to apply.",
+    "Learn about Knock Your Knowledge (KYK), a platform offering paid, real-time internship programmes alongside separate courses and course bundles across four learning tracks.",
   h1: "About Knock Your Knowledge",
   ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
   twitterCard: "summary_large_image",
@@ -60,12 +60,24 @@ export const ABOUT_SEO = {
 
 export const HOME_PATH = "/";
 
-/** First-byte + Helmet SEO for the homepage only. */
+/** First-byte + Helmet SEO for the homepage only. Brand-first title preserved. */
 export const HOME_SEO = {
   title: "Knock Your Knowledge | Paid Internships in Development, AI, Analytics & Marketing",
   description:
-    "KYK offers four paid, real-time internships in Development, AI, Analytics and Digital Marketing. Courses and bundles are separate. Explore programmes, fees, and how to apply.",
+    "Explore KYK's paid, real-time internship programmes, individual courses and course bundles across Development, AI, Business Analytics and Digital Marketing.",
   h1: "Knock Your Knowledge",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
+export const LIVE_CLASSES_PATH = "/LiveClasses";
+
+/** First-byte + Helmet SEO for the Live Classes page only. */
+export const LIVE_CLASSES_SEO = {
+  title: "Online Live Classes | Lectures, Workshops & Doubt Sessions | KYK",
+  description:
+    "Explore KYK's live session schedule for Development, AI, Business Analytics and Digital Marketing, including lectures, doubt sessions, workshops, webinars and mock interviews.",
+  h1: "Interactive Live Sessions",
   ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
   twitterCard: "summary_large_image",
 };
@@ -74,9 +86,9 @@ export const SMM_COURSE_PATH = "/Blog/smm-social-media-marketing";
 
 /** First-byte + Helmet SEO for the SMM course page only. */
 export const SMM_COURSE_SEO = {
-  title: "Social Media Marketing Course & SMM Training | KYK",
+  title: "Social Media Marketing Course | Instagram, LinkedIn & YouTube | KYK",
   description:
-    "Learn social media marketing with beginner-friendly SMM training covering Instagram, LinkedIn, X and YouTube, paid social, analytics and content calendars.",
+    "Learn social media marketing across Instagram, LinkedIn, X and YouTube with content strategies and paid social advertising.",
   h1: "Social Media Marketing Course – Beginner SMM Training",
   ogImage: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -87,9 +99,9 @@ export const SEO_COURSE_PATH = "/Blog/seo-search-engine-optimization";
 
 /** First-byte + Helmet SEO for the SEO course page only. */
 export const SEO_COURSE_SEO = {
-  title: "SEO Course & Search Engine Optimization Training | KYK",
+  title: "SEO Course | Intermediate Search Engine Optimization | KYK",
   description:
-    "Learn SEO with KYK's intermediate course: keyword research, on-page SEO, technical SEO and link building. 30 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+    "Learn search engine optimization through keyword strategy, on-page SEO, technical SEO and link building in KYK's intermediate SEO course.",
   h1: "Search Engine Optimization Course – Intermediate SEO Training",
   ogImage: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -100,9 +112,9 @@ export const SEM_COURSE_PATH = "/Blog/sem-search-engine-marketing";
 
 /** First-byte + Helmet SEO for the SEM course page only. */
 export const SEM_COURSE_SEO = {
-  title: "SEM Course & Search Engine Marketing Training | KYK",
+  title: "Search Engine Marketing Course | Google Ads, PPC & Retargeting | KYK",
   description:
-    "Learn SEM with KYK's intermediate course: Google Ads, keyword bidding, ad copy, landing pages and ROI. 25 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+    "Learn search engine marketing with Google Ads and Bing Ads, including campaign bidding, ad copy, Quality Score and retargeting strategies.",
   h1: "Search Engine Marketing Course – Intermediate SEM Training",
   ogImage: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -113,9 +125,9 @@ export const SMO_COURSE_PATH = "/Blog/smo-social-media-optimization";
 
 /** First-byte + Helmet SEO for the SMO course page only. */
 export const SMO_COURSE_SEO = {
-  title: "SMO Course & Social Media Optimization Training | KYK",
+  title: "Social Media Optimization Course | Organic Reach & Engagement | KYK",
   description:
-    "Learn SMO with KYK's beginner course: profile optimisation, hashtag strategy, engagement and analytics. 15 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+    "Learn social media optimization through profile improvements, organic reach, hashtag strategy, engagement and community building.",
   h1: "Social Media Optimization Course – Beginner SMO Training",
   ogImage: "https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -126,9 +138,9 @@ export const GSC_COURSE_PATH = "/Blog/google-webmaster-search-console";
 
 /** First-byte + Helmet SEO for the Google Webmaster & Search Console course page only. */
 export const GSC_COURSE_SEO = {
-  title: "Google Search Console Course & Webmaster Tools Training | KYK",
+  title: "Google Search Console Course | Indexing, Sitemaps & SEO | KYK",
   description:
-    "Learn Google Search Console with KYK's beginner course: indexing, performance, Core Web Vitals and sitemaps. 10 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+    "Learn Google Search Console and Webmaster Tools to monitor search performance, understand indexing, work with sitemaps and troubleshoot website search visibility.",
   h1: "Google Search Console Course – Beginner GSC Training",
   ogImage: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -139,9 +151,9 @@ export const AI_MARKETING_COURSE_PATH = "/Blog/ai-tools-in-digital-marketing";
 
 /** First-byte + Helmet SEO for the AI Tools in Digital Marketing course page only. */
 export const AI_MARKETING_COURSE_SEO = {
-  title: "AI for Digital Marketing Course & AI Tools Training | KYK",
+  title: "AI Tools in Digital Marketing Course | Jasper, Surfer SEO & Canva AI | KYK",
   description:
-    "Learn AI for Digital Marketing with KYK's intermediate course: Jasper, Surfer SEO, Canva AI and ChatGPT. 18 hours, 5 topics, 20 videos. ₹149 + 18% GST.",
+    "Explore AI tools for digital marketing tasks, including Jasper, Surfer SEO, Canva AI and ChatGPT, and learn how they support marketing workflows.",
   h1: "AI Tools in Digital Marketing Course – Intermediate AI Marketing Training",
   ogImage: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -152,9 +164,9 @@ export const AI_PRODUCTIVITY_COURSE_PATH = "/Blog/8-best-ai-tools-for-productivi
 
 /** First-byte + Helmet SEO for the 8 Best AI Tools for Productivity course page only. */
 export const AI_PRODUCTIVITY_COURSE_SEO = {
-  title: "AI Tools for Productivity Course | KYK",
+  title: "AI Tools for Productivity Course | Writing, Research & Media AI | KYK",
   description:
-    "Learn AI Tools for Productivity with KYK's beginner course: Notion AI, Midjourney, Runway and Perplexity. 12 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Explore AI tools for image and video creation, writing, research, coding assistance and simple workflows, including Midjourney, Runway, Notion AI and Perplexity.",
   h1: "8 Best AI Tools for Productivity Course – Beginner AI Productivity Tools Training",
   ogImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -165,9 +177,9 @@ export const PROMPT_ENGINEERING_COURSE_PATH = "/Blog/prompt-engineering";
 
 /** First-byte + Helmet SEO for the Prompt Engineering course page only. */
 export const PROMPT_ENGINEERING_COURSE_SEO = {
-  title: "Prompt Engineering Course & ChatGPT Prompt Training | KYK",
+  title: "Prompt Engineering Course for Beginners | ChatGPT, Claude & Gemini | KYK",
   description:
-    "Learn Prompt Engineering with KYK's beginner course: ChatGPT, Claude and Gemini. 15 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn prompt design, ChatGPT, Claude and Gemini prompting, Chain-of-Thought and Few-Shot techniques through KYK's beginner-friendly Prompt Engineering course.",
   h1: "Prompt Engineering Course – Beginner Prompt Engineering Training",
   ogImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -178,9 +190,9 @@ export const AI_FUNDAMENTALS_COURSE_PATH = "/Blog/artificial-intelligence-fundam
 
 /** First-byte + Helmet SEO for the Artificial Intelligence Fundamentals course page only. */
 export const AI_FUNDAMENTALS_COURSE_SEO = {
-  title: "AI Fundamentals Course & Beginner AI Training | KYK",
+  title: "Artificial Intelligence Course for Beginners | AI Fundamentals | KYK",
   description:
-    "Learn AI Fundamentals with KYK's beginner course: machine learning, neural networks and NLP. 35 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Understand artificial intelligence through machine learning basics, neural networks, natural language processing and real-world AI use cases in KYK's beginner-friendly AI fundamentals course.",
   h1: "Artificial Intelligence Fundamentals Course – Beginner AI Training",
   ogImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -191,9 +203,9 @@ export const PYTHON_PROGRAMMING_COURSE_PATH = "/Blog/python-programming";
 
 /** First-byte + Helmet SEO for the Python Programming course page only. */
 export const PYTHON_PROGRAMMING_COURSE_SEO = {
-  title: "Python Programming Course & Beginner Python Training | KYK",
+  title: "Python Programming Course for Beginners | KYK",
   description:
-    "Learn Python Programming with KYK's beginner course: Python Basics, functions, OOP, files and APIs. 40 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+    "Learn Python from scratch with variables, loops, functions, modules, OOP, file handling and APIs. Build your skills through four learning modules and a final capstone project at KYK.",
   h1: "Python Programming Course – Beginner Python Training",
   ogImage: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -204,9 +216,9 @@ export const DATA_SCIENCE_COURSE_PATH = "/Blog/data-science";
 
 /** First-byte + Helmet SEO for the Data Science course page only. */
 export const DATA_SCIENCE_COURSE_SEO = {
-  title: "Data Science Course & Intermediate Python ML Training | KYK",
+  title: "Data Science Course with Python & Machine Learning | KYK",
   description:
-    "Learn Data Science with KYK's intermediate course: Data Wrangling, EDA, ML Models, features and deployment. 55 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+    "Learn data science with Python, Pandas, NumPy, Matplotlib and Scikit-learn. Explore data wrangling, EDA, machine learning, feature engineering and deployment through a structured course and capstone project.",
   h1: "Data Science Course – Intermediate Python ML Training",
   ogImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -217,9 +229,9 @@ export const MERN_STACK_COURSE_PATH = "/Blog/mern-stack-development";
 
 /** First-byte + Helmet SEO for the MERN Stack Development course page only. */
 export const MERN_STACK_COURSE_SEO = {
-  title: "MERN Stack Development Course & Full Stack Training | KYK",
+  title: "MERN Stack Development Course | Full Stack Web Development | KYK",
   description:
-    "Learn MERN Stack Development with KYK's advanced course: React, Node & Express, MongoDB CRUD, Auth & JWT. 70 hours, 5 topics, 20 videos. ₹299 + 18% GST.",
+    "Learn full-stack development with React, Node.js, Express and MongoDB. Explore CRUD operations, JWT authentication and build a final full-stack project in the KYK MERN Stack course.",
   h1: "MERN Stack Development Course – Advanced Full Stack Training",
   ogImage: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -230,9 +242,9 @@ export const JIRA_COURSE_PATH = "/Blog/jira-for-project-management";
 
 /** First-byte + Helmet SEO for the Jira for Project Management course page only. */
 export const JIRA_COURSE_SEO = {
-  title: "Jira for Project Management Course & Jira Training | KYK",
+  title: "Jira for Project Management Course | Scrum, Kanban & Sprints | KYK",
   description:
-    "Learn Jira for Project Management with KYK's beginner course: Jira Basics, Scrum & Kanban, Backlogs & Sprints, Reporting. 10 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn Jira project management through projects, issues, Scrum, Kanban, backlogs, sprint planning, reporting and team workflows using Jira and Confluence.",
   h1: "Jira for Project Management Course – Beginner Jira Training",
   ogImage: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -243,9 +255,9 @@ export const SQL_COURSE_PATH = "/Blog/sql-for-data-analysis";
 
 /** First-byte + Helmet SEO for the SQL for Data Analysis course page only. */
 export const SQL_COURSE_SEO = {
-  title: "SQL for Data Analysis Course & SQL Training | KYK",
+  title: "SQL for Data Analysis Course | MySQL, PostgreSQL & Analytics | KYK",
   description:
-    "Learn SQL for Data Analysis with KYK's beginner course: SQL Basics, Joins & Aggregations, Window Functions, Stored Procedures. 25 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn SQL for data analysis with MySQL and PostgreSQL. Practise SQL basics, joins, aggregations, window functions and stored procedures through sales analysis and customer segmentation projects.",
   h1: "SQL for Data Analysis Course – Beginner SQL Training",
   ogImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -256,9 +268,9 @@ export const POWER_BI_COURSE_PATH = "/Blog/power-bi-dashboarding";
 
 /** First-byte + Helmet SEO for the Power BI Dashboarding course page only. */
 export const POWER_BI_COURSE_SEO = {
-  title: "Power BI Dashboarding Course & Power BI Training | KYK",
+  title: "Power BI Dashboarding Course | DAX, Power Query & Dashboards | KYK",
   description:
-    "Learn Power BI Dashboarding with KYK's intermediate course: Power BI Basics, DAX Formulas, Data Modelling, Visuals & Filters. 28 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn Power BI dashboarding with DAX measures, data modelling, Power Query, visuals and filters. Apply your skills through sales reporting and HR analytics dashboard projects.",
   h1: "Power BI Dashboarding Course – Intermediate Power BI Training",
   ogImage: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -269,9 +281,9 @@ export const TABLEAU_COURSE_PATH = "/Blog/tableau-visualization";
 
 /** First-byte + Helmet SEO for the Tableau Visualization course page only. */
 export const TABLEAU_COURSE_SEO = {
-  title: "Tableau Visualization Course & Tableau Training | KYK",
+  title: "Tableau Course | Dashboard Design, Data Blending & Storytelling | KYK",
   description:
-    "Learn Tableau Visualization with KYK's intermediate course: Tableau Basics, Calculated Fields, Dashboard Design, Data Blending. 22 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn Tableau data visualisation, calculated fields, dashboard design, data blending and storytelling. Practise with market trend mapping and financial dashboard projects.",
   h1: "Tableau Visualization Course – Intermediate Tableau Training",
   ogImage: "https://images.unsplash.com/photo-1591696205602-2f950c417cb9?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -282,9 +294,9 @@ export const PYTHON_FOR_ANALYTICS_COURSE_PATH = "/Blog/python-for-analytics";
 
 /** First-byte + Helmet SEO for the Python for Analytics course page only. */
 export const PYTHON_FOR_ANALYTICS_COURSE_SEO = {
-  title: "Python for Analytics Course & Pandas Training | KYK",
+  title: "Python for Analytics Course | Pandas, EDA & Seaborn | KYK",
   description:
-    "Learn Python for Analytics with KYK's intermediate course: Data Cleaning, Exploratory Analysis, Visualisation, Reporting Automation. 30 hours, 5 topics, 20 videos. ₹199 + 18% GST.",
+    "Learn Python for business analytics with Pandas, exploratory data analysis, Seaborn visualisation and reporting automation. Apply your skills in revenue analysis and KPI dashboard projects.",
   h1: "Python for Analytics Course – Intermediate Python Analytics Training",
   ogImage: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -295,9 +307,9 @@ export const DEVELOPMENT_BUNDLE_PATH = "/Bundles/development";
 
 /** First-byte + Helmet SEO for the Development Bundle page only. */
 export const DEVELOPMENT_BUNDLE_SEO = {
-  title: "Development Course Bundle | Python, Data Science & MERN | KYK",
+  title: "Development Courses Bundle | Python, Data Science & MERN | KYK",
   description:
-    "KYK Development bundle: Python Programming, Data Science, and MERN Stack. 3 courses, 165 listed hours, ₹799/- instead of ₹897/- + 18% GST.",
+    "Get Python Programming, Data Science and MERN Stack Development together in the KYK Development Bundle — three Development-track courses in one pack.",
   h1: "Development Bundle – Python, Data Science and MERN Training",
   ogImage: "https://images.unsplash.com/photo-1526379095098-d400fd0bf935?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -308,9 +320,9 @@ export const AI_BUNDLE_PATH = "/Bundles/ai";
 
 /** First-byte + Helmet SEO for the AI & Prompt Engineering Bundle page only. */
 export const AI_BUNDLE_SEO = {
-  title: "AI & Prompt Engineering Course Bundle | KYK",
+  title: "AI Courses Bundle | AI Fundamentals, Prompt Engineering & Tools | KYK",
   description:
-    "KYK AI bundle: Artificial Intelligence Fundamentals, Prompt Engineering, and 8 Best AI Tools for Productivity. 3 courses, 62 listed hours, ₹499/- instead of ₹597/- + 18% GST.",
+    "Explore AI Fundamentals, Prompt Engineering and AI Tools for Productivity together in the KYK AI Courses Bundle — three AI-track courses in one pack.",
   h1: "AI & Prompt Engineering Bundle – AI Fundamentals, Prompts and Tools Training",
   ogImage: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -321,9 +333,9 @@ export const ANALYTICS_BUNDLE_PATH = "/Bundles/analytics";
 
 /** First-byte + Helmet SEO for the Business Analytics Bundle page only. */
 export const ANALYTICS_BUNDLE_SEO = {
-  title: "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK",
+  title: "Business Analytics Courses Bundle | SQL, Python, Power BI & Tableau | KYK",
   description:
-    "KYK Analytics bundle: SQL, Python for Analytics, Power BI, Tableau, and Jira. 5 courses, 115 listed hours, ₹899/- instead of ₹995/- + 18% GST.",
+    "Learn SQL, Python for Analytics, Power BI, Tableau and Jira together in the KYK Business Analytics Bundle — five analytics-track courses in one pack.",
   h1: "Business Analytics Bundle – SQL, Python Analytics, Power BI, Tableau and Jira Training",
   ogImage: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -334,9 +346,9 @@ export const MARKETING_BUNDLE_PATH = "/Bundles/marketing";
 
 /** First-byte + Helmet SEO for the Advanced Digital Marketing Bundle page only. */
 export const MARKETING_BUNDLE_SEO = {
-  title: "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK",
+  title: "Digital Marketing Courses Bundle | SEO, SEM, SMM & AI Tools | KYK",
   description:
-    "KYK Marketing bundle: SEO, SEM, SMM, SMO, Search Console, and AI Tools in Digital Marketing. 6 courses, 126 listed hours, ₹799/- instead of ₹894/- + 18% GST.",
+    "Get six digital marketing courses covering SEO, SEM, SMM, SMO, Google Search Console and AI tools in the KYK Digital Marketing Courses Bundle.",
   h1: "Advanced Digital Marketing Bundle – SEO, SEM, SMM, SMO, Search Console and AI Marketing Training",
   ogImage: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -347,9 +359,9 @@ export const DEVELOPMENT_INTERNSHIP_PATH = "/Internships/development";
 
 /** First-byte + Helmet SEO for the Development Internship page only. */
 export const DEVELOPMENT_INTERNSHIP_SEO = {
-  title: "Development Internship Program | Python & MERN | KYK",
+  title: "Software Development Internship | Python & MERN Development | KYK",
   description:
-    "Paid KYK Development Internship: 1–3 month Remote/Hybrid programme. Build with Python, MERN, React, Node.js, MongoDB and Git. Programme fee ₹3,999/- + 18% GST.",
+    "Explore KYK's Development Internship with Python, MERN Stack and modern web development, mentor-supported feature work and a listed duration of 1–3 months.",
   h1: "Development Internship – Python, MERN and Full-Stack Project Experience",
   ogImage: "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -359,9 +371,9 @@ export const AI_INTERNSHIP_PATH = "/Internships/ai";
 
 /** First-byte + Helmet SEO for the AI & Prompt Engineering Internship page only. */
 export const AI_INTERNSHIP_SEO = {
-  title: "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK",
+  title: "AI Internship | Prompt Engineering, ChatGPT & AI Tools | KYK",
   description:
-    "Paid KYK AI & Prompt Engineering Internship: 1–3 month Remote programme. Design prompts and AI-assisted workflows with ChatGPT, Claude, and productivity tools. Programme fee ₹3,999/- + 18% GST.",
+    "Explore KYK's AI Internship focused on prompt engineering, ChatGPT, Claude, AI tools and NLP. Review the programme details and apply online.",
   h1: "AI & Prompt Engineering Internship – ChatGPT, Claude and LLM Workflow Experience",
   ogImage: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -371,9 +383,9 @@ export const ANALYTICS_INTERNSHIP_PATH = "/Internships/analytics";
 
 /** First-byte + Helmet SEO for the Business Analytics Internship page only. */
 export const ANALYTICS_INTERNSHIP_SEO = {
-  title: "Business Analytics Internship | SQL, Power BI & Tableau | KYK",
+  title: "Data Analytics Internship | SQL, Python, Power BI & Tableau | KYK",
   description:
-    "Paid KYK Business Analytics Internship: 1–3 month Remote/Hybrid programme. Analyse data with SQL, Python, Power BI, Tableau, and Excel. Programme fee ₹3,999/- + 18% GST.",
+    "Explore KYK's Business Analytics Internship using SQL, Python, Power BI, Tableau and Excel. Review the programme details and apply online.",
   h1: "Business Analytics Internship – SQL, Python, Power BI and Tableau Project Experience",
   ogImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -383,9 +395,9 @@ export const MARKETING_INTERNSHIP_PATH = "/Internships/marketing";
 
 /** First-byte + Helmet SEO for the Advanced Digital Marketing Internship page only. */
 export const MARKETING_INTERNSHIP_SEO = {
-  title: "Advanced Digital Marketing Internship | SEO, SEM & Social | KYK",
+  title: "Digital Marketing Internship | SEO, SEM, Social Media & AI | KYK",
   description:
-    "Paid KYK Advanced Digital Marketing Internship: 1–3 month Remote programme. Run SEO, SEM, social campaigns, and AI-powered marketing experiments. Programme fee ₹3,999/- + 18% GST.",
+    "Explore KYK's remote Advanced Digital Marketing Internship covering SEO, SEM, social media campaigns and AI-powered marketing experiments, with a listed duration of 1–3 months.",
   h1: "Advanced Digital Marketing Internship – SEO, SEM and Social Campaign Experience",
   ogImage: "https://images.unsplash.com/photo-1432888498266-38ffec3eaf0a?w=800&q=80",
   twitterCard: "summary_large_image",
@@ -492,6 +504,16 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: ABOUT_SEO.ogImage,
       twitterCard: ABOUT_SEO.twitterCard,
+    };
+  }
+  if (path === LIVE_CLASSES_PATH) {
+    return {
+      title: LIVE_CLASSES_SEO.title,
+      description: LIVE_CLASSES_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: LIVE_CLASSES_SEO.ogImage,
+      twitterCard: LIVE_CLASSES_SEO.twitterCard,
     };
   }
   if (path === DEVELOPMENT_INTERNSHIP_PATH) {

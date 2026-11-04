@@ -1883,7 +1883,7 @@ if (AI_BUNDLE_SEO.productName === "AI & Prompt Engineering Bundle") {
 if (AI_BUNDLE_SEO.h1 === "AI & Prompt Engineering Bundle – AI Fundamentals, Prompts and Tools Training") {
   pass("AI Bundle H1 is the approved training heading");
 } else fail("AI Bundle H1 is not the approved heading");
-if (AI_BUNDLE_SEO.title === "AI & Prompt Engineering Course Bundle | KYK") {
+if (AI_BUNDLE_SEO.title === "AI Courses Bundle | AI Fundamentals, Prompt Engineering & Tools | KYK") {
   pass("AI Bundle title remains the approved Helmet title");
 } else fail("AI Bundle title changed");
 if (
@@ -1975,7 +1975,7 @@ if (ANALYTICS_BUNDLE_SEO.productName === "Business Analytics Bundle") {
 if (ANALYTICS_BUNDLE_SEO.h1 === "Business Analytics Bundle – SQL, Python Analytics, Power BI, Tableau and Jira Training") {
   pass("Analytics Bundle H1 is the approved training heading");
 } else fail("Analytics Bundle H1 is not the approved heading");
-if (ANALYTICS_BUNDLE_SEO.title === "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK") {
+if (ANALYTICS_BUNDLE_SEO.title === "Business Analytics Courses Bundle | SQL, Python, Power BI & Tableau | KYK") {
   pass("Analytics Bundle title remains the approved Helmet title");
 } else fail("Analytics Bundle title changed");
 if (
@@ -2073,7 +2073,7 @@ if (MARKETING_BUNDLE_SEO.productName === "Advanced Digital Marketing Bundle") {
 if (MARKETING_BUNDLE_SEO.h1 === "Advanced Digital Marketing Bundle – SEO, SEM, SMM, SMO, Search Console and AI Marketing Training") {
   pass("Marketing Bundle H1 is the approved training heading");
 } else fail("Marketing Bundle H1 is not the approved heading");
-if (MARKETING_BUNDLE_SEO.title === "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK") {
+if (MARKETING_BUNDLE_SEO.title === "Digital Marketing Courses Bundle | SEO, SEM, SMM & AI Tools | KYK") {
   pass("Marketing Bundle title remains the approved Helmet title");
 } else fail("Marketing Bundle title changed");
 if (
@@ -2184,7 +2184,7 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(DEVELOPMENT_INTERNS
 if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/python-programming/videos").includes(DEVELOPMENT_INTERNSHIP_SEO.title) === false) {
   pass("Development Internship HTML SEO injection does not change Python /videos");
 } else fail("Development Internship metadata leaked onto Python /videos");
-if (DEVELOPMENT_INTERNSHIP_SEO.title === "Development Internship Program | Python & MERN | KYK") {
+if (DEVELOPMENT_INTERNSHIP_SEO.title === "Software Development Internship | Python & MERN Development | KYK") {
   pass("Development Internship title remains the approved Helmet title");
 } else fail("Development Internship title changed");
 if (
@@ -2301,7 +2301,7 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(AI_INTERNSHIP_SEO.t
 if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/prompt-engineering/videos").includes(AI_INTERNSHIP_SEO.title) === false) {
   pass("AI Internship HTML SEO injection does not change Prompt Engineering /videos");
 } else fail("AI Internship metadata leaked onto Prompt Engineering /videos");
-if (AI_INTERNSHIP_SEO.title === "AI & Prompt Engineering Internship | ChatGPT & LLMs | KYK") {
+if (AI_INTERNSHIP_SEO.title === "AI Internship | Prompt Engineering, ChatGPT & AI Tools | KYK") {
   pass("AI Internship title remains the approved Helmet title");
 } else fail("AI Internship title changed");
 if (
@@ -2431,7 +2431,7 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(ANALYTICS_INTERNSHI
 if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/sql-for-data-analysis/videos").includes(ANALYTICS_INTERNSHIP_SEO.title) === false) {
   pass("Analytics Internship HTML SEO injection does not change SQL /videos");
 } else fail("Analytics Internship metadata leaked onto SQL /videos");
-if (ANALYTICS_INTERNSHIP_SEO.title === "Business Analytics Internship | SQL, Power BI & Tableau | KYK") {
+if (ANALYTICS_INTERNSHIP_SEO.title === "Data Analytics Internship | SQL, Python, Power BI & Tableau | KYK") {
   pass("Analytics Internship title remains the approved Helmet title");
 } else fail("Analytics Internship title changed");
 if (
@@ -2563,7 +2563,7 @@ if (applyInitialHtmlSeo("<title>Home</title>", "/").includes(MARKETING_INTERNSHI
 if (applyInitialHtmlSeo("<title>Home</title>", "/Blog/seo-search-engine-optimization/videos").includes(MARKETING_INTERNSHIP_SEO.title) === false) {
   pass("Marketing Internship HTML SEO injection does not change SEO /videos");
 } else fail("Marketing Internship metadata leaked onto SEO /videos");
-if (MARKETING_INTERNSHIP_SEO.title === "Advanced Digital Marketing Internship | SEO, SEM & Social | KYK") {
+if (MARKETING_INTERNSHIP_SEO.title === "Digital Marketing Internship | SEO, SEM, Social Media & AI | KYK") {
   pass("Marketing Internship title remains the approved Helmet title");
 } else fail("Marketing Internship title changed");
 if (
@@ -2755,7 +2755,7 @@ if (
   smmCopy.includes('q: "Does this include Data Science or MERN?"') &&
   smmCopy.includes('q: "Are there course videos?"') &&
   smmCopy.includes('a: "The course duration listed on KYK is 40 hrs."') &&
-  smmCopy.includes('a: "KYK lists five topics and twenty videos for this course. Enrol to unlock playback on the course videos page."') &&
+  smmCopy.includes('a: "KYK lists twenty videos for this course across the four learning modules and final capstone. Enrol to unlock playback on the course videos page."') &&
   smmCopy.includes('relatedSlugs: ["data-science", "mern-stack-development", "python-for-analytics"]') &&
   smmCopy.includes('to: "/Blog/data-science"') &&
   smmCopy.includes('to: "/Blog/mern-stack-development"') &&
@@ -3287,9 +3287,9 @@ if (bundleDetailSrc.includes("addBundle") && bundleDetailSrc.includes("addCourse
   pass("Bundle detail still uses catalog pricing and cart CTAs");
 } else fail("Bundle detail lost pricing or cart CTAs");
 if (
-  AI_BUNDLE_SEO.title === "AI & Prompt Engineering Course Bundle | KYK" &&
-  ANALYTICS_BUNDLE_SEO.title === "Business Analytics Course Bundle | SQL, Power BI & Tableau | KYK" &&
-  MARKETING_BUNDLE_SEO.title === "Digital Marketing Course Bundle | SEO, SEM & SMM | KYK"
+  AI_BUNDLE_SEO.title === "AI Courses Bundle | AI Fundamentals, Prompt Engineering & Tools | KYK" &&
+  ANALYTICS_BUNDLE_SEO.title === "Business Analytics Courses Bundle | SQL, Python, Power BI & Tableau | KYK" &&
+  MARKETING_BUNDLE_SEO.title === "Digital Marketing Courses Bundle | SEO, SEM, SMM & AI Tools | KYK"
 ) {
   pass("AI Bundle title is preserved and Analytics/Marketing Helmet titles remain unchanged");
 } else fail("AI, Analytics, or Marketing bundle Helmet title changed unexpectedly");

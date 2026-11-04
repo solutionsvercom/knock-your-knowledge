@@ -5,6 +5,7 @@ import {
   CAREER_GUIDE_SEO,
   ABOUT_SEO,
   HOME_SEO,
+  LIVE_CLASSES_SEO,
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
@@ -64,10 +65,7 @@ const STATIC_SEO = {
     ...CAREER_GUIDE_SEO,
   },
   "/LiveClasses": {
-    title: "Live Classes | Interactive Sessions for KYK Internship Tracks",
-    description:
-      "See today’s KYK live classes for Development, AI & Prompt Engineering, Business Analytics, and Advanced Digital Marketing. Sessions update from the admin panel.",
-    h1: "Interactive Live Sessions",
+    ...LIVE_CLASSES_SEO,
   },
   "/About": {
     ...ABOUT_SEO,

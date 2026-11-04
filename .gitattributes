@@ -1,0 +1,2 @@
+# Keep sitemap LF so it matches sitemapXml() on Windows (core.autocrlf).
+frontend/public/sitemap.xml text eol=lf
