@@ -1,0 +1,3 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^www\.knockyourknowledge\.com$ [NC]
+RewriteRule ^(.*)$ https://knockyourknowledge.com/$1 [R=301,L]
