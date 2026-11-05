@@ -6,6 +6,8 @@ import {
   ABOUT_SEO,
   HOME_SEO,
   LIVE_CLASSES_SEO,
+  PRIVACY_POLICY_SEO,
+  WORKPLACE_POLICY_SEO,
   isIndexablePath,
   SITE_ORIGIN,
   SMM_COURSE_SEO,
@@ -69,6 +71,12 @@ const STATIC_SEO = {
   },
   "/About": {
     ...ABOUT_SEO,
+  },
+  "/PrivacyPolicy": {
+    ...PRIVACY_POLICY_SEO,
+  },
+  "/WorkplacePolicy": {
+    ...WORKPLACE_POLICY_SEO,
   },
 };
 

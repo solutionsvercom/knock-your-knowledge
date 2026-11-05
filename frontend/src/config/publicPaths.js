@@ -58,6 +58,30 @@ export const ABOUT_SEO = {
   twitterCard: "summary_large_image",
 };
 
+export const PRIVACY_POLICY_PATH = "/PrivacyPolicy";
+
+/** First-byte + Helmet SEO for the Privacy Policy page only. */
+export const PRIVACY_POLICY_SEO = {
+  title: "Privacy Policy | Knock Your Knowledge",
+  description:
+    "Read how Knock Your Knowledge collects, uses, and protects personal information for enquiries, accounts, enrolments, and payments on knockyourknowledge.com.",
+  h1: "Privacy Policy",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
+export const WORKPLACE_POLICY_PATH = "/WorkplacePolicy";
+
+/** First-byte + Helmet SEO for the Hybrid Workplace Policy page only. */
+export const WORKPLACE_POLICY_SEO = {
+  title: "Hybrid Workplace Policy | Knock Your Knowledge",
+  description:
+    "KYK’s hybrid workplace policy covers flexible remote and office work, collaboration, working hours, communication, accountability, and data security.",
+  h1: "Hybrid Workplace Policy",
+  ogImage: `${SITE_ORIGIN}/kyk-logo.png`,
+  twitterCard: "summary_large_image",
+};
+
 export const HOME_PATH = "/";
 
 /** First-byte + Helmet SEO for the homepage only. Brand-first title preserved. */
@@ -411,6 +435,8 @@ export const STATIC_INDEXABLE_PATHS = [
   "/Blog",
   "/LiveClasses",
   "/About",
+  "/PrivacyPolicy",
+  "/WorkplacePolicy",
 ];
 
 export const PRIVATE_PREFIXES = [
@@ -504,6 +530,26 @@ export function initialHtmlSeoForPath(pathname) {
       robots: "index, follow",
       ogImage: ABOUT_SEO.ogImage,
       twitterCard: ABOUT_SEO.twitterCard,
+    };
+  }
+  if (path === PRIVACY_POLICY_PATH) {
+    return {
+      title: PRIVACY_POLICY_SEO.title,
+      description: PRIVACY_POLICY_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: PRIVACY_POLICY_SEO.ogImage,
+      twitterCard: PRIVACY_POLICY_SEO.twitterCard,
+    };
+  }
+  if (path === WORKPLACE_POLICY_PATH) {
+    return {
+      title: WORKPLACE_POLICY_SEO.title,
+      description: WORKPLACE_POLICY_SEO.description,
+      canonical: canonicalUrl(path),
+      robots: "index, follow",
+      ogImage: WORKPLACE_POLICY_SEO.ogImage,
+      twitterCard: WORKPLACE_POLICY_SEO.twitterCard,
     };
   }
   if (path === LIVE_CLASSES_PATH) {

@@ -54,6 +54,8 @@ import Courses from './pages/Courses';
 import Home from './pages/Home';
 import Internships from './pages/Internships';
 import LiveClasses from './pages/LiveClasses';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import WorkplacePolicy from './pages/WorkplacePolicy';
 import __Layout from './Layout.jsx';
 
 
@@ -65,6 +67,8 @@ export const PAGES = {
     "Home": Home,
     "Internships": Internships,
     "LiveClasses": LiveClasses,
+    "PrivacyPolicy": PrivacyPolicy,
+    "WorkplacePolicy": WorkplacePolicy,
 }
 
 export const pagesConfig = {

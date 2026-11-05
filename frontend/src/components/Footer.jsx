@@ -31,6 +31,8 @@ const platformLinks = [
 const companyLinks = [
   { name: "Career Guide", page: "Blog" },
   { name: "About Us", page: "About" },
+  { name: "Privacy Policy", page: "PrivacyPolicy" },
+  { name: "Workplace Policy", page: "WorkplacePolicy" },
 ];
 
 const socials = [
@@ -213,7 +215,13 @@ export default function Footer() {
           </div>
 
           <p className="text-xs text-center sm:text-right" style={{ color: "#475569" }}>
-            Privacy &nbsp;·&nbsp; Terms &nbsp;·&nbsp; Cookies
+            <Link to={createPageUrl("PrivacyPolicy")} className="hover:text-slate-300 transition-colors">
+              Privacy Policy
+            </Link>
+            &nbsp;·&nbsp;
+            <Link to={createPageUrl("WorkplacePolicy")} className="hover:text-slate-300 transition-colors">
+              Workplace Policy
+            </Link>
             <br />
             <span style={{ color: "#334155" }}>Powered by Vercom Solutions</span>
           </p>
